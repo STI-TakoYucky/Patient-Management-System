@@ -3,6 +3,10 @@ package mvc.views;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.RoundRectangle2D;
 
 public class App extends JFrame {
@@ -18,6 +22,7 @@ public class App extends JFrame {
         JLabel appName = new JLabel("App Name");
         JTextField searchField = new RoundJTextField("Search", 30);
         JLabel patientCount = new JLabel("Patient Count: ");
+        JPanel patientPanel = new JPanel();
 
         //Jframe setup
         setVisible(true);
@@ -26,7 +31,7 @@ public class App extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        //add header
+        //ADD HEADER
         header.setBackground(Color.gray);
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
 
@@ -36,17 +41,66 @@ public class App extends JFrame {
 
         searchField.setMaximumSize(new java.awt.Dimension(250, 35));
         searchField.setMargin(new Insets(0,10,0,10));
-
+        searchField.addMouseListener(new searchFieldClicked(searchField));
         searchField.setFont(DEFAULT_FONT);
         header.add(searchField);
 
         patientCount.setFont(DEFAULT_FONT);
         patientCount.setBorder(new EmptyBorder(0, 50, 0, 0));
         header.add(patientCount);
+
+        for (int i = 0; i < 2; i++) {
+            CardComponent cardItem = new CardComponent();
+            patientPanel.add(cardItem);
+        }
+
+        patientPanel.setPreferredSize(new Dimension(500,0));
+
+
+
+        //add all main panels to the JFrame
         add(header, BorderLayout.NORTH);
+        add(patientPanel, BorderLayout.CENTER);
     }
 
-    public class RoundJTextField extends JTextField {
+    public class searchFieldClicked implements MouseListener {
+
+        JTextField searchField;
+
+        public searchFieldClicked (JTextField searchField) {
+            this.searchField = searchField;
+        }
+
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            searchField.setText("");
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+    }
+
+
+    //To create a custom textField with rounded borders
+    class RoundJTextField extends JTextField {
 
         private Shape shape;
         private int Size;
@@ -65,6 +119,8 @@ public class App extends JFrame {
         }
 
         protected void paintComponent(Graphics g) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setColor(getBackground());
             g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, Size, Size);
             super.paintComponent(g);
