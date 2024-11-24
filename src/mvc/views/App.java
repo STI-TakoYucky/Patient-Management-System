@@ -3,11 +3,8 @@ package mvc.views;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.RoundRectangle2D;
 
 public class App extends JFrame {
 
@@ -22,7 +19,6 @@ public class App extends JFrame {
         JLabel appName = new JLabel("App Name");
         JTextField searchField = new RoundJTextField("Search", 30);
         JLabel patientCount = new JLabel("Patient Count: ");
-        JPanel patientPanel = new JPanel();
 
         //Jframe setup
         setVisible(true);
@@ -49,18 +45,11 @@ public class App extends JFrame {
         patientCount.setBorder(new EmptyBorder(0, 50, 0, 0));
         header.add(patientCount);
 
-        for (int i = 0; i < 2; i++) {
-            CardComponent cardItem = new CardComponent();
-            patientPanel.add(cardItem);
-        }
-
-        patientPanel.setPreferredSize(new Dimension(500,0));
-
-
+        MedicalStaffView medicalStaffList = new MedicalStaffView();
 
         //add all main panels to the JFrame
         add(header, BorderLayout.NORTH);
-        add(patientPanel, BorderLayout.CENTER);
+        add(medicalStaffList, BorderLayout.CENTER);
     }
 
     public class searchFieldClicked implements MouseListener {
