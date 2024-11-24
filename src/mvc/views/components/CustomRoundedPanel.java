@@ -1,4 +1,4 @@
-package mvc.views;
+package mvc.views.components;
 
 import javax.swing.*;
 import java.awt.*;

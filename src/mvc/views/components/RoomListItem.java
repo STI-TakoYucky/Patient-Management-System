@@ -1,11 +1,11 @@
-package mvc.views;
+package mvc.views.components;
 import mvc.views.constants.Constants;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CardComponent extends CustomRoundedPanel {
-    public CardComponent () {
+public class RoomListItem extends CustomRoundedPanel {
+    public RoomListItem() {
         initComponents();
     }
 
