@@ -6,6 +6,7 @@ import javax.swing.event.DocumentListener;
 
 import mvc.controllers.AddStaffController;
 import mvc.models.AddStaffModel;
+import mvc.views.components.MedicalStaffItem;
 import mvc.views.constants.Constants;
 
 import java.awt.*;
@@ -18,8 +19,10 @@ public class AddStaffView extends JFrame {
     JTextField staffPositionTextField = new JTextField("Staff Postion", 30);
 
     AddStaffModel model = new AddStaffModel();
+    MedicalStaffView medicalStaffView;
 
-    public AddStaffView() {
+    public AddStaffView(MedicalStaffView view) {
+        this.medicalStaffView = view;
         initComponents();
     }
 
@@ -48,6 +51,7 @@ public class AddStaffView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new AddStaffController(model);
+                medicalStaffView.updateUI();
             }
         });
 
