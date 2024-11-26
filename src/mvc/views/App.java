@@ -50,6 +50,8 @@ public class App extends JFrame {
         //add all main panels to the JFrame
         add(header, BorderLayout.NORTH);
         add(medicalStaffList, BorderLayout.CENTER);
+        revalidate();
+        repaint();
     }
 
     public class searchFieldClicked implements MouseListener {

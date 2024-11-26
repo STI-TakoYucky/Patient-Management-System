@@ -10,40 +10,17 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Desktop/Java/mongodb-driver-sync-5.2.1.jar!/" />
-          <root url="jar://$USER_HOME$/Desktop/Java/bson-5.2.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/systemdependencies/bson-5.2.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/systemdependencies/mongodb-driver-core-5.2.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/systemdependencies/mongodb-driver-sync-5.2.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/systemdependencies/slf4j-api-2.0.16.jar!/" />
+          <root url="jar://$MODULE_DIR$/systemdependencies/slf4j-simple-2.0.9.jar!/" />
+          <root url="file://$MODULE_DIR$" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
           <root url="file://$MODULE_DIR$/src" />
         </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/Desktop/Java/mongodb-driver-core-5.2.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/Desktop/Java/slf4j-api-2.0.16.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/Desktop/Java/slf4j-simple-2.0.9.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
       </library>
     </orderEntry>
   </component>
