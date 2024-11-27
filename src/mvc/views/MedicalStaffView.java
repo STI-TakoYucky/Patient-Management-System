@@ -5,6 +5,8 @@ import mvc.controllers.GetStaff;
 import mvc.models.AddStaffModel;
 import mvc.views.components.CustomRoundedPanel;
 import mvc.views.components.MedicalStaffItem;
+import mvc.views.constants.Constants;
+import mvc.views.utility.SetDefaultFont;
 import org.bson.Document;
 import java.util.List;
 
@@ -46,6 +48,7 @@ public class MedicalStaffView extends Panel {
         updateUI();
 
         add(staffListItemPanel, BorderLayout.CENTER);
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
         revalidate();
         repaint();
     }
@@ -66,6 +69,8 @@ public class MedicalStaffView extends Panel {
                 item.repaint();
             }
         }
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+
     }
 
     class addStaffBttn implements ActionListener {

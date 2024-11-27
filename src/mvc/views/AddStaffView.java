@@ -8,6 +8,7 @@ import mvc.controllers.AddStaffController;
 import mvc.models.AddStaffModel;
 import mvc.views.components.MedicalStaffItem;
 import mvc.views.constants.Constants;
+import mvc.views.utility.SetDefaultFont;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -70,6 +71,8 @@ public class AddStaffView extends JFrame {
         add(mainPanel);
 
         setOnChangeEvent(this, model);
+
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
     }
 
     private void setOnChangeEvent(Container container, AddStaffModel model) {

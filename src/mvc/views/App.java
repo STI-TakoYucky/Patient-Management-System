@@ -3,6 +3,8 @@ package mvc.views;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -37,7 +39,7 @@ public class App extends JFrame {
 
         searchField.setMaximumSize(new java.awt.Dimension(250, 35));
         searchField.setMargin(new Insets(0,10,0,10));
-        searchField.addMouseListener(new searchFieldClicked(searchField));
+        searchField.addFocusListener(new searchFieldClicked(searchField));
         searchField.setFont(DEFAULT_FONT);
         header.add(searchField);
 
@@ -54,7 +56,7 @@ public class App extends JFrame {
         repaint();
     }
 
-    public class searchFieldClicked implements MouseListener {
+    public class searchFieldClicked implements FocusListener {
 
         JTextField searchField;
 
@@ -62,30 +64,14 @@ public class App extends JFrame {
             this.searchField = searchField;
         }
 
-
         @Override
-        public void mouseClicked(MouseEvent e) {
+        public void focusGained(FocusEvent e) {
             searchField.setText("");
         }
 
         @Override
-        public void mousePressed(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-
+        public void focusLost(FocusEvent e) {
+            searchField.setText("Search");
         }
     }
 

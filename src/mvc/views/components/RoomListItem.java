@@ -1,5 +1,6 @@
 package mvc.views.components;
 import mvc.views.constants.Constants;
+import mvc.views.utility.SetDefaultFont;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,20 +53,10 @@ public class RoomListItem extends CustomRoundedPanel {
 
 
         //set the default font for all the Labels
-        setFontForAllLabels(this, Constants.DEFAULT_FONT);
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
 
         //set Custom Font for the room number label
         roomNumber.setFont(new Font("Arial", Font.BOLD, 24));
 
-    }
-
-    private void setFontForAllLabels(Container container, Font font) {
-        for (Component component : container.getComponents()) {
-            if (component instanceof JLabel) {
-                component.setFont(font);
-            } else if (component instanceof Container) {
-                setFontForAllLabels((Container) component, font);
-            }
-        }
     }
 }
