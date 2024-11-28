@@ -1,16 +1,14 @@
 package mvc.controllers;
 
 import com.mongodb.client.*;
-import mvc.models.AddStaffModel;
-import mvc.views.AddStaffView;
-import mvc.views.MedicalStaffView;
+import mvc.models.StaffModel;
 import org.bson.Document;
 
 public class AddStaffController {
 
-    private AddStaffModel model;
+    private StaffModel model;
 
-    public AddStaffController(AddStaffModel model) {
+    public AddStaffController(StaffModel model) {
         this.model = model;
         String uri = "mongodb://localhost:27017";
 
