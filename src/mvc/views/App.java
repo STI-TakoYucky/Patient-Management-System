@@ -24,7 +24,7 @@ public class App extends JFrame {
 
         //Jframe setup
         setVisible(true);
-        setSize(1440, 924);
+        setSize(1440, 824);
         setTitle("PatientManagementSystem");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

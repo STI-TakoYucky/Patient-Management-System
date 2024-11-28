@@ -4,26 +4,34 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import mvc.controllers.AddStaffController;
+import mvc.controllers.EditStaffController;
 import mvc.models.StaffModel;
 import mvc.views.constants.Constants;
 import mvc.views.utility.SetDefaultFont;
+import org.bson.types.ObjectId;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddStaffView extends JFrame {
+public class EditStaffView extends JFrame {
+    MedicalStaffView view;
+
     JTextField staffNameFieldFN = new JTextField("First Name", 30);
     JTextField staffNameFieldLN = new JTextField("Last Name", 30);
     JTextField staffPositionTextField = new JTextField("Staff Postion", 30);
+    JLabel staffId = new JLabel("A");
 
     StaffModel model = new StaffModel();
-    MedicalStaffView medicalStaffView;
 
-    public AddStaffView(MedicalStaffView view) {
-        this.medicalStaffView = view;
+    public EditStaffView(ObjectId id, String firstName, String lastName, String position, MedicalStaffView view) {
         initComponents();
+        this.view = view;
+        staffNameFieldFN.setText(firstName);
+        staffNameFieldLN.setText(lastName);
+        staffPositionTextField.setText(position);
+        staffId.setText(String.valueOf(id));
+        model.setId(id);
     }
 
     public void initComponents() {
@@ -46,12 +54,12 @@ public class AddStaffView extends JFrame {
         staffPositionPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         staffPositionPanel.setMaximumSize(new Dimension(1500, 60));
 
-        JButton addStaffButton = new JButton("Add Staff");
+        JButton addStaffButton = new JButton("Confirm Edit");
         addStaffButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new AddStaffController(model);
-                medicalStaffView.updateUI();
+                new EditStaffController(model);
+                view.updateUI();
             }
         });
 
