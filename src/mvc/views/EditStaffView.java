@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import mvc.controllers.DeleteStaffController;
 import mvc.controllers.EditStaffController;
 import mvc.models.StaffModel;
 import mvc.views.constants.Constants;
@@ -24,7 +25,7 @@ public class EditStaffView extends JFrame {
 
     StaffModel model = new StaffModel();
 
-    public EditStaffView(ObjectId id, String firstName, String lastName, String position, MedicalStaffView view) {
+    public EditStaffView(String id, String firstName, String lastName, String position, MedicalStaffView view) {
         initComponents();
         this.view = view;
         staffNameFieldFN.setText(firstName);
@@ -63,6 +64,15 @@ public class EditStaffView extends JFrame {
             }
         });
 
+        JButton deleteButton = new JButton("Delete Staff");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new DeleteStaffController(model);
+                view.updateUI();
+            }
+        });
+
         //setup JFrame
         setVisible(true);
         setSize(900, 700);
@@ -75,6 +85,7 @@ public class EditStaffView extends JFrame {
         mainPanel.add(staffPosition);
         mainPanel.add(staffPositionPanel);
         mainPanel.add(addStaffButton);
+        mainPanel.add(deleteButton);
         add(mainPanel);
 
         setOnChangeEvent(this, model);
