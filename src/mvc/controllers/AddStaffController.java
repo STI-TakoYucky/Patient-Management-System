@@ -3,6 +3,7 @@ package mvc.controllers;
 import com.mongodb.client.*;
 import mvc.models.StaffModel;
 import org.bson.Document;
+import mvc.views.utility.IDGenerator;
 
 public class AddStaffController {
 
@@ -17,7 +18,8 @@ public class AddStaffController {
 
             MongoCollection<Document> collection = database.getCollection("medical staff");
 
-            Document document = new Document("First Name", model.getFirstName())
+            Document document = new Document("_id", IDGenerator.generateShortId())
+                    .append("First Name", model.getFirstName())
                     .append("Last Name", model.getLastName())
                     .append("Position", model.getPosition());
 

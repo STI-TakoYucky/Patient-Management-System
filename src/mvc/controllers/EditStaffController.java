@@ -25,7 +25,7 @@ public class EditStaffController {
 
             MongoCollection<Document> collection = database.getCollection("medical staff");
 
-            ObjectId id = model.getId();
+            String id = model.getId();
             String newFirstName = model.getFirstName();
             String newLastName = model.getLastName();
             String newPosition = model.getPosition();
@@ -37,7 +37,7 @@ public class EditStaffController {
             e.printStackTrace();
         }
     }
-        public void updateStaffData(MongoCollection<Document> collection, ObjectId id, String firstName, String lastName, String position) {
+        public void updateStaffData(MongoCollection<Document> collection, String id, String firstName, String lastName, String position) {
             Bson filter = Filters.eq("_id", id);
 
             Bson update = Updates.combine(
