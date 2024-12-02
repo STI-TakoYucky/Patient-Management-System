@@ -2,6 +2,7 @@ package mvc.views;
 
 import mvc.controllers.GetStaff;
 import mvc.views.components.MedicalStaffItem;
+import mvc.views.components.PatientItem;
 import mvc.views.constants.Constants;
 import mvc.views.utility.SetDefaultFont;
 import org.bson.Document;
@@ -38,7 +39,7 @@ public class PatientView extends Panel {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 20, 5, 20);
 
-//        addPatientBttn.addActionListener(new addPatientBttn());
+        addPatientBttn.addActionListener(new addPatientBttn());
 
         addPatientPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         addPatientPanel.setBorder(new EmptyBorder(40,80,0,0));
@@ -48,6 +49,9 @@ public class PatientView extends Panel {
 
         patientListPanel.setLayout(new BoxLayout(patientListPanel, BoxLayout.Y_AXIS));
         patientListPanel.setBorder(new EmptyBorder(40,80,80,80));
+
+        PatientItem patient = new PatientItem();
+        patientListPanel.add(patient);
 
 //        updateUI();
 
@@ -79,12 +83,12 @@ public class PatientView extends Panel {
 //        repaint();
 //    }
 
-//    class addPatientBttn implements ActionListener {
-//
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//            AddStaffView view = new AddStaffView(medView);
-//        }
-//    }
+    class addPatientBttn implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            AddPatientView view = new AddPatientView();
+        }
+    }
 
 }

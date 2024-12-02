@@ -33,7 +33,6 @@ public class MedicalStaffItem extends CustomRoundedPanel {
         setMaximumSize(new Dimension(1255, 50));
         setPreferredSize(new Dimension(1255, 50));
         setLayout(new GridBagLayout());
-        JFrame frame = new JFrame("JLabel Click Event Example");
 
         editStaffItemButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         editStaffItemButton.addMouseListener(new MouseAdapter() {
