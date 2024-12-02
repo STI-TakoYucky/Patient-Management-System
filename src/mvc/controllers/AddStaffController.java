@@ -11,7 +11,7 @@ public class AddStaffController {
 
     public AddStaffController(StaffModel model) {
         this.model = model;
-        String uri = "mongodb://localhost:27017";
+        String uri = "mongodb+srv://lucky:lucky123patientmanagementsystem.edpel.mongodb.net/?retryWrites=true&w=majority&appName=patientmanagementsystemcluster";
 
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase("staffDB");
