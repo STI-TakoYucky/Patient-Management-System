@@ -7,6 +7,6 @@ public class Constants {
     public static Font HEADING_FONT = new Font("Arial", Font.BOLD, 24);
 
     public static Color primary = Color.decode("#5571CF");
-    public static Color secondary = Color.decode("#B5FFD3");
+    public static Color secondary = Color.decode("#92ceaf");
     public static Color accent = Color.decode("#FFC27D");
 }
