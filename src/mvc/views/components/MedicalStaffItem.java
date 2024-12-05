@@ -27,6 +27,7 @@ public class MedicalStaffItem extends CustomRoundedPanel {
         add(staffPosition,gbc );
         add(editStaffItemButton, gbc);
 
+
     }
 
 

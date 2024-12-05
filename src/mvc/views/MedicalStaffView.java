@@ -27,7 +27,9 @@ public class MedicalStaffView extends Panel {
     JPanel addStaffPanel = new JPanel();
     JButton addStaffBttn = new JButton("Add New Staff");
 
+
     public void initComponents() {
+
 
 
         setLayout(new BorderLayout());
@@ -37,6 +39,7 @@ public class MedicalStaffView extends Panel {
         gbc.insets = new Insets(5, 20, 5, 20);
 
         addStaffBttn.addActionListener(new addStaffBttn());
+        staffListItemPanel.setBackground(Color.LIGHT_GRAY);
 
         addStaffPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         addStaffPanel.setBorder(new EmptyBorder(0,50,0,0));
