@@ -6,7 +6,7 @@ import java.awt.*;
 public class SetDefaultFont {
     public static void setFontForAllLabels(Container container, Font font) {
         for (Component component : container.getComponents()) {
-            if (component instanceof JLabel || component instanceof JButton) {
+            if (component instanceof JLabel || component instanceof JButton || component instanceof JTextField) {
                 component.setFont(font);
             } else if (component instanceof Container) {
                 setFontForAllLabels((Container) component, font);

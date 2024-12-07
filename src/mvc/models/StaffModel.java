@@ -1,10 +1,17 @@
 package mvc.models;
 
-public class AddStaffModel {
+import org.bson.types.ObjectId;
+
+public class StaffModel {
     private String firstName, lastName, position;
+    private String id;
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setLastName(String lastName) {
@@ -17,6 +24,10 @@ public class AddStaffModel {
 
     public String getFirstName() {
         return this.firstName;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     public String getLastName() {
