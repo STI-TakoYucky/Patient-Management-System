@@ -15,9 +15,9 @@ public class AddPatientView extends JFrame {
         initComponents();
     }
 
-    public JTextField patientNameFieldFN = new JTextField(18);
-    public JTextField patientNameFieldLN = new JTextField(13);
-    public JTextField patientNameFieldMN = new JTextField(13);
+    public JTextField patientNameFieldFN = new JTextField("First Name",18);
+    public JTextField patientNameFieldLN = new JTextField("Last Name",13);
+    public JTextField patientNameFieldMN = new JTextField("Middle Name",13);
 
     JPanel symptomsContainer = new JPanel();
     GridBagConstraints symptomsgbc = new GridBagConstraints();
@@ -36,6 +36,7 @@ public class AddPatientView extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(2, 0, 2, 7);
 
         // Main Panel with BoxLayout for Vertical Stacking
         JPanel mainPanel = new JPanel();
@@ -71,19 +72,32 @@ public class AddPatientView extends JFrame {
         patientTextFieldPanel.add(patientNameFieldLN);
 
         // Date of Birth Section
+        GridBagConstraints dategbc = new GridBagConstraints();
+        dategbc.fill = GridBagConstraints.HORIZONTAL;
+        dategbc.anchor = GridBagConstraints.WEST;
+
         JLabel dateFieldLabel = new JLabel("Date of Birth");
         JDateChooser birthDate = new JDateChooser();
         JTextField dateField = (JTextField) birthDate.getDateEditor().getUiComponent();
+
+        dateField.setMaximumSize(new Dimension(220, 20));
+
         birthDate.setDate(new Date());
+
+        birthDate.getCalendarButton().setPreferredSize(new Dimension(30, 20));
+        birthDate.setPreferredSize(new Dimension(220, 30));
+
         JPanel datePanel = new JPanel(new GridBagLayout());
+        datePanel.setPreferredSize(new Dimension(220, 70));
         JPanel datePanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         datePanelWrapper.add(datePanel);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        datePanel.add(dateFieldLabel, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        datePanel.add(birthDate, gbc);
+
+        dategbc.gridx = 0;
+        dategbc.gridy = 0;
+        datePanel.add(dateFieldLabel, dategbc);
+        dategbc.gridx = 0;
+        dategbc.gridy = 1;
+        datePanel.add(birthDate, dategbc);
 
         // Gender Section
         JLabel genderFieldLabel = new JLabel("Sex");
@@ -101,9 +115,9 @@ public class AddPatientView extends JFrame {
 
         // Contact Information Section
         JLabel contactInfoLabel = new JLabel("Contact Information");
-        JTextField phoneNumberField = new JTextField(20);
-        JTextField emailAddressField = new JTextField(30);
-        JTextField emergencyContactNumber = new JTextField(20);
+        JTextField phoneNumberField = new JTextField("Phone Number", 15);
+        JTextField emailAddressField = new JTextField("Email",20);
+        JTextField emergencyContactNumber = new JTextField("Emergency Contact No.",15);
 
         JPanel contactInfoPanel = new JPanel(new GridBagLayout());
         JPanel contactInfoPanelWrapper = new JPanel();
@@ -121,10 +135,10 @@ public class AddPatientView extends JFrame {
 
         // Address Section
         JLabel addressLabel = new JLabel("Address");
-        JTextField streetAddressField = new JTextField(20);
-        JTextField cityField = new JTextField(20);
-        JTextField regionField = new JTextField(20);
-        JTextField postalCodeField = new JTextField(10);
+        JTextField streetAddressField = new JTextField("Street Name",20);
+        JTextField cityField = new JTextField("City",20);
+        JTextField regionField = new JTextField("Region",20);
+        JTextField postalCodeField = new JTextField("Postal Code",5);
 
         JPanel addressPanel = new JPanel(new GridBagLayout());
         JPanel addressPanelWrapper = new JPanel();
@@ -170,20 +184,29 @@ public class AddPatientView extends JFrame {
         civilStatusPanel.add(civilStatusField, gbc);
         civilStatusWrapper.add(civilStatusPanel);
 
-        // Add
-        JLabel admissionDateLabel = new JLabel("Enter Admission Date (YYYY-MM-DD):");
+        // Admission date
+        JLabel admissionDateLabel = new JLabel("Enter Admission Date");
         JDateChooser admissionDate = new JDateChooser();
         JTextField admissionDateField = (JTextField) admissionDate.getDateEditor().getUiComponent();
+
         admissionDate.setDate(new Date());
+        admissionDateField.setMaximumSize(new Dimension(220, 20));
+
+        admissionDate.setPreferredSize(new Dimension(220, 30));
+
+        admissionDate.getCalendarButton().setPreferredSize(new Dimension(30, 20));
+
         JPanel admissionDatePanel = new JPanel(new GridBagLayout());
+        admissionDatePanel.setPreferredSize(new Dimension(220, 70));
         JPanel admissionDatePanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         admissionDatePanelWrapper.add(admissionDatePanel);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        admissionDatePanel.add(admissionDateLabel, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        admissionDatePanel.add(admissionDate, gbc);
+
+        dategbc.gridx = 0;
+        dategbc.gridy = 0;
+        admissionDatePanel.add(admissionDateLabel, dategbc);
+        dategbc.gridx = 0;
+        dategbc.gridy = 1;
+        admissionDatePanel.add(admissionDate, dategbc);
 
         // Symptoms Section
         JLabel symptomsLabel = new JLabel("Symptoms");
@@ -343,8 +366,8 @@ public class AddPatientView extends JFrame {
         addPatientHeader.setFont(Constants.HEADING_FONT);
         setJTextFieldPadding(this);
 
-        dateField.setFont(new Font("Arial", Font.PLAIN, 16));
-        dateField.setColumns(300);
+//        dateField.setFont(new Font("Arial", Font.PLAIN, 16));
+//        dateField.setColumns(30);
     }
 
 
