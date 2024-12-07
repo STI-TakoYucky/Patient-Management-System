@@ -4,13 +4,13 @@ import org.bson.types.ObjectId;
 
 public class StaffModel {
     private String firstName, lastName, position;
-    private ObjectId id;
+    private String id;
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -26,7 +26,7 @@ public class StaffModel {
         return this.firstName;
     }
 
-    public ObjectId getId() {
+    public String getId() {
         return this.id;
     }
 

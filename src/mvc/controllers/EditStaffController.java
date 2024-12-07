@@ -18,14 +18,14 @@ public class EditStaffController {
     StaffModel model;
     public EditStaffController(StaffModel model) {
         this.model = model;
-        String uri = "mongodb://localhost:27017";
+        String uri = "mongodb+srv://lucky:<db_password>@patientmanagementsystem.edpel.mongodb.net/?retryWrites=true&w=majority&appName=patientmanagementsystemcluster";
 
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase("staffDB");
 
             MongoCollection<Document> collection = database.getCollection("medical staff");
 
-            ObjectId id = model.getId();
+            String id = model.getId();
             String newFirstName = model.getFirstName();
             String newLastName = model.getLastName();
             String newPosition = model.getPosition();
@@ -37,7 +37,7 @@ public class EditStaffController {
             e.printStackTrace();
         }
     }
-        public void updateStaffData(MongoCollection<Document> collection, ObjectId id, String firstName, String lastName, String position) {
+        public void updateStaffData(MongoCollection<Document> collection, String id, String firstName, String lastName, String position) {
             Bson filter = Filters.eq("_id", id);
 
             Bson update = Updates.combine(

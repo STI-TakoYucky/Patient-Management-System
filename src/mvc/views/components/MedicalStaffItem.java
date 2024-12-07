@@ -4,21 +4,20 @@ import mvc.views.EditStaffView;
 import mvc.views.MedicalStaffView;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-
+import mvc.views.constants.Constants;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
+
 
 public class MedicalStaffItem extends CustomRoundedPanel {
     MedicalStaffView view;
-    public MedicalStaffItem(Document staff, MedicalStaffView view) {
+    public MedicalStaffItem(Document staffModel, MedicalStaffView view) {
         this.view = view;
-        JLabel staffID = new JLabel(String.valueOf(staff.getObjectId("_id")));
-        JLabel staffName = new JLabel(staff.getString("First Name") + " " +  staff.getString("Last Name"));
-        JLabel staffPosition = new JLabel(staff.getString("Position"));
+        JLabel staffID = new JLabel("Staff ID: " + staffModel.getString("_id"));
+        JLabel staffName = new JLabel(staffModel.getString("First Name") + " " +  staffModel.getString("Last Name"));
+        JLabel staffPosition = new JLabel(staffModel.getString("Position"));
         JLabel editStaffItemButton = new JLabel("Edit Info");
 
         setLayout(new GridBagLayout());
@@ -30,20 +29,19 @@ public class MedicalStaffItem extends CustomRoundedPanel {
         gbc.weightx = 1;  // Evenly distribute horizontally
         gbc.weighty = 1;
 
-        setBackground(Color.LIGHT_GRAY);
-        setMaximumSize(new Dimension(1255, 220));
-        setPreferredSize(new Dimension(1255, 90));
+        setBackground(Constants.primary);
+        setMaximumSize(new Dimension(1255, 50));
+        setPreferredSize(new Dimension(1255, 50));
         setLayout(new GridBagLayout());
-        JFrame frame = new JFrame("JLabel Click Event Example");
 
         editStaffItemButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         editStaffItemButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                ObjectId id = staff.getObjectId("_id");
-                String firstName = staff.getString("First Name");
-                String lastName = staff.getString("Last Name");
-                String position = staff.getString("Position");
+                String id = staffModel.getString("_id");
+                String firstName = staffModel.getString("First Name");
+                String lastName = staffModel.getString("Last Name");
+                String position = staffModel.getString("Position");
                 new EditStaffView(id, firstName, lastName, position, view);
             }
         });
@@ -60,6 +58,7 @@ public class MedicalStaffItem extends CustomRoundedPanel {
         for (Component component : container.getComponents()) {
             if (component instanceof JLabel) {
                 component.setPreferredSize(new Dimension(200, 30));
+                component.setForeground(Color.white);
             } else if (component instanceof Container) {
                 fixedJLabel((Container) component);
             }

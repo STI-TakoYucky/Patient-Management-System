@@ -75,7 +75,8 @@ public class MedicalStaffView extends Panel {
             }
         }
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-
+        revalidate();
+        repaint();
     }
 
     class addStaffBttn implements ActionListener {

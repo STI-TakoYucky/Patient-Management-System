@@ -7,6 +7,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import mvc.views.constants.Constants;
 
 public class App extends JFrame {
 
@@ -30,11 +31,13 @@ public class App extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //ADD HEADER
-        header.setBackground(Color.gray);
+        header.setBackground(Constants.primary);
+        header.setForeground(Color.white);
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
 
         appName.setBorder(new EmptyBorder(40, 50, 40, 100));
         appName.setFont(new Font("Arial", Font.BOLD, 32));
+        appName.setForeground(Color.white);
         header.add(appName);
 
         searchField.setMaximumSize(new java.awt.Dimension(250, 35));
@@ -44,14 +47,17 @@ public class App extends JFrame {
         header.add(searchField);
 
         patientCount.setFont(DEFAULT_FONT);
+        patientCount.setForeground(Color.white);
         patientCount.setBorder(new EmptyBorder(0, 50, 0, 0));
         header.add(patientCount);
 
-        MedicalStaffView medicalStaffList = new MedicalStaffView();
+        searchField.setForeground(Color.gray);
+
+        PatientView patientViewList = new PatientView();
 
         //add all main panels to the JFrame
         add(header, BorderLayout.NORTH);
-        add(medicalStaffList, BorderLayout.CENTER);
+        add(patientViewList, BorderLayout.CENTER);
         revalidate();
         repaint();
     }
