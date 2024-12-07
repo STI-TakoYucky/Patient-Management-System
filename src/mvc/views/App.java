@@ -3,63 +3,90 @@ package mvc.views;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import mvc.views.constants.Constants;
+import java.awt.event.*;
 
 public class App extends JFrame {
-
-    public Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
+    JButton roombtn,patientsbtn,medicalstaffBtn,medicalrecordBtn,settingBtn;
+     public Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
 
     public App() {
         initComponents();
     }
 
     public void initComponents() {
+
         JPanel header = new JPanel();
+        JPanel buttons = new JPanel();
+
         JLabel appName = new JLabel("App Name");
         JTextField searchField = new RoundJTextField("Search", 30);
         JLabel patientCount = new JLabel("Patient Count: ");
 
         //Jframe setup
         setVisible(true);
-        setSize(1440, 824);
+        setSize(1440, 924);
         setTitle("PatientManagementSystem");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //ADD HEADER
-        header.setBackground(Constants.primary);
-        header.setForeground(Color.white);
+        header.setBackground(Color.gray);
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
+        buttons.setBackground(Color.gray);
+        buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
+
+
 
         appName.setBorder(new EmptyBorder(40, 50, 40, 100));
         appName.setFont(new Font("Arial", Font.BOLD, 32));
-        appName.setForeground(Color.white);
         header.add(appName);
 
-        searchField.setMaximumSize(new java.awt.Dimension(250, 35));
+        searchField.setMaximumSize(new Dimension(250, 35));
         searchField.setMargin(new Insets(0,10,0,10));
         searchField.addFocusListener(new searchFieldClicked(searchField));
         searchField.setFont(DEFAULT_FONT);
         header.add(searchField);
 
         patientCount.setFont(DEFAULT_FONT);
-        patientCount.setForeground(Color.white);
         patientCount.setBorder(new EmptyBorder(0, 50, 0, 0));
         header.add(patientCount);
+        // Buttons
+         roombtn = new JButton("Rooms");
+         patientsbtn= new JButton("Patients");
+         medicalstaffBtn = new JButton("Medical Staffs");
+         medicalrecordBtn = new JButton("Medical Records");
+         settingBtn = new JButton("Settings");
 
-        searchField.setForeground(Color.gray);
+        //Button sizes
+        roombtn.setPreferredSize(new Dimension(150, 50));
+        settingBtn.setPreferredSize(new Dimension(150, 50));
+        patientsbtn.setPreferredSize(new Dimension(150,50));
+        medicalstaffBtn.setPreferredSize(new Dimension(150,50));
+        medicalrecordBtn.setPreferredSize(new Dimension(150,50));
+        // Action listener
 
-        PatientView patientViewList = new PatientView();
+
+        buttons.setLayout(new FlowLayout(FlowLayout.CENTER , 20, 20));
+        buttons.setPreferredSize(new Dimension(200,600));
+        // add buttons
+        buttons.add(roombtn);
+        buttons.add(patientsbtn);
+        buttons.add(medicalstaffBtn);
+        buttons.add(settingBtn);
+        buttons.add(medicalrecordBtn);
+
+
+  MedicalStaffView medicalStaffList = new MedicalStaffView();
 
         //add all main panels to the JFrame
         add(header, BorderLayout.NORTH);
-        add(patientViewList, BorderLayout.CENTER);
+        add(medicalStaffList, BorderLayout.CENTER);
+        add(buttons, BorderLayout.WEST);
+
         revalidate();
         repaint();
+
+
     }
 
     public class searchFieldClicked implements FocusListener {
@@ -113,4 +140,5 @@ public class App extends JFrame {
             g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, Size, Size);
         }
     }
+
 }
