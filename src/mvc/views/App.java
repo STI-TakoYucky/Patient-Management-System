@@ -1,13 +1,17 @@
 package mvc.views;
 
+import mvc.views.constants.Constants;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 
-public class App extends JFrame {
+public class App extends JFrame implements ActionListener  {
     JButton roombtn,patientsbtn,medicalstaffBtn,medicalrecordBtn,settingBtn;
      public Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
+        CardLayout cl1 = new CardLayout();
+        JPanel container = new JPanel(cl1);
 
     public App() {
         initComponents();
@@ -24,13 +28,13 @@ public class App extends JFrame {
 
         //Jframe setup
         setVisible(true);
-        setSize(1440, 924);
+        setSize(1440, 724);
         setTitle("PatientManagementSystem");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //ADD HEADER
-        header.setBackground(Color.gray);
+        header.setBackground(Constants.primary);
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
         buttons.setBackground(Color.gray);
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
@@ -75,17 +79,47 @@ public class App extends JFrame {
         buttons.add(settingBtn);
         buttons.add(medicalrecordBtn);
 
+        MedicalStaffView medicalStaffList = new MedicalStaffView();
+        PatientView patientView = new PatientView();
 
-  MedicalStaffView medicalStaffList = new MedicalStaffView();
+        //
+        roombtn.addActionListener(this);
+        medicalstaffBtn.addActionListener(this);
+        medicalrecordBtn.addActionListener(this);
+        settingBtn.addActionListener(this);
+        patientsbtn.addActionListener(this);
+        //container
+        container.add(medicalStaffList, "med");
+        container.add(patientView, "patientView");
 
         //add all main panels to the JFrame
         add(header, BorderLayout.NORTH);
-        add(medicalStaffList, BorderLayout.CENTER);
+        add(container, BorderLayout.CENTER);
         add(buttons, BorderLayout.WEST);
 
         revalidate();
         repaint();
 
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == roombtn){
+        cl1.show(container, "patientView");
+        }
+        if(e.getSource() == patientsbtn){
+            cl1.show(container, "patientView");
+        }
+        if(e.getSource() == medicalstaffBtn){
+            cl1.show(container, "med");
+        }
+        if(e.getSource() == settingBtn){
+            cl1.show(container, "patientView");
+        }
+        if(e.getSource() == medicalrecordBtn){
+            cl1.show(container, "patientView");
+        }
 
     }
 
