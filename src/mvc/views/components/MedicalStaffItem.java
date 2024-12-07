@@ -30,8 +30,8 @@ public class MedicalStaffItem extends CustomRoundedPanel {
         gbc.weighty = 1;
 
         setBackground(Constants.primary);
-        setMaximumSize(new Dimension(1255, 50));
-        setPreferredSize(new Dimension(1255, 50));
+        setMaximumSize(new Dimension(1090, 50));
+        setPreferredSize(new Dimension(1090, 50));
         setLayout(new GridBagLayout());
 
         editStaffItemButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
