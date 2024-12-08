@@ -7,6 +7,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
+import database.URI;
 import mvc.models.StaffModel;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -18,9 +19,8 @@ public class EditStaffController {
     StaffModel model;
     public EditStaffController(StaffModel model) {
         this.model = model;
-        String uri = "mongodb+srv://lucky:<db_password>@patientmanagementsystem.edpel.mongodb.net/?retryWrites=true&w=majority&appName=patientmanagementsystemcluster";
 
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
             MongoDatabase database = mongoClient.getDatabase("staffDB");
 
             MongoCollection<Document> collection = database.getCollection("medical staff");

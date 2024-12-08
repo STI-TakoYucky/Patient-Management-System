@@ -1,25 +1,24 @@
 package mvc.views.components;
 
-import mvc.views.EditStaffView;
-import mvc.views.MedicalStaffView;
 import mvc.views.PatientView;
 import org.bson.Document;
 import mvc.views.constants.Constants;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
 
 
 public class PatientItem extends CustomRoundedPanel {
+    Document patientItem;
 
-    public PatientItem() {
+    public PatientItem(Document patientItem, PatientView patientView) {
+        this.patientItem = patientItem;
         initComponents();
     }
 
     public void initComponents() {
-        JLabel patientID = new JLabel("Patient ID: ");
-        JLabel patientName = new JLabel("Patient Name");
+        JLabel patientID = new JLabel("Patient ID: " + patientItem.getString("_id"));
+        JLabel patientName = new JLabel(patientItem.getString("First Name") + " " + patientItem.getString("Middle Name") + " " + patientItem.getString("Last Name"));
         JLabel patientInfoBttn = new JLabel("Patient Info");
         JLabel editBttn = new JLabel("Edit Info");
 
@@ -31,8 +30,8 @@ public class PatientItem extends CustomRoundedPanel {
         gbc.weightx = 1;  // Evenly distribute horizontally
         gbc.weighty = 1;
         setBackground(Constants.primary);
-        setMaximumSize(new Dimension(1255, 50));
-        setPreferredSize(new Dimension(1255, 50));
+        setMaximumSize(new Dimension(1090, 50));
+        setPreferredSize(new Dimension(1090, 50));
         setLayout(new GridBagLayout());
 
         add(patientID, gbc);

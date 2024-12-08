@@ -10,24 +10,24 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetStaff {
-    public List<Document> getStaffData() {
+public class GetPatients {
+    public List<Document> getPatientData() {
 
-        List<Document> staffList = new ArrayList<>();
+        List<Document> patientList = new ArrayList<>();
 
         try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
-            MongoDatabase database = mongoClient.getDatabase("staffDB");
+            MongoDatabase database = mongoClient.getDatabase("patientDB");
 
-            MongoCollection<Document> collection = database.getCollection("medical staff");
+            MongoCollection<Document> collection = database.getCollection("patients");
 
             for (Document doc : collection.find()) {
-                staffList.add(doc);
+                patientList.add(doc);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (!staffList.isEmpty()) {
-            return staffList;
+        if (!patientList.isEmpty()) {
+            return patientList;
         }
         return null;
     }

@@ -1,23 +1,49 @@
 package mvc.views;
+import mvc.controllers.AddPatientController;
+import mvc.models.PatientModel;
 import mvc.views.constants.Constants;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import mvc.views.utility.SetDefaultFont;
+import mvc.views.utility.SetFocusListenerToJTextFields;
 
 public class AddPatientView extends JFrame {
-    public AddPatientView() {
+    PatientModel patientModel;
+    PatientView patientView;
+
+    public AddPatientView(PatientModel patientModel, PatientView patientView) {
+        this.patientModel = patientModel;
+        this.patientView = patientView;
         initComponents();
     }
 
     public JTextField patientNameFieldFN = new JTextField("First Name",18);
+    public JDateChooser birthDate = new JDateChooser();
+    public JDateChooser admissionDate = new JDateChooser();
     public JTextField patientNameFieldLN = new JTextField("Last Name",13);
     public JTextField patientNameFieldMN = new JTextField("Middle Name",13);
+    public JTextField allergiesTextField = new JTextField(20);
+    public JTextField medicationTextField = new JTextField(20);
+    public JTextField symptomsTextField = new JTextField(20);
+    public JTextField phoneNumberField = new JTextField("Phone Number", 15);
+    public JTextField emailAddressField = new JTextField("Email",20);
+    public JTextField emergencyContactNumberField = new JTextField("Emergency Contact No.",15);
+    public JTextField streetAddressField = new JTextField("Street Name",20);
+    public JTextField cityField = new JTextField("City",20);
+    public JTextField regionField = new JTextField("Region",20);
+    public JTextField postalCodeField = new JTextField("Postal Code",5);
+    public JTextField nationalityTextField = new JTextField("Nationality", 30);
+    public JTextField civilStatusField = new JTextField("Civil Status", 30);
+    public JRadioButton maleRadioButtonn = new JRadioButton("Male");
+    public JRadioButton femaleRadioButton = new JRadioButton("Female");
 
     JPanel symptomsContainer = new JPanel();
     GridBagConstraints symptomsgbc = new GridBagConstraints();
@@ -77,7 +103,7 @@ public class AddPatientView extends JFrame {
         dategbc.anchor = GridBagConstraints.WEST;
 
         JLabel dateFieldLabel = new JLabel("Date of Birth");
-        JDateChooser birthDate = new JDateChooser();
+
         JTextField dateField = (JTextField) birthDate.getDateEditor().getUiComponent();
 
         dateField.setMaximumSize(new Dimension(220, 20));
@@ -101,23 +127,18 @@ public class AddPatientView extends JFrame {
 
         // Gender Section
         JLabel genderFieldLabel = new JLabel("Sex");
-        JRadioButton option1 = new JRadioButton("Male");
-        JRadioButton option2 = new JRadioButton("Female");
 
         ButtonGroup group = new ButtonGroup();
-        group.add(option1);
-        group.add(option2);
+        group.add(maleRadioButtonn);
+        group.add(femaleRadioButton);
 
         JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         genderPanel.add(genderFieldLabel);
-        genderPanel.add(option1);
-        genderPanel.add(option2);
+        genderPanel.add(maleRadioButtonn);
+        genderPanel.add(femaleRadioButton);
 
         // Contact Information Section
         JLabel contactInfoLabel = new JLabel("Contact Information");
-        JTextField phoneNumberField = new JTextField("Phone Number", 15);
-        JTextField emailAddressField = new JTextField("Email",20);
-        JTextField emergencyContactNumber = new JTextField("Emergency Contact No.",15);
 
         JPanel contactInfoPanel = new JPanel(new GridBagLayout());
         JPanel contactInfoPanelWrapper = new JPanel();
@@ -131,14 +152,10 @@ public class AddPatientView extends JFrame {
         gbc.gridx = 1;
         contactInfoPanel.add(emailAddressField, gbc);
         gbc.gridx = 2;
-        contactInfoPanel.add(emergencyContactNumber, gbc);
+        contactInfoPanel.add(emergencyContactNumberField, gbc);
 
         // Address Section
         JLabel addressLabel = new JLabel("Address");
-        JTextField streetAddressField = new JTextField("Street Name",20);
-        JTextField cityField = new JTextField("City",20);
-        JTextField regionField = new JTextField("Region",20);
-        JTextField postalCodeField = new JTextField("Postal Code",5);
 
         JPanel addressPanel = new JPanel(new GridBagLayout());
         JPanel addressPanelWrapper = new JPanel();
@@ -161,7 +178,6 @@ public class AddPatientView extends JFrame {
         JPanel nationalityWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel nationalityPanel = new JPanel(new GridBagLayout());
         JLabel nationalityLabel = new JLabel("Nationality");
-        JTextField nationalityTextField = new JTextField("Nationality", 30);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -174,7 +190,6 @@ public class AddPatientView extends JFrame {
         JPanel civilStatusWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel civilStatusPanel = new JPanel(new GridBagLayout());
         JLabel civilStatusLabel = new JLabel("Civil Status");
-        JTextField civilStatusField = new JTextField("Civil Status", 30);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -186,7 +201,7 @@ public class AddPatientView extends JFrame {
 
         // Admission date
         JLabel admissionDateLabel = new JLabel("Enter Admission Date");
-        JDateChooser admissionDate = new JDateChooser();
+
         JTextField admissionDateField = (JTextField) admissionDate.getDateEditor().getUiComponent();
 
         admissionDate.setDate(new Date());
@@ -210,7 +225,6 @@ public class AddPatientView extends JFrame {
 
         // Symptoms Section
         JLabel symptomsLabel = new JLabel("Symptoms");
-        JTextField symptomsTextField = new JTextField(20);
         JButton addSymptomsBttn = new JButton("Add");
 
         JPanel symptomsPanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -230,7 +244,7 @@ public class AddPatientView extends JFrame {
         symptomsContainer.setLayout(new GridBagLayout());
 
         // Add Symptoms Button Listener
-        addSymptomsBttn.addActionListener(e -> {
+        addSymptomsBttn.addActionListener(_ -> {
             String symptomText = symptomsTextField.getText();
             if (!symptomText.isEmpty()) {
                 symptomsArray.add(symptomText);
@@ -244,7 +258,6 @@ public class AddPatientView extends JFrame {
 
         // Medication Section
         JLabel medicationLabel = new JLabel("Medication");
-        JTextField medicationTextField = new JTextField(20);
         JButton addMedication = new JButton("Add");
 
         JPanel medicationPanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -263,7 +276,7 @@ public class AddPatientView extends JFrame {
 
         medicationContainer.setLayout(new GridBagLayout());
 
-        addMedication.addActionListener(e -> {
+        addMedication.addActionListener(_ -> {
             String medicationText = medicationTextField.getText();
             if (!medicationText.isEmpty()) {
                 medicationArray.add(medicationText);
@@ -276,7 +289,6 @@ public class AddPatientView extends JFrame {
 
         // Allergies Section
         JLabel allergiesLabel = new JLabel("Allergies");
-        JTextField allergiesTextField = new JTextField(20);
         JButton addAllergy = new JButton("Add");
 
         JPanel allergiesPanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -295,7 +307,7 @@ public class AddPatientView extends JFrame {
 
         allergiesContainer.setLayout(new GridBagLayout());
 
-        addAllergy.addActionListener(e -> {
+        addAllergy.addActionListener(_ -> {
             String allergyText = allergiesTextField.getText();
             if (!allergyText.isEmpty()) {
                 allergiesArray.add(allergyText); // Add to the allergies list
@@ -329,6 +341,28 @@ public class AddPatientView extends JFrame {
         JButton addPatientButton = new JButton("Add Patient");
         JPanel addPatientButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         addPatientButtonPanel.add(addPatientButton);
+
+        addPatientButton.addActionListener(e -> {
+            try {
+                patientModel.setBirthdate(birthDate.getDate());
+                patientModel.setAdmissionDate(admissionDate.getDate());
+                if (maleRadioButtonn.isSelected()) {
+                    patientModel.setSex(maleRadioButtonn.getText());
+                } else if (femaleRadioButton.isSelected()) {
+                    patientModel.setSex(femaleRadioButton.getText());
+                }
+                patientModel.setSymptoms(symptomsArray);
+                patientModel.setMedication(medicationArray);
+                patientModel.setAllergies(allergiesArray);
+                patientModel.setPostalCode(Integer.parseInt(postalCodeField.getText()));
+                new AddPatientController(patientModel);
+            }catch (NumberFormatException err) {
+                System.out.println(err);
+            } catch (Exception err) {
+                System.out.println("System Error");
+            }
+            patientView.updateUI();
+        });
 
         // Add All Sections to Main Panel
         mainHeader.add(headerPanel);
@@ -366,8 +400,16 @@ public class AddPatientView extends JFrame {
         addPatientHeader.setFont(Constants.HEADING_FONT);
         setJTextFieldPadding(this);
 
-//        dateField.setFont(new Font("Arial", Font.PLAIN, 16));
-//        dateField.setColumns(30);
+        setOnChangeEvent(this, patientModel);
+        new SetFocusListenerToJTextFields(this);
+
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                addPatientButton.requestFocusInWindow();
+            }
+        });
+
     }
 
 
@@ -550,6 +592,60 @@ public class AddPatientView extends JFrame {
                 ));
             } else if (component instanceof Container) {
                 setJTextFieldPadding((Container) component);
+            }
+        }
+    }
+
+    private void setOnChangeEvent(Container container, PatientModel model) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JTextField) {
+                JTextField textField = (JTextField) component;
+                ((JTextField) component).getDocument().addDocumentListener(new DocumentListener() {
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        handleTextChange();
+                    }
+
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        handleTextChange();
+                    }
+
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {
+                        handleTextChange();
+                    }
+
+                    private void handleTextChange() {
+                        JTextField source = (JTextField) component;
+                        String text = source.getText();
+
+                        // Handle text change for specific fields
+                        if (component == patientNameFieldFN) {
+                            model.setFirstName(text);
+                        } else if (component == patientNameFieldLN) {
+                            model.setLastName(text);
+                        } else if (component == patientNameFieldMN) {
+                            model.setMiddleName(text);
+                        } else if (component == emailAddressField) {
+                            model.setEmail(text);
+                        } else if (component == streetAddressField) {
+                            model.setStreetName(text);
+                        } else if (component == cityField) {
+                            model.setCity(text);
+                        } else if (component == regionField) {
+                            model.setRegion(text);
+                        } else if (component == civilStatusField) {
+                            model.setCivilStatus(text);
+                        } else if (component == phoneNumberField) {
+                            model.setPhoneNumber(text);
+                        } else if (component == emergencyContactNumberField) {
+                            model.setEmergencyContactNumber(text);
+                        }
+
+                }});
+            } else if (component instanceof Container) {
+                setOnChangeEvent((Container) component, model);
             }
         }
     }

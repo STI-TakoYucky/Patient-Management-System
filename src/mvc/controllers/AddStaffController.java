@@ -4,6 +4,7 @@ import com.mongodb.client.*;
 import mvc.models.StaffModel;
 import org.bson.Document;
 import mvc.views.utility.IDGenerator;
+import database.URI;
 
 public class AddStaffController {
 
@@ -11,9 +12,9 @@ public class AddStaffController {
 
     public AddStaffController(StaffModel model) {
         this.model = model;
-        String uri = "mongodb+srv://lucky:lucky123patientmanagementsystem.edpel.mongodb.net/?retryWrites=true&w=majority&appName=patientmanagementsystemcluster";
 
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
+
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
             MongoDatabase database = mongoClient.getDatabase("staffDB");
 
             MongoCollection<Document> collection = database.getCollection("medical staff");
