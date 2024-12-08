@@ -1,7 +1,6 @@
-package connectmongodb;
+package database;
 
 import com.mongodb.client.*;
-import org.bson.Document;
 
 public class ConnectMongoDb {
 

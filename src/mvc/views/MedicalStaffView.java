@@ -41,13 +41,13 @@ public class MedicalStaffView extends Panel {
         addStaffBttn.addActionListener(new addStaffBttn());
 
         addStaffPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        addStaffPanel.setBorder(new EmptyBorder(40,80,0,0));
+        addStaffPanel.setBorder(new EmptyBorder(30,80,0,0));
         addStaffPanel.add(addStaffBttn);
 
         add(addStaffPanel, BorderLayout.NORTH);
 
         staffListItemPanel.setLayout(new BoxLayout(staffListItemPanel, BoxLayout.Y_AXIS));
-        staffListItemPanel.setBorder(new EmptyBorder(40,80,80,80));
+        staffListItemPanel.setBorder(new EmptyBorder(30,80,80,80));
 
         updateUI();
 
