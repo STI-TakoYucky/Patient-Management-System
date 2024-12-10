@@ -1,6 +1,8 @@
 package mvc.views;
 
+import mvc.controllers.GetPatients;
 import mvc.controllers.GetStaff;
+import mvc.models.PatientModel;
 import mvc.views.components.MedicalStaffItem;
 import mvc.views.components.PatientItem;
 import mvc.views.constants.Constants;
@@ -17,8 +19,10 @@ import java.util.List;
 public class PatientView extends Panel {
 
     PatientView patientView = this;
+    Dashboard dashboard;
 
-    public PatientView() {
+    public PatientView(Dashboard dashboard) {
+        this.dashboard = dashboard;
         initComponents();
     }
     JPanel patientListPanel = new JPanel();
@@ -42,18 +46,15 @@ public class PatientView extends Panel {
         addPatientBttn.addActionListener(new addPatientBttn());
 
         addPatientPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        addPatientPanel.setBorder(new EmptyBorder(40,80,0,0));
+        addPatientPanel.setBorder(new EmptyBorder(30,80,0,0));
         addPatientPanel.add(addPatientBttn);
 
         add(addPatientPanel, BorderLayout.NORTH);
 
         patientListPanel.setLayout(new BoxLayout(patientListPanel, BoxLayout.Y_AXIS));
-        patientListPanel.setBorder(new EmptyBorder(40,80,80,80));
+        patientListPanel.setBorder(new EmptyBorder(30,80,80,80));
 
-        PatientItem patient = new PatientItem();
-        patientListPanel.add(patient);
-
-//        updateUI();
+        updateUI();
 
         add(scrollPane, BorderLayout.CENTER);
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
@@ -61,33 +62,35 @@ public class PatientView extends Panel {
         repaint();
     }
 
-//    public void updateUI(){
-//        patientListPanel.removeAll();
-//        GetStaff getStaff = new GetStaff();
-//        List<Document> staffList = getStaff.getStaffData();
-//
-//        if (staffList == null) {
-//            JLabel noStaff = new JLabel("No Staff Yet");
-//            patientListPanel.add(noStaff);
-//        } else {
-//            for (Document staff : staffList) {
-//                MedicalStaffItem item = new MedicalStaffItem(staff, patientView);
-//                patientListPanel.add(item);
-//                patientListPanel.add(Box.createVerticalStrut(20));
-//                item.revalidate();
-//                item.repaint();
-//            }
-//        }
-//        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-//        revalidate();
-//        repaint();
-//    }
+    public void updateUI(){
+        patientListPanel.removeAll();
+        GetPatients getPatients = new GetPatients();
+        List<Document> patientList = getPatients.getPatientData();
+
+        if (patientList == null) {
+            JLabel noPatient = new JLabel("No Patients Yet");
+            patientListPanel.add(noPatient);
+        } else {
+            for (Document patient : patientList) {
+                PatientItem item = new PatientItem(patient, patientView);
+                patientListPanel.add(item);
+                patientListPanel.add(Box.createVerticalStrut(20));
+                item.revalidate();
+                item.repaint();
+            }
+        }
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+        revalidate();
+        repaint();
+    }
 
     class addPatientBttn implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            AddPatientView view = new AddPatientView();
+            dashboard.setEnabled(false);
+            dashboard.setFocusable(false);
+            new AddPatientView(new PatientModel(), patientView, dashboard);
         }
     }
 

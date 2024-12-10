@@ -18,7 +18,7 @@ public class AddStaffView extends JFrame {
     JTextField staffNameFieldLN = new JTextField("Last Name", 30);
     JTextField staffPositionTextField = new JTextField("Staff Postion", 30);
 
-    StaffModel model = new StaffModel();
+    StaffModel staffModel = new StaffModel();
     MedicalStaffView medicalStaffView;
 
     public AddStaffView(MedicalStaffView view) {
@@ -40,19 +40,16 @@ public class AddStaffView extends JFrame {
         staffNameTextFieldPanel.add(staffNameFieldFN);
         staffNameTextFieldPanel.add(staffNameFieldLN);
 
-        JLabel staffPosition = new JLabel("Staff Postion");
+        JLabel staffPosition = new JLabel("Staff Position");
         JPanel staffPositionPanel = new JPanel();
         staffPositionPanel.add(staffPositionTextField);
         staffPositionPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         staffPositionPanel.setMaximumSize(new Dimension(1500, 60));
 
         JButton addStaffButton = new JButton("Add Staff");
-        addStaffButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new AddStaffController(model);
-                medicalStaffView.updateUI();
-            }
+        addStaffButton.addActionListener(e -> {
+            new AddStaffController(staffModel);
+            medicalStaffView.updateUI();
         });
 
         //setup JFrame
@@ -69,7 +66,7 @@ public class AddStaffView extends JFrame {
         mainPanel.add(addStaffButton);
         add(mainPanel);
 
-        setOnChangeEvent(this, model);
+        setOnChangeEvent(this, staffModel);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
     }

@@ -4,6 +4,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import database.URI;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -11,10 +12,10 @@ import java.util.List;
 
 public class GetStaff {
     public List<Document> getStaffData() {
-        String uri = "mongodb+srv://lucky:<db_password>@patientmanagementsystem.edpel.mongodb.net/?retryWrites=true&w=majority&appName=patientmanagementsystemcluster";
+
         List<Document> staffList = new ArrayList<>();
 
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
             MongoDatabase database = mongoClient.getDatabase("staffDB");
 
             MongoCollection<Document> collection = database.getCollection("medical staff");

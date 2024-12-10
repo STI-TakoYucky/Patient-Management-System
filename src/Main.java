@@ -1,8 +1,8 @@
-import mvc.views.App;
+import mvc.views.Dashboard;
 
 public class Main {
     public static void main(String[] args) {
-        new App();
+        new Dashboard();
         //comment
     }
 }
