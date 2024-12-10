@@ -31,4 +31,18 @@ public class GetPatients {
         }
         return null;
     }
+    public Document getPatientDataById(String patientID) {
+
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
+            MongoDatabase database = mongoClient.getDatabase("patientDB");
+            MongoCollection<Document> collection = database.getCollection("patients");
+            Document patientDoc = collection.find(new Document("_id", patientID)).first();
+            System.out.println(patientDoc);
+            System.out.println();
+            return (Document) patientDoc;
+        }catch (Exception err) {
+            err.printStackTrace();
+        }
+        return null;
+    }
 }

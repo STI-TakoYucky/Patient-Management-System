@@ -7,7 +7,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 
-public class App extends JFrame implements ActionListener  {
+public class Dashboard extends JFrame implements ActionListener  {
     String userRole = "admin";
 
     JButton roombtn,patientsbtn,medicalstaffBtn,medicalrecordBtn,settingBtn;
@@ -15,7 +15,7 @@ public class App extends JFrame implements ActionListener  {
     CardLayout cl1 = new CardLayout();
     JPanel container = new JPanel(cl1);
 
-    public App() {
+    public Dashboard() {
         initComponents();
     }
 
@@ -75,7 +75,7 @@ public class App extends JFrame implements ActionListener  {
         buttons.setLayout(new FlowLayout(FlowLayout.CENTER , 20, 20));
         buttons.setPreferredSize(new Dimension(200,600));
         // add buttons
-        if (userRole == "Staff") {
+        if (userRole == "staff") {
             buttons.add(roombtn);
             buttons.add(patientsbtn);
             buttons.add(settingBtn);
@@ -89,8 +89,8 @@ public class App extends JFrame implements ActionListener  {
         }
 
 
-        MedicalStaffView medicalStaffList = new MedicalStaffView();
-        PatientView patientView = new PatientView();
+//        MedicalStaffView medicalStaffList = new MedicalStaffView();
+        PatientView patientView = new PatientView(this);
 
         //
         roombtn.addActionListener(this);
@@ -99,7 +99,7 @@ public class App extends JFrame implements ActionListener  {
         settingBtn.addActionListener(this);
         patientsbtn.addActionListener(this);
         //container
-        container.add(medicalStaffList, "med");
+//        container.add(medicalStaffList, "med");
         container.add(patientView, "patientView");
 
         //add all main panels to the JFrame
