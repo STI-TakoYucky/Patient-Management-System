@@ -19,8 +19,10 @@ import java.util.List;
 public class PatientView extends Panel {
 
     PatientView patientView = this;
+    Dashboard dashboard;
 
-    public PatientView() {
+    public PatientView(Dashboard dashboard) {
+        this.dashboard = dashboard;
         initComponents();
     }
     JPanel patientListPanel = new JPanel();
@@ -85,7 +87,10 @@ public class PatientView extends Panel {
     class addPatientBttn implements ActionListener {
 
         @Override
-        public void actionPerformed(ActionEvent e) { new AddPatientView(new PatientModel(), patientView);
+        public void actionPerformed(ActionEvent e) {
+            dashboard.setEnabled(false);
+            dashboard.setFocusable(false);
+            new AddPatientView(new PatientModel(), patientView, dashboard);
         }
     }
 

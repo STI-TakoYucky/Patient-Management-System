@@ -1,8 +1,13 @@
 package mvc.views;
+
+import com.toedter.calendar.JDateChooser;
 import mvc.controllers.AddPatientController;
+import mvc.controllers.GetPatients;
 import mvc.models.PatientModel;
 import mvc.views.constants.Constants;
-import com.toedter.calendar.JDateChooser;
+import mvc.views.utility.SetDefaultFont;
+import mvc.views.utility.SetFocusListenerToJTextFields;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -12,46 +17,48 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import org.bson.Document;
 import java.util.Date;
-import mvc.views.utility.SetDefaultFont;
-import mvc.views.utility.SetFocusListenerToJTextFields;
 
-public class AddPatientView extends JFrame {
-    PatientModel patientModel;
+public class EditPatientView extends JFrame {
+    PatientModel patientModel = new PatientModel();
     PatientView patientView;
     Dashboard dashboard;
+    String patientID;
+    Document patientDocument;
 
-    public AddPatientView() {
+    public EditPatientView() {
         System.out.println("Default Constructor");
     }
 
-    public AddPatientView(PatientModel patientModel, PatientView patientView, Dashboard dashboard) {
-        this.dashboard = dashboard;
-        this.patientModel = patientModel;
-        this.patientView = patientView;
+    public EditPatientView(String patientID) {
+        this.patientID = patientID;
+
+        GetPatients getPatients = new GetPatients();
+        this.patientDocument = (Document) getPatients.getPatientDataById(patientID);
         initComponents();
     }
 
-    public JTextField patientNameFieldFN = new JTextField("First Name",18);
-    public JDateChooser birthDate = new JDateChooser();
-    public JDateChooser admissionDate = new JDateChooser();
-    public JTextField patientNameFieldLN = new JTextField("Last Name",13);
-    public JTextField patientNameFieldMN = new JTextField("Middle Name",13);
-    public JTextField allergiesTextField = new JTextField(20);
-    public JTextField medicationTextField = new JTextField(20);
-    public JTextField symptomsTextField = new JTextField(20);
-    public JTextField phoneNumberField = new JTextField("Phone Number", 15);
-    public JTextField emailAddressField = new JTextField("Email",20);
-    public JTextField emergencyContactNumberField = new JTextField("Emergency Contact No.",15);
-    public JTextField streetAddressField = new JTextField("Street Name",20);
-    public JTextField cityField = new JTextField("City",20);
-    public JTextField regionField = new JTextField("Region",20);
-    public JTextField provinceField = new JTextField("Province",20);
-    public JTextField postalCodeField = new JTextField("Postal Code",8);
-    public JTextField nationalityTextField = new JTextField("Nationality", 30);
-    public JTextField civilStatusField = new JTextField("Civil Status", 15);
-    public JRadioButton maleRadioButtonn = new JRadioButton("Male");
-    public JRadioButton femaleRadioButton = new JRadioButton("Female");
+    public JTextField patientNameFieldFN;
+    public JTextField patientNameFieldLN;
+    public JTextField patientNameFieldMN;
+    public JDateChooser birthDate;
+    public JDateChooser admissionDate;
+    public JTextField allergiesTextField;
+    public JTextField medicationTextField;
+    public JTextField symptomsTextField;
+    public JTextField phoneNumberField;
+    public JTextField emailAddressField;
+    public JTextField emergencyContactNumberField;
+    public JTextField streetAddressField;
+    public JTextField cityField;
+    public JTextField regionField;
+    public JTextField provinceField;
+    public JTextField postalCodeField;
+    public JTextField nationalityTextField;
+    public JTextField civilStatusField;
+    public JRadioButton maleRadioButtonn;
+    public JRadioButton femaleRadioButton;
 
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
     Image image = closeButtonIcon.getImage();
@@ -74,6 +81,29 @@ public class AddPatientView extends JFrame {
     ArrayList<String> allergiesArray = new ArrayList<>();
 
     public void initComponents() {
+
+        if (this.patientDocument != null) {
+            patientNameFieldFN = new JTextField((String) patientDocument.get("First Name"),18);
+            birthDate = new JDateChooser(patientDocument.getDate("Birthdate"));
+            admissionDate = new JDateChooser(patientDocument.getDate("Admission Date"));
+            patientNameFieldLN = new JTextField("Last Name",13);
+            patientNameFieldMN = new JTextField("Middle Name",13);
+            allergiesTextField = new JTextField(20);
+            medicationTextField = new JTextField(20);
+            symptomsTextField = new JTextField(20);
+            phoneNumberField = new JTextField("Phone Number", 15);
+            emailAddressField = new JTextField("Email",20);
+            emergencyContactNumberField = new JTextField("Emergency Contact No.",15);
+            streetAddressField = new JTextField("Street Name",20);
+            cityField = new JTextField("City",20);
+            regionField = new JTextField("Region",20);
+            provinceField = new JTextField("Province",20);
+            postalCodeField = new JTextField("Postal Code",8);
+            nationalityTextField = new JTextField("Nationality", 30);
+            civilStatusField = new JTextField("Civil Status", 15);
+            maleRadioButtonn = new JRadioButton("Male");
+            femaleRadioButton = new JRadioButton("Female");
+        }
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -342,9 +372,11 @@ public class AddPatientView extends JFrame {
 
         addAllergy.addActionListener(_ -> {
             String allergyText = allergiesTextField.getText();
+            System.out.println(allergyText);
             if (!allergyText.isEmpty()) {
                 allergiesArray.add(allergyText); // Add to the allergies list
-                updateAllergiesContainer();     // Refresh the container to display the new allergy
+                SwingUtilities.invokeLater(this::updateAllergiesContainer);    // Refresh the container to display the new allergy
+
             }
         });
 
@@ -439,7 +471,7 @@ public class AddPatientView extends JFrame {
         setLocationRelativeTo(null);
         setUndecorated(true);
         setVisible(true);
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
@@ -541,7 +573,7 @@ public class AddPatientView extends JFrame {
                     allergiesArray.remove(finalIndex);
 
                     // Update the UI after removal
-                    updateAllergiesContainer(); // Refresh the panel with the updated list
+                    SwingUtilities.invokeLater(() -> updateAllergiesContainer()); // Refresh the panel with the updated list
                 }
             });
 
