@@ -2,6 +2,7 @@ package mvc.views;
 
 import mvc.views.constants.Constants;
 import mvc.views.utility.SetDefaultFont;
+import mvc.views.utility.SetFocusListenerToJTextFields;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,8 +17,7 @@ public class LogIn extends JFrame implements ActionListener {
     public LogIn (){ LogInComponents();}
     public void LogInComponents(){
 
-        JFrame Login = new JFrame();
-        JPanel logPanel = new JPanel();
+        JPanel logPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         logInbtn = new JButton("Log In");
         logInbtn.setSize(20,10);
         logInbtn.addActionListener(this);
@@ -27,7 +27,8 @@ public class LogIn extends JFrame implements ActionListener {
         JLabel headerName= new JLabel("Log In");
         Logheader.add(headerName);
         Logheader.setLayout(new FlowLayout(FlowLayout.CENTER));
-        Logheader.setBorder(new EmptyBorder(50, 0, 50, 0));
+        Logheader.setBorder(new EmptyBorder(30, 0, 30, 0));
+
         Logheader.setBackground(Constants.primary);
 
 
@@ -36,7 +37,7 @@ public class LogIn extends JFrame implements ActionListener {
         LogPassword = new JTextField(20);
         JLabel PasswordLabel = new JLabel("Enter password: ");
         logPanel.setBackground(Color.WHITE);
-        logPanel.setLayout(new FlowLayout(FlowLayout.CENTER , 25, 25));
+        logPanel.setLayout(new FlowLayout(FlowLayout.CENTER , 25, 65));
 
 
         logPanel.add(userLabel);
@@ -44,14 +45,16 @@ public class LogIn extends JFrame implements ActionListener {
         logPanel.add(PasswordLabel);
         logPanel.add(LogPassword);
         logPanel.add(logInbtn);
-        Login.add(logPanel);
+        add(logPanel);
 
-        Login.add(Logheader, BorderLayout.NORTH);
+        add(Logheader, BorderLayout.NORTH);
         SetDefaultFont.setFontForAllLabels(this,Constants.DEFAULT_FONT);
-        Login.setSize(400, 400);
-        Login.setLocationRelativeTo(null);
-        Login.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        Login.setVisible(true);
+        headerName.setFont(Constants.HEADING_FONT);
+        new SetFocusListenerToJTextFields(this);
+        setSize(590, 500);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
 
     }
 
@@ -61,7 +64,7 @@ public class LogIn extends JFrame implements ActionListener {
         if(e.getSource()==logInbtn){
             if(text.getText().equals(name)&& LogPassword.getText().equals(name)){
                 this.setEnabled(false);
-                new LogIn();
+                new Dashboard();
             }
             else if(!text.getText().equals(name)&& !LogPassword.getText().equals(name)){
 

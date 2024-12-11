@@ -23,7 +23,7 @@ public class SetFocusListenerToJTextFields implements FocusListener {
         addFocusListenerToJTextFields(container);
     }
 
-    public SetFocusListenerToJTextFields(Container container, AddPatientView addPatientView) {
+    public SetFocusListenerToJTextFields(Container container) {
         this.container = container;
         this.addPatientView = addPatientView;
         addFocusListenerToJTextFields(container);
@@ -58,7 +58,7 @@ public class SetFocusListenerToJTextFields implements FocusListener {
             source.setBorder(BorderFactory.createCompoundBorder(
                     borderColor, new EmptyBorder(2, 10, 2, 10) // Inner padding
             ));
-        }else if (source.getText().trim().equals(placeholder) && Objects.equals(container, addPatientView)) {
+        }else if (source.getText().trim().equals(placeholder)) {
             source.setText(""); // Clear placeholder text
             source.setForeground(Color.BLACK); // Set text color to default
             Border borderColor = BorderFactory.createLineBorder(Constants.primary, 2, true);
@@ -76,6 +76,7 @@ public class SetFocusListenerToJTextFields implements FocusListener {
 
         if (source.getText().trim().isEmpty()) {
             source.setText(placeholder);
+
         }
 
         source.setBorder(BorderFactory.createCompoundBorder(

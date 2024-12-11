@@ -89,7 +89,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         }
 
 
-//        MedicalStaffView medicalStaffList = new MedicalStaffView();
+        MedicalStaffView medicalStaffList = new MedicalStaffView();
         PatientView patientView = new PatientView(this);
 
         //
@@ -99,7 +99,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         settingBtn.addActionListener(this);
         patientsbtn.addActionListener(this);
         //container
-//        container.add(medicalStaffList, "med");
+        container.add(medicalStaffList, "med");
         container.add(patientView, "patientView");
 
         //add all main panels to the JFrame
