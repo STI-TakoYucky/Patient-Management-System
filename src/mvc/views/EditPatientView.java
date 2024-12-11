@@ -84,25 +84,35 @@ public class EditPatientView extends JFrame {
 
         if (this.patientDocument != null) {
             patientNameFieldFN = new JTextField((String) patientDocument.get("First Name"),18);
-            birthDate = new JDateChooser(patientDocument.getDate("Birthdate"));
+            birthDate = new JDateChooser();
+            Date birthDateFromMongoDB = patientDocument.getDate("Birthdate");
+            birthDate.setDate(birthDateFromMongoDB);
             admissionDate = new JDateChooser(patientDocument.getDate("Admission Date"));
-            patientNameFieldLN = new JTextField("Last Name",13);
-            patientNameFieldMN = new JTextField("Middle Name",13);
-            allergiesTextField = new JTextField(20);
-            medicationTextField = new JTextField(20);
-            symptomsTextField = new JTextField(20);
-            phoneNumberField = new JTextField("Phone Number", 15);
+            patientNameFieldLN = new JTextField(patientDocument.getString("Last Name"),13);
+            patientNameFieldMN = new JTextField(patientDocument.getString("Middle Name"), 13);
+            symptomsTextField = new JTextField("", 15);
+            medicationTextField = new JTextField("", 15);
+            allergiesTextField = new JTextField("", 15);
+            phoneNumberField = new JTextField("", 15);
             emailAddressField = new JTextField("Email",20);
-            emergencyContactNumberField = new JTextField("Emergency Contact No.",15);
-            streetAddressField = new JTextField("Street Name",20);
-            cityField = new JTextField("City",20);
-            regionField = new JTextField("Region",20);
-            provinceField = new JTextField("Province",20);
-            postalCodeField = new JTextField("Postal Code",8);
-            nationalityTextField = new JTextField("Nationality", 30);
-            civilStatusField = new JTextField("Civil Status", 15);
+            emergencyContactNumberField = new JTextField("",15);
+            streetAddressField = new JTextField(patientDocument.getString("Street Name"),20);
+            cityField = new JTextField(patientDocument.getString("City"),20);
+            regionField = new JTextField(patientDocument.getString("Region"),20);
+            provinceField = new JTextField(patientDocument.getString("Province"),20);
+            postalCodeField = new JTextField("",8);
+            nationalityTextField = new JTextField(patientDocument.getString("Nationality"), 30);
+            civilStatusField = new JTextField(patientDocument.getString("Civil Status"), 15);
+
             maleRadioButtonn = new JRadioButton("Male");
             femaleRadioButton = new JRadioButton("Female");
+
+            if (patientDocument.getString("Sex") == "Male") {
+                maleRadioButtonn.isSelected();
+            } else {
+                femaleRadioButton.isSelected();
+            }
+
         }
 
         GridBagConstraints gbc = new GridBagConstraints();
