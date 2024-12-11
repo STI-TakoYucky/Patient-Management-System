@@ -67,7 +67,13 @@ public class App extends JFrame implements ActionListener  {
         patientsbtn.setPreferredSize(new Dimension(150,50));
         medicalstaffBtn.setPreferredSize(new Dimension(150,50));
         medicalrecordBtn.setPreferredSize(new Dimension(150,50));
-        // Action listener
+        // Color button
+        buttons.setBackground(Constants.primary);
+        roombtn.setBackground(Constants.primary);
+        patientsbtn.setBackground(Constants.primary);
+        medicalrecordBtn.setBackground(Constants.primary);
+        medicalstaffBtn.setBackground(Constants.primary);
+        settingBtn.setBackground(Constants.primary);
 
 
         buttons.setLayout(new FlowLayout(FlowLayout.CENTER , 20, 20));
