@@ -25,16 +25,15 @@ public class LogIn extends JFrame implements ActionListener {
 
         JPanel Logheader = new JPanel();
         JLabel headerName= new JLabel("Log In");
-        headerName.setBorder(new EmptyBorder(40, 150, 40, 100));
-        headerName.setFont(new Font("Arial",Font.BOLD, 20));
         Logheader.add(headerName);
-        Logheader.setLayout(new BoxLayout(Logheader, BoxLayout.X_AXIS));
+        Logheader.setLayout(new FlowLayout(FlowLayout.CENTER));
+        Logheader.setBorder(new EmptyBorder(50, 0, 50, 0));
         Logheader.setBackground(Constants.primary);
 
 
-         text = new JTextField(20);
+        text = new JTextField(20);
         JLabel userLabel = new JLabel("Enter username: ");
-         LogPassword = new JTextField(20);
+        LogPassword = new JTextField(20);
         JLabel PasswordLabel = new JLabel("Enter password: ");
         logPanel.setBackground(Color.WHITE);
         logPanel.setLayout(new FlowLayout(FlowLayout.CENTER , 25, 25));
@@ -62,7 +61,7 @@ public class LogIn extends JFrame implements ActionListener {
         if(e.getSource()==logInbtn){
             if(text.getText().equals(name)&& LogPassword.getText().equals(name)){
                 this.setEnabled(false);
-            new App();
+                new LogIn();
             }
             else if(!text.getText().equals(name)&& !LogPassword.getText().equals(name)){
 

@@ -7,13 +7,15 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 
-public class App extends JFrame implements ActionListener  {
-    JButton roombtn,patientsbtn,medicalstaffBtn,medicalrecordBtn,settingBtn;
-     public Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
-        CardLayout cl1 = new CardLayout();
-        JPanel container = new JPanel(cl1);
+public class Dashboard extends JFrame implements ActionListener  {
+    String userRole = "admin";
 
-    public App() {
+    JButton roombtn,patientsbtn,medicalstaffBtn,medicalrecordBtn,settingBtn;
+    public Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
+    CardLayout cl1 = new CardLayout();
+    JPanel container = new JPanel(cl1);
+
+    public Dashboard() {
         initComponents();
     }
 
@@ -41,7 +43,7 @@ public class App extends JFrame implements ActionListener  {
 
 
 
-        appName.setBorder(new EmptyBorder(40, 50, 40, 100));
+        appName.setBorder(new EmptyBorder(30, 50, 30, 100));
         appName.setFont(new Font("Arial", Font.BOLD, 32));
         header.add(appName);
 
@@ -54,6 +56,7 @@ public class App extends JFrame implements ActionListener  {
         patientCount.setFont(DEFAULT_FONT);
         patientCount.setBorder(new EmptyBorder(0, 50, 0, 0));
         header.add(patientCount);
+
         // Buttons
          roombtn = new JButton("Rooms");
          patientsbtn= new JButton("Patients");
@@ -67,26 +70,27 @@ public class App extends JFrame implements ActionListener  {
         patientsbtn.setPreferredSize(new Dimension(150,50));
         medicalstaffBtn.setPreferredSize(new Dimension(150,50));
         medicalrecordBtn.setPreferredSize(new Dimension(150,50));
-        // Color button
-        buttons.setBackground(Constants.primary);
-        roombtn.setBackground(Constants.primary);
-        patientsbtn.setBackground(Constants.primary);
-        medicalrecordBtn.setBackground(Constants.primary);
-        medicalstaffBtn.setBackground(Constants.primary);
-        settingBtn.setBackground(Constants.primary);
 
-
+        // Action listener
         buttons.setLayout(new FlowLayout(FlowLayout.CENTER , 20, 20));
         buttons.setPreferredSize(new Dimension(200,600));
         // add buttons
-        buttons.add(roombtn);
-        buttons.add(patientsbtn);
-        buttons.add(medicalstaffBtn);
-        buttons.add(settingBtn);
-        buttons.add(medicalrecordBtn);
+        if (userRole == "staff") {
+            buttons.add(roombtn);
+            buttons.add(patientsbtn);
+            buttons.add(settingBtn);
+            buttons.add(medicalrecordBtn);
+        } else if (userRole == "admin") {
+            buttons.add(roombtn);
+            buttons.add(patientsbtn);
+            buttons.add(medicalstaffBtn);
+            buttons.add(settingBtn);
+            buttons.add(medicalrecordBtn);
+        }
 
-        MedicalStaffView medicalStaffList = new MedicalStaffView();
-        PatientView patientView = new PatientView();
+
+//        MedicalStaffView medicalStaffList = new MedicalStaffView();
+        PatientView patientView = new PatientView(this);
 
         //
         roombtn.addActionListener(this);
@@ -95,7 +99,7 @@ public class App extends JFrame implements ActionListener  {
         settingBtn.addActionListener(this);
         patientsbtn.addActionListener(this);
         //container
-        container.add(medicalStaffList, "med");
+//        container.add(medicalStaffList, "med");
         container.add(patientView, "patientView");
 
         //add all main panels to the JFrame
