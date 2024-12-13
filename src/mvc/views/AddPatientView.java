@@ -9,10 +9,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EventListener;
+
 import mvc.views.utility.SetDefaultFont;
 import mvc.views.utility.SetFocusListenerToJTextFields;
 
@@ -280,9 +283,15 @@ public class AddPatientView extends JFrame {
         addSymptomsBttn.addActionListener(_ -> {
             String symptomText = symptomsTextField.getText();
             if (!symptomText.isEmpty()) {
+                if(symptomsArray.contains(symptomsTextField.getText())){
+                    symptomsTextField.setText("");
+                    return;
+                };
                 symptomsArray.add(symptomText);
                 updateSymptomsContainer();
+                symptomsTextField.setText("");
             }
+
         });
 
         JPanel SYMPTOMS_ITEM_CONTAINER = new JPanel(new FlowLayout(FlowLayout.LEFT));

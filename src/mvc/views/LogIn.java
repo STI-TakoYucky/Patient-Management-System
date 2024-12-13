@@ -64,6 +64,7 @@ public class LogIn extends JFrame implements ActionListener {
         if(e.getSource()==logInbtn){
             if(text.getText().equals(name)&& LogPassword.getText().equals(name)){
                 this.setEnabled(false);
+                this.dispose();
                 new Dashboard();
             }
             else if(!text.getText().equals(name)&& !LogPassword.getText().equals(name)){
