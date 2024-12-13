@@ -72,7 +72,7 @@ public class PatientView extends Panel {
             patientListPanel.add(noPatient);
         } else {
             for (Document patient : patientList) {
-                PatientItem item = new PatientItem(patient, patientView);
+                PatientItem item = new PatientItem(patient, patientView, dashboard);
                 patientListPanel.add(item);
                 patientListPanel.add(Box.createVerticalStrut(20));
                 item.revalidate();
