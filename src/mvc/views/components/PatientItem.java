@@ -50,8 +50,9 @@ public class PatientItem extends CustomRoundedPanel {
         editBttn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+
+                 new EditPatientView(patientID);
                 System.out.println(patientID);
-                new EditPatientView(patientID);
 
             }
         });
