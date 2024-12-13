@@ -36,6 +36,10 @@ public class SetFocusListenerToJTextFields implements FocusListener {
                 JTextField textField = (JTextField) component;
                 textField.addFocusListener(this);
 
+                if (Objects.equals(this.container, editPatientView)) {
+                    component.setForeground(Color.BLACK);
+                }
+
                 // Store placeholder text if not already stored
                 if (textField.getClientProperty("placeholder") == null) {
                     textField.putClientProperty("placeholder", textField.getText());
@@ -76,12 +80,12 @@ public class SetFocusListenerToJTextFields implements FocusListener {
 
         if (source.getText().trim().isEmpty()) {
             source.setText(placeholder);
-
+            source.setForeground(Color.GRAY);
         }
 
         source.setBorder(BorderFactory.createCompoundBorder(
                 borderColor, new EmptyBorder(2, 10, 2, 10) // Inner padding
         ));
-        source.setForeground(Color.GRAY);
+
     }
 }

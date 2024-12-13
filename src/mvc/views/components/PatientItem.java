@@ -1,5 +1,7 @@
 package mvc.views.components;
 
+import mvc.models.PatientModel;
+import mvc.views.Dashboard;
 import mvc.views.EditPatientView;
 import mvc.views.EditStaffView;
 import mvc.views.PatientView;
@@ -14,9 +16,13 @@ import java.awt.event.MouseEvent;
 public class PatientItem extends CustomRoundedPanel {
     Document patientItem;
     String patientID;
+    PatientView patientView;
+    Dashboard dashboard;
 
-    public PatientItem(Document patientItem, PatientView patientView) {
+    public PatientItem(Document patientItem, PatientView patientView, Dashboard dashboard) {
         this.patientItem = patientItem;
+        this.patientView = patientView;
+        this.dashboard = dashboard;
         this.patientID = patientItem.getString("_id");
         initComponents();
     }
@@ -51,7 +57,7 @@ public class PatientItem extends CustomRoundedPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                 new EditPatientView(patientID);
+                 new EditPatientView(patientID, new PatientModel(), patientView, dashboard);
                 System.out.println(patientID);
 
             }

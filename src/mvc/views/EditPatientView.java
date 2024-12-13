@@ -19,6 +19,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import org.bson.Document;
 import java.util.Date;
+import java.util.Objects;
 
 public class EditPatientView extends JFrame {
     PatientModel patientModel = new PatientModel();
@@ -31,8 +32,11 @@ public class EditPatientView extends JFrame {
         System.out.println("Default Constructor");
     }
 
-    public EditPatientView(String patientID) {
+    public EditPatientView(String patientID, PatientModel patientModel, PatientView patientView, Dashboard dashboard) {
         this.patientID = patientID;
+        this.dashboard = dashboard;
+        this.patientModel = patientModel;
+        this.patientView = patientView;
 
         GetPatients getPatients = new GetPatients();
         this.patientDocument = (Document) getPatients.getPatientDataById(patientID);
@@ -93,24 +97,27 @@ public class EditPatientView extends JFrame {
             symptomsTextField = new JTextField("", 15);
             medicationTextField = new JTextField("", 15);
             allergiesTextField = new JTextField("", 15);
-            phoneNumberField = new JTextField("", 15);
+            Object phoneNumberValue = patientDocument.get("Phone Number");
+            phoneNumberField = new JTextField(phoneNumberValue.toString(), 15);
             emailAddressField = new JTextField("Email",20);
-            emergencyContactNumberField = new JTextField("",15);
+            Object emergencyContactNumberValue = patientDocument.get("Emergency Contact Number");
+            emergencyContactNumberField = new JTextField(emergencyContactNumberValue.toString(),15);
             streetAddressField = new JTextField(patientDocument.getString("Street Name"),20);
             cityField = new JTextField(patientDocument.getString("City"),20);
             regionField = new JTextField(patientDocument.getString("Region"),20);
             provinceField = new JTextField(patientDocument.getString("Province"),20);
-            postalCodeField = new JTextField("",8);
+            Object postalCodeValue = patientDocument.get("Phone Number");
+            postalCodeField = new JTextField(postalCodeValue.toString(),8);
             nationalityTextField = new JTextField(patientDocument.getString("Nationality"), 30);
             civilStatusField = new JTextField(patientDocument.getString("Civil Status"), 15);
 
             maleRadioButtonn = new JRadioButton("Male");
             femaleRadioButton = new JRadioButton("Female");
 
-            if (patientDocument.getString("Sex") == "Male") {
-                maleRadioButtonn.isSelected();
+            if (Objects.equals(patientDocument.getString("Sex"), "Male")) {
+                maleRadioButtonn.setSelected(true);
             } else {
-                femaleRadioButton.isSelected();
+                femaleRadioButton.setSelected(true);
             }
 
         }
@@ -134,7 +141,7 @@ public class EditPatientView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
         // Header Section
-        JLabel addPatientHeader = new JLabel("Add Patient");
+        JLabel addPatientHeader = new JLabel("Edit Patient");
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel headerPanel = new JPanel();
@@ -176,8 +183,6 @@ public class EditPatientView extends JFrame {
         JTextField dateField = (JTextField) birthDate.getDateEditor().getUiComponent();
 
         dateField.setMaximumSize(new Dimension(220, 20));
-
-        birthDate.setDate(new Date());
 
         birthDate.getCalendarButton().setPreferredSize(new Dimension(30, 20));
         birthDate.setPreferredSize(new Dimension(220, 30));
@@ -413,11 +418,11 @@ public class EditPatientView extends JFrame {
         chooseRoomAndStaffPanelWrapper.add(chooseRoomAndStaffPanel);
 
         // Add Patient Button
-        JButton addPatientButton = new JButton("Add Patient");
+        JButton editPatientBttn = new JButton("Add Patient");
         JPanel addPatientButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        addPatientButtonPanel.add(addPatientButton);
+        addPatientButtonPanel.add(editPatientBttn);
 
-        addPatientButton.addActionListener(e -> {
+        editPatientBttn.addActionListener(e -> {
             try {
                 patientModel.setBirthdate(birthDate.getDate());
                 patientModel.setAdmissionDate(admissionDate.getDate());
@@ -476,12 +481,11 @@ public class EditPatientView extends JFrame {
 
         // Set Up Frame
         setContentPane(scrollPane);
-        setTitle("Add Patient");
         setSize(900, 700);
         setLocationRelativeTo(null);
         setUndecorated(true);
         setVisible(true);
-        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
@@ -494,7 +498,7 @@ public class EditPatientView extends JFrame {
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowOpened(java.awt.event.WindowEvent e) {
-                addPatientButton.requestFocusInWindow();
+                editPatientBttn.requestFocusInWindow();
             }
         });
 
