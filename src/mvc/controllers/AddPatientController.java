@@ -33,6 +33,7 @@ public class AddPatientController {
                     .append("Region", patientModel.getRegion())
                     .append("Street Name", patientModel.getStreetName())
                     .append("City", patientModel.getCity())
+                    .append("Municipality", patientModel.getMunicipality())
                     .append("Civil Status", patientModel.getCivilStatus())
                     .append("Room", patientModel.getRoom())
                     .append("Assigned Staff", patientModel.getAssignedStaff())

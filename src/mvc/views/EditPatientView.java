@@ -2,6 +2,8 @@ package mvc.views;
 
 import com.toedter.calendar.JDateChooser;
 import mvc.controllers.AddPatientController;
+import mvc.controllers.DeletePatientController;
+import mvc.controllers.EditPatientController;
 import mvc.controllers.GetPatients;
 import mvc.models.PatientModel;
 import mvc.views.constants.Constants;
@@ -74,7 +76,7 @@ public class EditPatientView extends JFrame {
 
     JPanel symptomsContainer = new JPanel();
     GridBagConstraints symptomsgbc = new GridBagConstraints();
-    ArrayList<String> symptomsArray = new ArrayList<>();
+    ArrayList<String> symptomsArray;
 
     JPanel medicationContainer = new JPanel();
     GridBagConstraints medicationgbc = new GridBagConstraints();
@@ -87,6 +89,7 @@ public class EditPatientView extends JFrame {
     public void initComponents() {
 
         if (this.patientDocument != null) {
+            setValuesToModels();
             patientNameFieldFN = new JTextField((String) patientDocument.get("First Name"),18);
             birthDate = new JDateChooser();
             Date birthDateFromMongoDB = patientDocument.getDate("Birthdate");
@@ -105,10 +108,10 @@ public class EditPatientView extends JFrame {
             streetAddressField = new JTextField(patientDocument.getString("Street Name"),20);
             cityField = new JTextField(patientDocument.getString("City"),20);
             regionField = new JTextField(patientDocument.getString("Region"),20);
-            provinceField = new JTextField(patientDocument.getString("Province"),20);
+            provinceField = new JTextField(patientDocument.getString("Municipality"),20);
             Object postalCodeValue = patientDocument.get("Phone Number");
             postalCodeField = new JTextField(postalCodeValue.toString(),8);
-            nationalityTextField = new JTextField(patientDocument.getString("Nationality"), 30);
+            nationalityTextField = new JTextField(patientDocument.getString("Nationality"), 15);
             civilStatusField = new JTextField(patientDocument.getString("Civil Status"), 15);
 
             maleRadioButtonn = new JRadioButton("Male");
@@ -119,6 +122,8 @@ public class EditPatientView extends JFrame {
             } else {
                 femaleRadioButton.setSelected(true);
             }
+
+            symptomsArray = new ArrayList<>(patientDocument.getList("Symptoms", String.class));
 
         }
 
@@ -252,18 +257,6 @@ public class EditPatientView extends JFrame {
         gbc.gridy = 2;
         addressPanel.add(streetAddressField, gbc);
 
-        //Nationality Section
-        JPanel nationalityWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JPanel nationalityPanel = new JPanel(new GridBagLayout());
-        JLabel nationalityLabel = new JLabel("Nationality");
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        nationalityPanel.add(nationalityLabel, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        nationalityPanel.add(nationalityTextField, gbc);
-        nationalityWrapper.add(nationalityPanel);
 
         JPanel civilStatusWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel civilStatusPanel = new JPanel(new GridBagLayout());
@@ -275,6 +268,9 @@ public class EditPatientView extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 1;
         civilStatusPanel.add(civilStatusField, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        civilStatusPanel.add(nationalityTextField, gbc);
         civilStatusWrapper.add(civilStatusPanel);
 
         // Admission date
@@ -418,30 +414,57 @@ public class EditPatientView extends JFrame {
         chooseRoomAndStaffPanelWrapper.add(chooseRoomAndStaffPanel);
 
         // Add Patient Button
-        JButton editPatientBttn = new JButton("Add Patient");
+        JButton editPatientBttn = new JButton("Edit Patient");
+        JButton deletePatientBttn = new JButton("Delete Patient");
         JPanel addPatientButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         addPatientButtonPanel.add(editPatientBttn);
+        addPatientButtonPanel.add(deletePatientBttn);
+        deletePatientBttn.addActionListener(_ -> {
+
+            // Display a confirmation dialog with Yes, No, and Cancel options
+            int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this patient?",
+                    "Delete Patient", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                new DeletePatientController(patientDocument.getString("_id"));
+                patientView.updateUI();
+                JOptionPane.showMessageDialog(null, "Deleted Successfully");
+                dispose();
+                dashboard.setEnabled(true);
+                dashboard.setFocusable(true);
+                dashboard.setAlwaysOnTop(true);
+            }
+        });
 
         editPatientBttn.addActionListener(e -> {
-            try {
-                patientModel.setBirthdate(birthDate.getDate());
-                patientModel.setAdmissionDate(admissionDate.getDate());
-                if (maleRadioButtonn.isSelected()) {
-                    patientModel.setSex(maleRadioButtonn.getText());
-                } else if (femaleRadioButton.isSelected()) {
-                    patientModel.setSex(femaleRadioButton.getText());
+            int choice = JOptionPane.showConfirmDialog(null, "Confirm Edit?",
+                    "Edit Patient", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                try {
+                    patientModel.setBirthdate(birthDate.getDate());
+                    patientModel.setAdmissionDate(admissionDate.getDate());
+                    if (maleRadioButtonn.isSelected()) {
+                        patientModel.setSex(maleRadioButtonn.getText());
+                    } else if (femaleRadioButton.isSelected()) {
+                        patientModel.setSex(femaleRadioButton.getText());
+                    }
+                    patientModel.setSymptoms(symptomsArray);
+                    patientModel.setMedication(medicationArray);
+                    patientModel.setAllergies(allergiesArray);
+                    patientModel.setPostalCode(Integer.parseInt(postalCodeField.getText()));
+                    new EditPatientController(patientModel);
+                    patientView.updateUI();
+                    JOptionPane.showMessageDialog(null, "Edited Successfully");
+                    dispose();
+                    dashboard.setEnabled(true);
+                    dashboard.setFocusable(true);
+                    dashboard.setAlwaysOnTop(true);
+                }catch (NumberFormatException err) {
+                    System.out.println(err);
+                } catch (Exception err) {
+                    System.out.println("System Error");
                 }
-                patientModel.setSymptoms(symptomsArray);
-                patientModel.setMedication(medicationArray);
-                patientModel.setAllergies(allergiesArray);
-                patientModel.setPostalCode(Integer.parseInt(postalCodeField.getText()));
-                new AddPatientController(patientModel);
-            }catch (NumberFormatException err) {
-                System.out.println(err);
-            } catch (Exception err) {
-                System.out.println("System Error");
+
             }
-            patientView.updateUI();
         });
 
         // Add All Sections to Main Panel
@@ -486,7 +509,6 @@ public class EditPatientView extends JFrame {
         setUndecorated(true);
         setVisible(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setAlwaysOnTop(true);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
         addPatientHeader.setFont(Constants.HEADING_FONT);
@@ -501,6 +523,9 @@ public class EditPatientView extends JFrame {
                 editPatientBttn.requestFocusInWindow();
             }
         });
+        updateSymptomsContainer();
+        updateAllergiesContainer();
+        updateMedicationContainer();
 
     }
 
@@ -741,6 +766,32 @@ public class EditPatientView extends JFrame {
                 setOnChangeEvent((Container) component, model);
             }
         }
+    }
+
+    public void setValuesToModels() {
+        // Assuming patientModel is an instance of your PatientModel class
+        patientModel.setId(patientDocument.getString("_id"));
+        patientModel.setFirstName(patientDocument.getString("First Name"));
+        patientModel.setLastName(patientDocument.getString("Last Name"));
+        patientModel.setMiddleName(patientDocument.getString("Middle Name"));
+        patientModel.setMunicipality(patientDocument.getString("Municipality"));
+        patientModel.setSex(patientDocument.getString("Sex"));
+        patientModel.setEmail(patientDocument.getString("Email"));
+        patientModel.setRegion(patientDocument.getString("Region"));
+        patientModel.setStreetName(patientDocument.getString("Street Name"));
+        patientModel.setCity(patientDocument.getString("City"));
+        patientModel.setCivilStatus(patientDocument.getString("Civil Status"));
+        patientModel.setRoom(patientDocument.getString("Room"));
+        patientModel.setAssignedStaff(patientDocument.getString("Assigned Staff"));
+        patientModel.setSymptoms((ArrayList<String>) patientDocument.get("Symptoms")); // Cast to ArrayList<String>
+        patientModel.setMedication((ArrayList<String>) patientDocument.get("Medication")); // Cast to ArrayList<String>
+        patientModel.setAllergies((ArrayList<String>) patientDocument.get("Allergies")); // Cast to ArrayList<String>
+        patientModel.setPhoneNumber(patientDocument.getString("Phone Number"));
+        patientModel.setEmergencyContactNumber(patientDocument.getString("Emergency Contact Number"));
+        patientModel.setPostalCode(patientDocument.getInteger("Postal Code")); // Integer field
+        patientModel.setBirthdate(patientDocument.getDate("Birthdate")); // Date field
+        patientModel.setAdmissionDate(patientDocument.getDate("Admission Date")); // Date field
+
     }
 
 }
