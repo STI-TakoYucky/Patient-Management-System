@@ -10,7 +10,7 @@ import java.awt.event.*;
 public class Dashboard extends JFrame implements ActionListener  {
     String userRole = "admin";
 
-    JButton roombtn,patientsbtn,medicalstaffBtn,medicalrecordBtn,settingBtn;
+    JButton roombtn,patientsbtn,medicalstaffBtn,medicalrecordBtn;
     public Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
     CardLayout cl1 = new CardLayout();
     JPanel container = new JPanel(cl1);
@@ -62,11 +62,9 @@ public class Dashboard extends JFrame implements ActionListener  {
          patientsbtn= new JButton("Patients");
          medicalstaffBtn = new JButton("Medical Staffs");
          medicalrecordBtn = new JButton("Medical Records");
-         settingBtn = new JButton("Settings");
 
         //Button sizes
         roombtn.setPreferredSize(new Dimension(150, 50));
-        settingBtn.setPreferredSize(new Dimension(150, 50));
         patientsbtn.setPreferredSize(new Dimension(150,50));
         medicalstaffBtn.setPreferredSize(new Dimension(150,50));
         medicalrecordBtn.setPreferredSize(new Dimension(150,50));
@@ -78,14 +76,13 @@ public class Dashboard extends JFrame implements ActionListener  {
         if (userRole == "staff") {
             buttons.add(roombtn);
             buttons.add(patientsbtn);
-            buttons.add(settingBtn);
             buttons.add(medicalrecordBtn);
         } else if (userRole == "admin") {
             buttons.add(roombtn);
             buttons.add(patientsbtn);
-            buttons.add(medicalstaffBtn);
-            buttons.add(settingBtn);
             buttons.add(medicalrecordBtn);
+            buttons.add(medicalstaffBtn);
+
         }
 
 
@@ -96,7 +93,6 @@ public class Dashboard extends JFrame implements ActionListener  {
         roombtn.addActionListener(this);
         medicalstaffBtn.addActionListener(this);
         medicalrecordBtn.addActionListener(this);
-        settingBtn.addActionListener(this);
         patientsbtn.addActionListener(this);
         //container
         container.add(medicalStaffList, "med");
@@ -123,9 +119,6 @@ public class Dashboard extends JFrame implements ActionListener  {
         }
         if(e.getSource() == medicalstaffBtn){
             cl1.show(container, "med");
-        }
-        if(e.getSource() == settingBtn){
-            cl1.show(container, "patientView");
         }
         if(e.getSource() == medicalrecordBtn){
             cl1.show(container, "patientView");
