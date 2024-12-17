@@ -88,6 +88,7 @@ public class Dashboard extends JFrame implements ActionListener  {
 
         MedicalStaffView medicalStaffList = new MedicalStaffView();
         PatientView patientView = new PatientView(this);
+        RoomView roomView = new RoomView(this);
 
         //
         roombtn.addActionListener(this);
@@ -95,6 +96,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         medicalrecordBtn.addActionListener(this);
         patientsbtn.addActionListener(this);
         //container
+        container.add(roomView, "roomView");
         container.add(medicalStaffList, "med");
         container.add(patientView, "patientView");
 
@@ -112,7 +114,7 @@ public class Dashboard extends JFrame implements ActionListener  {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == roombtn){
-        cl1.show(container, "patientView");
+        cl1.show(container, "roomView");
         }
         if(e.getSource() == patientsbtn){
             cl1.show(container, "patientView");
