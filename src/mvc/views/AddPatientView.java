@@ -21,6 +21,7 @@ public class AddPatientView extends JFrame {
     PatientModel patientModel;
     PatientView patientView;
     Dashboard dashboard;
+    JFrame frame = this;
 
     public AddPatientView() {
         System.out.println("Default Constructor");
@@ -461,7 +462,7 @@ public class AddPatientView extends JFrame {
         setLocationRelativeTo(null);
         setUndecorated(true);
         setVisible(true);
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
         addPatientHeader.setFont(Constants.HEADING_FONT);
