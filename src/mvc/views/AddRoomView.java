@@ -207,7 +207,7 @@ public class AddRoomView extends JFrame {
             patientListPanel.add(noPatient);
         } else {
             for (Document patient : patientList) {
-                PatientItem item = new PatientItem(patient, 815);
+                PatientItem item = new PatientItem(patient, 780);
                 patientListPanel.add(item);
                 patientListPanel.add(Box.createVerticalStrut(20));
                 item.revalidate();
@@ -260,12 +260,29 @@ public class AddRoomView extends JFrame {
                         // Handle text change for specific fields
                         if (source == patientSearchField) {
                             System.out.println(text);
-                            GetPatients.filterPatientData(text);
-                            updateUI(patientListPanel);
-                        }else if(source == roomName) {
-                            System.out.println("HASUD");
-                        }
+                            List<Document> patientList = GetPatients.filterPatientData(text);
 
+                            if (patientList.isEmpty() && !text.equals("Search Patient") && !text.isEmpty()) {
+                                patientListPanel.removeAll();
+                                JLabel noPatient = new JLabel("Patient does not exist");
+                                patientListPanel.add(noPatient);
+                            } else if(!text.isEmpty() && !patientList.isEmpty()){
+                                patientListPanel.removeAll();
+                                for (Document patient : patientList) {
+                                    PatientItem item = new PatientItem(patient, 780);
+                                    patientListPanel.add(item);
+                                    patientListPanel.add(Box.createVerticalStrut(20));
+                                    item.revalidate();
+                                    item.repaint();
+                                    revalidate();
+                                    repaint();
+                                }
+                            }else {
+                               updateUI(patientListPanel);
+                            }
+                            revalidate();
+                            repaint();
+                        }
                     }});
             } else if (component instanceof Container) {
                 setOnChangeEvent((Container) component, model);
