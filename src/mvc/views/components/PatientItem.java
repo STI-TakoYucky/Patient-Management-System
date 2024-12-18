@@ -43,7 +43,7 @@ public class PatientItem extends CustomRoundedPanel {
 
     public void initComponents() {
 
-        JLabel patientInfoBttn = new JLabel("Patient Info");
+        JLabel patientInfoBttn = new JLabel("Medical Records");
         JLabel editBttn = new JLabel("Edit Info");
 
         setLayout(new GridBagLayout());
