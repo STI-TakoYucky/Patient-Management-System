@@ -56,7 +56,7 @@ public class AddStaffView extends JFrame {
         setVisible(true);
         setSize(900, 700);
         setLocationRelativeTo(null);
-        setUndecorated(true);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
 
