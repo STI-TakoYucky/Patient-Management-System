@@ -1,5 +1,6 @@
 package mvc.views;
 import mvc.controllers.AddPatientController;
+import mvc.controllers.DeletePatientController;
 import mvc.models.PatientModel;
 import mvc.views.constants.Constants;
 import com.toedter.calendar.JDateChooser;
@@ -23,6 +24,7 @@ public class AddPatientView extends JFrame {
     PatientModel patientModel;
     PatientView patientView;
     Dashboard dashboard;
+    JFrame frame = this;
 
     public AddPatientView() {
         System.out.println("Default Constructor");
@@ -49,9 +51,9 @@ public class AddPatientView extends JFrame {
     public JTextField streetAddressField = new JTextField("Street Name",20);
     public JTextField cityField = new JTextField("City",20);
     public JTextField regionField = new JTextField("Region",20);
-    public JTextField provinceField = new JTextField("Province",20);
+    public JTextField municipalityField = new JTextField("Municipality",20);
     public JTextField postalCodeField = new JTextField("Postal Code",8);
-    public JTextField nationalityTextField = new JTextField("Nationality", 30);
+    public JTextField nationalityTextField = new JTextField("Nationality", 15);
     public JTextField civilStatusField = new JTextField("Civil Status", 15);
     public JRadioButton maleRadioButtonn = new JRadioButton("Male");
     public JRadioButton femaleRadioButton = new JRadioButton("Female");
@@ -199,7 +201,7 @@ public class AddPatientView extends JFrame {
         gbc.gridy = 1;
         addressPanel.add(regionField, gbc);
         gbc.gridx = 1;
-        addressPanel.add(provinceField, gbc);
+        addressPanel.add(municipalityField, gbc);
         gbc.gridy = 2;
         gbc.gridx = 0;
         addressPanel.add(cityField, gbc);
@@ -209,6 +211,7 @@ public class AddPatientView extends JFrame {
         gbc.gridx = 1;
         gbc.gridy = 2;
         addressPanel.add(streetAddressField, gbc);
+
 
         //Nationality Section
         JPanel nationalityWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -233,6 +236,9 @@ public class AddPatientView extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 1;
         civilStatusPanel.add(civilStatusField, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        civilStatusPanel.add(nationalityTextField, gbc);
         civilStatusWrapper.add(civilStatusPanel);
 
         // Admission date
@@ -385,25 +391,42 @@ public class AddPatientView extends JFrame {
         addPatientButtonPanel.add(addPatientButton);
 
         addPatientButton.addActionListener(e -> {
-            try {
-                patientModel.setBirthdate(birthDate.getDate());
-                patientModel.setAdmissionDate(admissionDate.getDate());
-                if (maleRadioButtonn.isSelected()) {
-                    patientModel.setSex(maleRadioButtonn.getText());
-                } else if (femaleRadioButton.isSelected()) {
-                    patientModel.setSex(femaleRadioButton.getText());
+            int choice = JOptionPane.showConfirmDialog(null, "Confirm?",
+                    "Add patient", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                try {
+                    patientModel.setBirthdate(birthDate.getDate());
+                    patientModel.setAdmissionDate(admissionDate.getDate());
+                    if (maleRadioButtonn.isSelected()) {
+                        patientModel.setSex(maleRadioButtonn.getText());
+                    } else if (femaleRadioButton.isSelected()) {
+                        patientModel.setSex(femaleRadioButton.getText());
+                    }
+                    patientModel.setSymptoms(symptomsArray);
+                    patientModel.setMedication(medicationArray);
+                    patientModel.setAllergies(allergiesArray);
+                    patientModel.setPostalCode(Integer.parseInt(postalCodeField.getText()));
+                    new AddPatientController(patientModel);
+                    patientView.updateUI();
+                    JOptionPane.showMessageDialog(null, "Successfully added a patient");
+                }catch (NumberFormatException err) {
+                    System.out.println(err);
+                } catch (Exception err) {
+                    System.out.println("System Error");
                 }
-                patientModel.setSymptoms(symptomsArray);
-                patientModel.setMedication(medicationArray);
-                patientModel.setAllergies(allergiesArray);
-                patientModel.setPostalCode(Integer.parseInt(postalCodeField.getText()));
-                new AddPatientController(patientModel);
-            }catch (NumberFormatException err) {
-                System.out.println(err);
-            } catch (Exception err) {
-                System.out.println("System Error");
+                int addMorePatient = JOptionPane.showConfirmDialog(null, "Add another patient?",
+                        "Add patient", JOptionPane.YES_NO_OPTION);
+                if (addMorePatient == JOptionPane.YES_OPTION) {
+
+                } else {
+                    dispose();
+                    dashboard.setEnabled(true);
+                    dashboard.setFocusable(true);
+                    dashboard.setAlwaysOnTop(true);
+                }
+
             }
-            patientView.updateUI();
+
         });
 
         // Add All Sections to Main Panel
@@ -448,8 +471,7 @@ public class AddPatientView extends JFrame {
         setLocationRelativeTo(null);
         setUndecorated(true);
         setVisible(true);
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setAlwaysOnTop(true);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
         addPatientHeader.setFont(Constants.HEADING_FONT);
@@ -697,6 +719,10 @@ public class AddPatientView extends JFrame {
                             model.setPhoneNumber(text);
                         } else if (component == emergencyContactNumberField) {
                             model.setEmergencyContactNumber(text);
+                        } else if (component == municipalityField) {
+                            model.setMunicipality(text);
+                        } else if (component == nationalityTextField) {
+                            model.setNationality(text);
                         }
 
                 }});

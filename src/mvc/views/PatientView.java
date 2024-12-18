@@ -90,6 +90,7 @@ public class PatientView extends Panel {
         public void actionPerformed(ActionEvent e) {
             dashboard.setEnabled(false);
             dashboard.setFocusable(false);
+            dashboard.setAlwaysOnTop(false);
             new AddPatientView(new PatientModel(), patientView, dashboard);
         }
     }

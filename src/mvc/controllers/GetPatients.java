@@ -1,9 +1,7 @@
 package mvc.controllers;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
+import com.mongodb.client.model.Filters;
 import database.URI;
 import org.bson.Document;
 
@@ -31,6 +29,7 @@ public class GetPatients {
         }
         return null;
     }
+
     public Document getPatientDataById(String patientID) {
 
         try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
@@ -42,6 +41,27 @@ public class GetPatients {
             return (Document) patientDoc;
         }catch (Exception err) {
             err.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Document filterPatientData(String searchFieldInput) {
+        List<Document> patientList = new ArrayList<>();
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
+            MongoDatabase database = mongoClient.getDatabase("patientDB");
+
+            MongoCollection<Document> collection = database.getCollection("patients");
+
+            String searchText = searchFieldInput.trim();
+            FindIterable<Document> results = collection.find(Filters.regex("name", searchText, "i"));
+            for (Document doc : results) {
+                patientList.add(doc);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!patientList.isEmpty()) {
+            return (Document) patientList;
         }
         return null;
     }

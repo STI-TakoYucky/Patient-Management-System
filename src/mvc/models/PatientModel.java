@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class PatientModel {
-    private String firstName, lastName, middleName, id, sex, email, region,  streetName, city, civilStatus;
+    private String firstName, lastName, middleName, id, sex, email, region,  streetName, city, civilStatus, municipality, nationality;
     private String room, phoneNumber, emergencyContactNumber, assignedStaff;
     private ArrayList<String> symptoms, medication, allergies;
     private int  postalCode;
     private Date birthdate, admissionDate;
 
     // Setters
+
+
+    public void setMunicipality(String municipality) {
+        this.municipality = municipality;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -91,7 +97,19 @@ public class PatientModel {
         this.admissionDate = admissionDate;
     }
 
-    // Getters
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+
+    public String getMunicipality() {
+        return municipality;
+    }
+
     public String getFirstName() {
         return this.firstName;
     }
