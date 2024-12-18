@@ -12,16 +12,20 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import mvc.views.utility.SetDefaultFont;
 import mvc.views.utility.SetFocusListenerToJTextFields;
 import org.bson.Document;
 
+import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
+
 public class AddRoomView extends JFrame {
     RoomModel roomModel;
     RoomView roomView;
     Dashboard dashboard;
+    AddRoomView addRoomView = this;
 
     public AddRoomView() {
         System.out.println("Default Constructor");
@@ -36,9 +40,12 @@ public class AddRoomView extends JFrame {
 
     public JTextField roomName = new JTextField("Room Name",18);
     public JTextField roomType = new JTextField("Room Type",18);
-    public JTextField roomCapacity = new JTextField("1",7);
+    public JTextField roomCapacity = new JTextField("Capacity",7);
     public JTextField patientSearchField = new JTextField("Search Patient",18);
     JPanel patientListPanel;
+    JPanel toBeAssignedPanel = new JPanel();
+    ArrayList<String> PatientsNameArray = new ArrayList<>();
+    ArrayList<String> PatientsIDArray = new ArrayList<>();
 
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
     Image image = closeButtonIcon.getImage();
@@ -125,6 +132,8 @@ public class AddRoomView extends JFrame {
         JPanel assignPatientsWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel AssignPatientsPanel = new JPanel(new GridBagLayout());
 
+        toBeAssignedPanel.setLayout(new BoxLayout(toBeAssignedPanel, BoxLayout.Y_AXIS));
+
         patientListPanel = new JPanel();
         patientListPanel.setLayout(new BoxLayout(patientListPanel, BoxLayout.Y_AXIS));
 
@@ -150,6 +159,13 @@ public class AddRoomView extends JFrame {
         gbc.weightx = 1;
         gbc.weighty = 1;
         AssignPatientsPanel.add(scroll, gbc);
+
+        // To Be Assigned Panel
+        gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.BOTH; // Allow scroll pane to expand
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        AssignPatientsPanel.add(toBeAssignedPanel, gbc);
 
         assignPatientsWrapper.add(AssignPatientsPanel);
 
@@ -187,14 +203,79 @@ public class AddRoomView extends JFrame {
         new SetFocusListenerToJTextFields(this);
         setJTextFieldPadding(this);
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-//
-//        this.addWindowListener(new java.awt.event.WindowAdapter() {
-//            @Override
-//            public void windowOpened(java.awt.event.WindowEvent e) {
-//                addPatientButton.requestFocusInWindow();
-//            }
-//        });
+        scrollPane.setHorizontalScrollBar(null);
 
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                addRoomBttn.requestFocusInWindow();
+            }
+        });
+
+
+    }
+
+    public void assignPatientsToRoom(String name, String id) {
+        try {
+            if (!PatientsIDArray.contains(id) && !PatientsNameArray.contains(name)) {
+                if (Integer.parseInt(roomCapacity.getText()) <= 0) {
+                    this.setAlwaysOnTop(false);
+                    JOptionPane.showMessageDialog(null, "Capacity should not be less than or equal to zero.");
+                } else if (PatientsNameArray.size() == Integer.parseInt(roomCapacity.getText())) {
+                    this.setAlwaysOnTop(false);
+                    JOptionPane.showMessageDialog(null, "Maximum capacity reached.");
+                } else {
+                    PatientsIDArray.add(id);
+                    PatientsNameArray.add(name);
+                    updateAssignedPatients();
+                }
+            } else {
+                this.setAlwaysOnTop(false);
+                JOptionPane.showMessageDialog(null, "Patient already added.");
+            }
+        } catch (NumberFormatException err) {
+            this.setAlwaysOnTop(false);
+            JOptionPane.showMessageDialog(null, "Capacity should be a number.");
+        }
+    }
+
+    public void updateAssignedPatients() {
+        toBeAssignedPanel.removeAll();
+        for (int i = 0; i <= PatientsNameArray.size() - 1; i++) {
+            JPanel toBeAssignedItem = new JPanel();
+            toBeAssignedItem.setLayout(new FlowLayout(FlowLayout.LEFT));
+            JLabel PatientName = new JLabel("Patient Name: " + PatientsNameArray.get(i));
+            PatientName.setPreferredSize(new Dimension(400, 50));
+            PatientName.setMaximumSize(new Dimension(400, 50));
+            PatientName.setBorder(new EmptyBorder(0, 11, 0, 11));
+            JLabel PatientID = new JLabel("Patient ID: " + PatientsIDArray.get(i));
+            PatientID.setPreferredSize(new Dimension(250, 50));
+            PatientID.setMaximumSize(new Dimension(250, 50));
+            PatientID.setForeground(Constants.primary);
+
+            JLabel removeBttn = new JLabel("X");
+            removeBttn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            int index = i;
+            removeBttn.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    PatientsNameArray.remove(index);
+                    PatientsIDArray.remove(index);
+                    updateAssignedPatients();
+                    repaint();
+                    revalidate();
+                }
+            });
+            toBeAssignedItem.add(PatientID);
+            toBeAssignedItem.add(PatientName);
+            toBeAssignedItem.add(removeBttn);
+            toBeAssignedPanel.add(toBeAssignedItem);
+            PatientName.setFont(Constants.DEFAULT_FONT);
+            PatientID.setFont(new Font("Arial", Font.BOLD, 18));
+            removeBttn.setFont(new Font("Arial", Font.BOLD ,18));
+            revalidate();
+            repaint();
+        }
     }
 
     public void updateUI(JPanel patientListPanel){
@@ -207,14 +288,13 @@ public class AddRoomView extends JFrame {
             patientListPanel.add(noPatient);
         } else {
             for (Document patient : patientList) {
-                PatientItem item = new PatientItem(patient, 780);
+                PatientItem item = new PatientItem(patient, 780, addRoomView);
                 patientListPanel.add(item);
                 patientListPanel.add(Box.createVerticalStrut(20));
                 item.revalidate();
                 item.repaint();
             }
         }
-        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
         revalidate();
         repaint();
     }
@@ -269,7 +349,7 @@ public class AddRoomView extends JFrame {
                             } else if(!text.isEmpty() && !patientList.isEmpty()){
                                 patientListPanel.removeAll();
                                 for (Document patient : patientList) {
-                                    PatientItem item = new PatientItem(patient, 780);
+                                    PatientItem item = new PatientItem(patient, 780, addRoomView);
                                     patientListPanel.add(item);
                                     patientListPanel.add(Box.createVerticalStrut(20));
                                     item.revalidate();
@@ -282,6 +362,19 @@ public class AddRoomView extends JFrame {
                             }
                             revalidate();
                             repaint();
+                        } else if (source == roomCapacity) {
+                            try {
+                                int roomCap = Integer.parseInt(text);
+                                if (roomCap < PatientsNameArray.size()) {
+                                    for (int i = PatientsNameArray.size(); i > roomCap; i--) {
+                                        PatientsNameArray.remove(i - 1);
+                                        PatientsIDArray.remove(i - 1);
+                                        updateAssignedPatients();
+                                    }
+                                }
+                            }catch (NumberFormatException err) {
+
+                            }
                         }
                     }});
             } else if (component instanceof Container) {

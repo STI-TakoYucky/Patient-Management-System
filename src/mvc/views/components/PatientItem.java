@@ -1,10 +1,7 @@
 package mvc.views.components;
 
 import mvc.models.PatientModel;
-import mvc.views.Dashboard;
-import mvc.views.EditPatientView;
-import mvc.views.EditStaffView;
-import mvc.views.PatientView;
+import mvc.views.*;
 import mvc.views.utility.SetDefaultFont;
 import org.bson.Document;
 import mvc.views.constants.Constants;
@@ -19,12 +16,16 @@ public class PatientItem extends CustomRoundedPanel {
     String patientID;
     PatientView patientView;
     Dashboard dashboard;
+    AddRoomView addRoomView;
     int width = 1090;
 
     JLabel patientIDLabel, patientName;
 
-    public PatientItem(Document patientItem, int width) {
+    public PatientItem(Document patientItem, int width, AddRoomView addRoomView) {
+        this.addRoomView = addRoomView;
         this.width = width;
+        this.patientItem = patientItem;
+        this.patientID = patientItem.getString("_id");
         patientIDLabel = new JLabel("Patient ID: " + patientItem.getString("_id"));
         patientName = new JLabel(patientItem.getString("First Name") + " " + patientItem.getString("Middle Name") + " " + patientItem.getString("Last Name"));
         initSearchPatientComponent();
@@ -80,6 +81,16 @@ public class PatientItem extends CustomRoundedPanel {
 
     public void initSearchPatientComponent() {
         JLabel assignBttn = new JLabel("Assign");
+
+        assignBttn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        assignBttn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                addRoomView.assignPatientsToRoom(patientItem.getString("First Name") + " " + patientItem.getString("Middle Name") + " " + patientItem.getString("Last Name"), patientID);
+                addRoomView.revalidate();
+                addRoomView.repaint();
+            }
+        });
 
         setLayout(new GridBagLayout());
         GridBagConstraints itemgbc = new GridBagConstraints();
