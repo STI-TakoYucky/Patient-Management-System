@@ -5,6 +5,7 @@ import mvc.views.Dashboard;
 import mvc.views.EditPatientView;
 import mvc.views.EditStaffView;
 import mvc.views.PatientView;
+import mvc.views.utility.SetDefaultFont;
 import org.bson.Document;
 import mvc.views.constants.Constants;
 import javax.swing.*;
@@ -97,6 +98,7 @@ public class PatientItem extends CustomRoundedPanel {
         add(assignBttn, itemgbc);
 
         fixedJLabel(this);
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
     }
 
     public void fixedJLabel(Container container) {
