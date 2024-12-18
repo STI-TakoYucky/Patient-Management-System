@@ -61,13 +61,11 @@ public class Dashboard extends JFrame implements ActionListener  {
          roombtn = new JButton("Rooms");
          patientsbtn= new JButton("Patients");
          medicalstaffBtn = new JButton("Medical Staffs");
-         medicalrecordBtn = new JButton("Medical Records");
 
         //Button sizes
         roombtn.setPreferredSize(new Dimension(150, 50));
         patientsbtn.setPreferredSize(new Dimension(150,50));
         medicalstaffBtn.setPreferredSize(new Dimension(150,50));
-        medicalrecordBtn.setPreferredSize(new Dimension(150,50));
 
         // Action listener
         buttons.setLayout(new FlowLayout(FlowLayout.CENTER , 20, 20));
@@ -76,11 +74,9 @@ public class Dashboard extends JFrame implements ActionListener  {
         if (userRole == "staff") {
             buttons.add(roombtn);
             buttons.add(patientsbtn);
-            buttons.add(medicalrecordBtn);
         } else if (userRole == "admin") {
             buttons.add(roombtn);
             buttons.add(patientsbtn);
-            buttons.add(medicalrecordBtn);
             buttons.add(medicalstaffBtn);
 
         }
@@ -93,7 +89,6 @@ public class Dashboard extends JFrame implements ActionListener  {
         //
         roombtn.addActionListener(this);
         medicalstaffBtn.addActionListener(this);
-        medicalrecordBtn.addActionListener(this);
         patientsbtn.addActionListener(this);
         //container
         container.add(roomView, "roomView");
@@ -121,9 +116,6 @@ public class Dashboard extends JFrame implements ActionListener  {
         }
         if(e.getSource() == medicalstaffBtn){
             cl1.show(container, "med");
-        }
-        if(e.getSource() == medicalrecordBtn){
-            cl1.show(container, "patientView");
         }
 
     }

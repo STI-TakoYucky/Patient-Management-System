@@ -365,13 +365,16 @@ public class AddRoomView extends JFrame {
                         } else if (source == roomCapacity) {
                             try {
                                 int roomCap = Integer.parseInt(text);
-                                if (roomCap < PatientsNameArray.size()) {
-                                    for (int i = PatientsNameArray.size(); i > roomCap; i--) {
-                                        PatientsNameArray.remove(i - 1);
-                                        PatientsIDArray.remove(i - 1);
-                                        updateAssignedPatients();
+                                if (!(roomCap <= 0)) {
+                                    if (roomCap < PatientsNameArray.size()) {
+                                        for (int i = PatientsNameArray.size(); i > roomCap; i--) {
+                                            PatientsNameArray.remove(i - 1);
+                                            PatientsIDArray.remove(i - 1);
+                                            updateAssignedPatients();
+                                        }
                                     }
                                 }
+
                             }catch (NumberFormatException err) {
 
                             }
