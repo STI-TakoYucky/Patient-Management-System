@@ -38,7 +38,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         //ADD HEADER
         header.setBackground(Constants.primary);
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
-        buttons.setBackground(Color.gray);
+        buttons.setBackground(Constants.primary);
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
 
 
