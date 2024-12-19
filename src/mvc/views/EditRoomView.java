@@ -1,8 +1,5 @@
 package mvc.views;
-import com.mongodb.client.FindIterable;
-import mvc.controllers.AddPatientController;
-import mvc.controllers.AddRoomController;
-import mvc.controllers.GetPatients;
+import mvc.controllers.*;
 import mvc.models.RoomModel;
 import mvc.views.components.PatientItem;
 import mvc.views.constants.Constants;
@@ -25,30 +22,33 @@ import org.bson.Document;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 
-public class AddRoomView extends JFrame {
+public class EditRoomView extends JFrame {
     RoomModel roomModel;
     RoomView roomView;
     Dashboard dashboard;
-    AddRoomView addRoomView = this;
+    EditRoomView addRoomView = this;
     Map<String, String> assignedPatients = new HashMap<>();
+    Document roomData;
+    String roomID;
 
-    public AddRoomView() {
+    public EditRoomView() {
         System.out.println("Default Constructor");
     }
 
-    public AddRoomView(RoomModel roomModel, RoomView roomView, Dashboard dashboard) {
+    public EditRoomView(String roomID, RoomModel roomModel, RoomView roomView, Dashboard dashboard) {
         this.dashboard = dashboard;
         this.roomModel = roomModel;
         this.roomView = roomView;
+        this.roomID = roomID;
+        GetRooms getRooms = new GetRooms();
+        this.roomData = getRooms.getRoomDataByID(roomID);
         initComponents();
     }
-
-    public JTextField roomName = new JTextField("Room Name",18);
-    public JTextField roomType = new JTextField("Room Type",18);
-    public JTextField roomCapacity = new JTextField("Capacity",7);
-    public JTextField patientSearchField = new JTextField("Search Patient",18);
     JPanel patientListPanel;
     JPanel toBeAssignedPanel = new JPanel();
+    JTextField patientSearchField = new JTextField("Search Patient",18);
+
+    public JTextField roomName, roomType, roomCapacity;
     ArrayList<String> PatientsNameArray = new ArrayList<>();
     ArrayList<String> PatientsIDArray = new ArrayList<>();
 
@@ -61,6 +61,22 @@ public class AddRoomView extends JFrame {
     JLabel closeButton = new JLabel(resizedCloseButtonIcon);
 
     public void initComponents() {
+
+        if (roomData != null) {
+            roomName = new JTextField(roomData.getString("Room Name"),18);
+            roomType = new JTextField(roomData.getString("Room Type"),18);
+            roomCapacity = new JTextField(String.valueOf(roomData.getInteger("Room Capacity")),7);
+        }
+
+        Map<String, String> patientMap = (Map<String, String>) roomData.get("Patients");
+        if (patientMap != null) {
+            for (Map.Entry<String, String> entry : patientMap.entrySet()) {
+                PatientsNameArray.add(entry.getValue());
+                PatientsIDArray.add(entry.getKey());
+            }
+        }
+
+        updateAssignedPatients();
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
@@ -81,7 +97,7 @@ public class AddRoomView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
         // Header Section
-        JLabel Header = new JLabel("Add Room");
+        JLabel Header = new JLabel("Edit Room");
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel headerPanel = new JPanel();
@@ -176,51 +192,62 @@ public class AddRoomView extends JFrame {
         updateUI(patientListPanel);
 
         //Room Bttn
-        JButton addRoomBttn = new JButton("Add Room");
+        JButton editRoomBttn = new JButton("Edit Room");
+        JButton deleteRoomBttn = new JButton("Delete Room");
         JPanel addRoomBttnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        addRoomBttnPanel.add(addRoomBttn);
+        addRoomBttnPanel.add(editRoomBttn);
+        addRoomBttnPanel.add(deleteRoomBttn);
 
-    addRoomBttn.addActionListener(_ -> {
-            this.setAlwaysOnTop(false);
-      try {
-          if (!(Integer.parseInt(roomCapacity.getText()) <= 0 )) {
+        deleteRoomBttn.addActionListener(_ -> {
 
-            int choice = JOptionPane.showConfirmDialog(null, "Confirm?",
-                    "Add Room", JOptionPane.YES_NO_OPTION);
+            // Display a confirmation dialog with Yes, No, and Cancel options
+            int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this room?",
+                    "Delete room", JOptionPane.YES_NO_OPTION);
             if (choice == JOptionPane.YES_OPTION) {
-
-
-                roomModel.setRoomName(roomName.getText());
-                roomModel.setRoomCapacity(Integer.parseInt(roomCapacity.getText()));
-                roomModel.setRoomType(roomType.getText());
-                for (int i = 1; i <= PatientsNameArray.size(); i++) {
-                    assignedPatients.put(PatientsIDArray.get(i - 1), PatientsNameArray.get(i - 1));
-                }
-                roomModel.setAssignedPatients(assignedPatients);
-                new AddRoomController(roomModel);
-                JOptionPane.showMessageDialog(null, "Successfully added a room");
+                new DeleteRoomController(this.roomID);
                 roomView.updateUI();
-
-                int addMorePatient = JOptionPane.showConfirmDialog(null, "Add another room?",
-                        "Add room", JOptionPane.YES_NO_OPTION);
-                if (addMorePatient == JOptionPane.YES_OPTION) {
-                    this.setAlwaysOnTop(true);
-                } else {
-                    dispose();
-                    dashboard.setEnabled(true);
-                    dashboard.setFocusable(true);
-                    dashboard.setAlwaysOnTop(true);
-                }
+                JOptionPane.showMessageDialog(null, "Deleted Successfully");
+                dispose();
+                dashboard.setEnabled(true);
+                dashboard.setFocusable(true);
+                dashboard.setAlwaysOnTop(true);
             }
-          }else {
-              this.setAlwaysOnTop(false);
-              JOptionPane.showMessageDialog(null, "Capacity should not be less than or equal to zero.");
-          }
-      }catch (NumberFormatException err) {
-          JOptionPane.showMessageDialog(null, "Capacity should be a number.");
-      } catch (Exception err) {
-          System.out.println("System Error");
-      }
+        });
+
+        editRoomBttn.addActionListener(_ -> {
+            this.setAlwaysOnTop(false);
+            try {
+                if (!(Integer.parseInt(roomCapacity.getText()) <= 0 )) {
+
+                    int choice = JOptionPane.showConfirmDialog(null, "Confirm?",
+                            "Edit Room", JOptionPane.YES_NO_OPTION);
+                    if (choice == JOptionPane.YES_OPTION) {
+                        roomModel.setRoomID(roomData.getString("_id"));
+                        roomModel.setRoomName(roomName.getText());
+                        roomModel.setRoomCapacity(Integer.parseInt(roomCapacity.getText()));
+                        roomModel.setRoomType(roomType.getText());
+                        for (int i = 1; i <= PatientsNameArray.size(); i++) {
+                            assignedPatients.put(PatientsIDArray.get(i - 1), PatientsNameArray.get(i - 1));
+                        }
+                        roomModel.setAssignedPatients(assignedPatients);
+                        new EditRoomController(roomModel);
+                        JOptionPane.showMessageDialog(null, "Successfully edited a room");
+                        roomView.updateUI();
+
+                            dispose();
+                            dashboard.setEnabled(true);
+                            dashboard.setFocusable(true);
+                            dashboard.setAlwaysOnTop(true);
+                        }
+                }else {
+                    this.setAlwaysOnTop(false);
+                    JOptionPane.showMessageDialog(null, "Capacity should not be less than or equal to zero.");
+                }
+            }catch (NumberFormatException err) {
+                JOptionPane.showMessageDialog(null, "Capacity should be a number.");
+            } catch (Exception err) {
+                System.out.println("System Error");
+            }
 
         });
 
@@ -243,7 +270,7 @@ public class AddRoomView extends JFrame {
         setVisible(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+        SetDefaultFont.setFontForAllLabels(mainContent, Constants.DEFAULT_FONT);
         Header.setFont(Constants.HEADING_FONT);
         setOnChangeEvent(this, roomModel);
         new SetFocusListenerToJTextFields(this);
@@ -253,7 +280,7 @@ public class AddRoomView extends JFrame {
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowOpened(java.awt.event.WindowEvent e) {
-                addRoomBttn.requestFocusInWindow();
+                editRoomBttn.requestFocusInWindow();
             }
         });
 
@@ -403,7 +430,7 @@ public class AddRoomView extends JFrame {
                                     repaint();
                                 }
                             }else {
-                               updateUI(patientListPanel);
+                                updateUI(patientListPanel);
                             }
                             revalidate();
                             repaint();
