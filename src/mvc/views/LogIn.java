@@ -11,16 +11,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LogIn extends JFrame implements ActionListener {
-    private static JButton logInbtn;
+    private static JButton logInbtn, registerBtn;
     JTextField text, LogPassword;
 
     public LogIn (){ LogInComponents();}
     public void LogInComponents(){
 
         JPanel logPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        logInbtn = new JButton("Log In");
+       logInbtn = new JButton("Log In");
         logInbtn.setSize(20,10);
         logInbtn.addActionListener(this);
+
+        registerBtn = new JButton("Register");
+        registerBtn.setSize(20,10);
+        registerBtn.addActionListener(this);
 
 
         JPanel Logheader = new JPanel();
@@ -32,9 +36,9 @@ public class LogIn extends JFrame implements ActionListener {
         Logheader.setBackground(Constants.primary);
 
 
-        text = new JTextField(20);
+        text = new JTextField("Username",20);
         JLabel userLabel = new JLabel("Enter username: ");
-        LogPassword = new JTextField(20);
+        LogPassword = new JTextField("Password",20);
         JLabel PasswordLabel = new JLabel("Enter password: ");
         logPanel.setBackground(Color.WHITE);
         logPanel.setLayout(new FlowLayout(FlowLayout.CENTER , 25, 65));
@@ -45,6 +49,7 @@ public class LogIn extends JFrame implements ActionListener {
         logPanel.add(PasswordLabel);
         logPanel.add(LogPassword);
         logPanel.add(logInbtn);
+        logPanel.add(registerBtn);
         add(logPanel);
 
         add(Logheader, BorderLayout.NORTH);
@@ -61,6 +66,7 @@ public class LogIn extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String name = "celine";
+
         if(e.getSource()==logInbtn){
             if(text.getText().equals(name)&& LogPassword.getText().equals(name)){
                 this.setEnabled(false);
@@ -73,6 +79,14 @@ public class LogIn extends JFrame implements ActionListener {
             }
 
         }
+         if(e.getSource()==registerBtn){
+
+                 this.setEnabled(false);
+                 this.dispose();
+                 new Register();
+
+
+         }
     }
 }
 
