@@ -17,6 +17,7 @@ public class PatientItem extends CustomRoundedPanel {
     PatientView patientView;
     Dashboard dashboard;
     AddRoomView addRoomView;
+    EditRoomView editRoomView;
     int width = 1090;
 
     JLabel patientIDLabel, patientName;
@@ -29,6 +30,16 @@ public class PatientItem extends CustomRoundedPanel {
         patientIDLabel = new JLabel("Patient ID: " + patientItem.getString("_id"));
         patientName = new JLabel(patientItem.getString("First Name") + " " + patientItem.getString("Middle Name") + " " + patientItem.getString("Last Name"));
         initSearchPatientComponent();
+    }
+
+    public PatientItem(Document patientItem, int width, EditRoomView editRoomView) {
+        this.editRoomView = editRoomView;
+        this.width = width;
+        this.patientItem = patientItem;
+        this.patientID = patientItem.getString("_id");
+        patientIDLabel = new JLabel("Patient ID: " + patientItem.getString("_id"));
+        patientName = new JLabel(patientItem.getString("First Name") + " " + patientItem.getString("Middle Name") + " " + patientItem.getString("Last Name"));
+        initSearchPatientComponentForEditRoom();
     }
 
     public PatientItem(Document patientItem, PatientView patientView, Dashboard dashboard) {
@@ -89,6 +100,39 @@ public class PatientItem extends CustomRoundedPanel {
                 addRoomView.assignPatientsToRoom(patientItem.getString("First Name") + " " + patientItem.getString("Middle Name") + " " + patientItem.getString("Last Name"), patientID);
                 addRoomView.revalidate();
                 addRoomView.repaint();
+            }
+        });
+
+        setLayout(new GridBagLayout());
+        GridBagConstraints itemgbc = new GridBagConstraints();
+        itemgbc.anchor = GridBagConstraints.WEST;
+        itemgbc.insets = new Insets(5, 50, 5, 0);
+        itemgbc.fill = GridBagConstraints.BOTH; // Fill the cell both horizontally and vertically
+        itemgbc.weightx = 1;  // Evenly distribute horizontally
+        itemgbc.weighty = 1;
+        setBackground(Constants.primary);
+        setMaximumSize(new Dimension(width, 45));
+        setPreferredSize(new Dimension(width, 45));
+        setLayout(new GridBagLayout());
+
+        add(patientIDLabel, itemgbc);
+        add(patientName, itemgbc);
+        add(assignBttn, itemgbc);
+
+        fixedJLabel(this);
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+    }
+
+    public void initSearchPatientComponentForEditRoom() {
+        JLabel assignBttn = new JLabel("Assign");
+
+        assignBttn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        assignBttn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                editRoomView.assignPatientsToRoom(patientItem.getString("First Name") + " " + patientItem.getString("Middle Name") + " " + patientItem.getString("Last Name"), patientID);
+                editRoomView.revalidate();
+                editRoomView.repaint();
             }
         });
 

@@ -5,7 +5,9 @@ import com.mongodb.client.model.Filters;
 import database.URI;
 import org.bson.Document;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class GetPatients {
@@ -44,6 +46,29 @@ public class GetPatients {
         }
         return null;
     }
+
+    public static String getPatientAdmissionDate(String patientID) {
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
+            MongoDatabase database = mongoClient.getDatabase("patientDB");
+            MongoCollection<Document> collection = database.getCollection("patients");
+
+            Document patientDoc = collection.find(new Document("_id", patientID)).first();
+
+            if (patientDoc != null) {
+                Date admissionDate = patientDoc.getDate("Admission Date");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d, yyyy h:mm a");
+                String formattedDate = simpleDateFormat.format(admissionDate);
+                System.out.println("Admission Date: " + formattedDate);
+                return formattedDate;
+            } else {
+                System.out.println("Patient not found.");
+            }
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+        return null;
+    }
+
 
     public static List<Document> filterPatientData(String searchFieldInput) {
         List<Document> patientList = new ArrayList<>();

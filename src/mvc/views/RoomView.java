@@ -1,6 +1,7 @@
 package mvc.views;
 
 import mvc.controllers.GetPatients;
+import mvc.controllers.GetRooms;
 import mvc.controllers.GetStaff;
 import mvc.models.PatientModel;
 import mvc.models.RoomModel;
@@ -55,42 +56,43 @@ public class RoomView extends Panel {
 
         roomListPanel.setLayout(new BoxLayout(roomListPanel, BoxLayout.Y_AXIS));
         roomListPanel.setBorder(new EmptyBorder(30,80,80,80));
-
-//        updateUI();
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+        updateUI();
 
         add(scrollPane, BorderLayout.CENTER);
-        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+
         revalidate();
         repaint();
     }
 
-//    public void updateUI(){
-//        roomListPanel.removeAll();
-//        GetRooms getRooms = new GetRooms();
-//        List<Document> roomList = getRooms.getRoomData();
-//
-//        if (roomList == null) {
-//            JLabel noRooms = new JLabel("No Rooms Yet");
-//            roomListPanel.add(noRooms);
-//        } else {
-//            for (Document room : roomList) {
-//                RoomListItem item = new RoomListItem(room, roomView, dashboard);
-//                roomListPanel.add(item);
-//                roomListPanel.add(Box.createVerticalStrut(20));
-//                item.revalidate();
-//                item.repaint();
-//            }
-//        }
-//        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-//        revalidate();
-//        repaint();
-//    }
+    public void updateUI(){
+        roomListPanel.removeAll();
+        GetRooms getRooms = new GetRooms();
+        List<Document> roomList = getRooms.getRoomData();
+
+        if (roomList == null) {
+            JLabel noRooms = new JLabel("No Rooms Yet");
+            roomListPanel.add(noRooms);
+        } else {
+            for (Document room : roomList) {
+                RoomListItem item = new RoomListItem(room, roomView, dashboard);
+                roomListPanel.add(item);
+                roomListPanel.add(Box.createVerticalStrut(20));
+                item.revalidate();
+                item.repaint();
+            }
+        }
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+        revalidate();
+        repaint();
+    }
 
     class addRoomBttn implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             dashboard.setEnabled(false);
+            dashboard.setAlwaysOnTop(false);
             dashboard.setFocusable(false);
             new AddRoomView(new RoomModel(), roomView, dashboard);
         }
