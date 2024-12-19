@@ -10,10 +10,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EventListener;
+
 import mvc.views.utility.SetDefaultFont;
 import mvc.views.utility.SetFocusListenerToJTextFields;
 
@@ -42,14 +45,14 @@ public class AddPatientView extends JFrame {
     public JTextField allergiesTextField = new JTextField(20);
     public JTextField medicationTextField = new JTextField(20);
     public JTextField symptomsTextField = new JTextField(20);
-    public JTextField phoneNumberField = new JTextField("Phone Number", 15);
+    public JTextField phoneNumberField = new JTextField("09876586418", 15);
     public JTextField emailAddressField = new JTextField("Email",20);
-    public JTextField emergencyContactNumberField = new JTextField("Emergency Contact No.",15);
+    public JTextField emergencyContactNumberField = new JTextField("Emergency Contact no.",15);
     public JTextField streetAddressField = new JTextField("Street Name",20);
     public JTextField cityField = new JTextField("City",20);
     public JTextField regionField = new JTextField("Region",20);
     public JTextField municipalityField = new JTextField("Municipality",20);
-    public JTextField postalCodeField = new JTextField("Postal Code",8);
+    public JTextField postalCodeField = new JTextField("4106",8);
     public JTextField nationalityTextField = new JTextField("Nationality", 15);
     public JTextField civilStatusField = new JTextField("Civil Status", 15);
     public JRadioButton maleRadioButtonn = new JRadioButton("Male");
@@ -286,9 +289,15 @@ public class AddPatientView extends JFrame {
         addSymptomsBttn.addActionListener(_ -> {
             String symptomText = symptomsTextField.getText();
             if (!symptomText.isEmpty()) {
+                if(symptomsArray.contains(symptomsTextField.getText())){
+                    symptomsTextField.setText("");
+                    return;
+                };
                 symptomsArray.add(symptomText);
                 updateSymptomsContainer();
+                symptomsTextField.setText("");
             }
+
         });
 
         JPanel SYMPTOMS_ITEM_CONTAINER = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -669,6 +678,7 @@ public class AddPatientView extends JFrame {
         for (Component component : container.getComponents()) {
             if (component instanceof JTextField) {
                 JTextField textField = (JTextField) component;
+                String[] previousValue = { textField.getText() };
                 ((JTextField) component).getDocument().addDocumentListener(new DocumentListener() {
                     @Override
                     public void insertUpdate(DocumentEvent e) {
@@ -686,10 +696,45 @@ public class AddPatientView extends JFrame {
                     }
 
                     private void handleTextChange() {
+                        SwingUtilities.invokeLater(() -> {
+                        String pattern = "^[a-zA-Z\\s]*$";
+                        String pattern2 = "^09\\d{9}$";    // Numbers starting with 09, exactly 11 digits
+                        String pattern3 = "^\\d{4}$";
+                        String emailPattern = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
                         JTextField source = (JTextField) component;
                         String text = source.getText();
 
-                        // Handle text change for specific fields
+
+
+                        if (component == patientNameFieldFN || component == patientNameFieldLN ||
+                                component == patientNameFieldMN || component == cityField ||
+                                component == municipalityField || component == nationalityTextField ||
+                                component == civilStatusField) {
+                            if (!text.matches(pattern)) {
+                                JOptionPane.showMessageDialog(null, "Invalid input. Please input letters and spaces only.");
+                                source.setText(""); // Clear invalid input
+
+                            }}
+                        else if (component == emergencyContactNumberField || component == phoneNumberField ) {
+                            if (text.length() == 11 && !text.matches(pattern2)|| text.length() > 11) {
+                                JOptionPane.showMessageDialog(null, "Enter a valid number.");
+                                source.setText(""); // Clear invalid input
+
+                            }
+                        }
+                        else if (component == postalCodeField) {
+
+                            // Validate only when text length is exactly 4
+                            if (text.length() == 4 && !text.matches(pattern3)) {
+                                JOptionPane.showMessageDialog(null, "Postal code must be exactly 4 digits.");
+                                source.setText("");  // Clear invalid input
+                            }
+                            else if (text.length() > 4) {
+                                JOptionPane.showMessageDialog(null, "Postal code must be exactly 4 digits.");
+                                source.setText("");  // Clear input if it's more than 4 digits
+                            }}
+
+                          // Handle text change for specific fields
                         if (component == patientNameFieldFN) {
                             model.setFirstName(text);
                         } else if (component == patientNameFieldLN) {
@@ -716,7 +761,9 @@ public class AddPatientView extends JFrame {
                             model.setNationality(text);
                         }
 
-                }});
+                }
+                );}
+                });
             } else if (component instanceof Container) {
                 setOnChangeEvent((Container) component, model);
             }

@@ -515,7 +515,7 @@ public class EditPatientView extends JFrame {
         setJTextFieldPadding(this);
 
         setOnChangeEvent(this, patientModel);
-        new SetFocusListenerToJTextFields(this, this);
+        new SetFocusListenerToJTextFields(this);
 
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override

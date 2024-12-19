@@ -62,7 +62,7 @@ public class SetFocusListenerToJTextFields implements FocusListener {
             source.setBorder(BorderFactory.createCompoundBorder(
                     borderColor, new EmptyBorder(2, 10, 2, 10) // Inner padding
             ));
-        }else if (source.getText().trim().equals(placeholder)) {
+        }else if (source.getText().trim().equals(placeholder) && !Objects.equals(container, editPatientView)) {
             source.setText(""); // Clear placeholder text
             source.setForeground(Color.BLACK); // Set text color to default
             Border borderColor = BorderFactory.createLineBorder(Constants.primary, 2, true);

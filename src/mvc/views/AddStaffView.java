@@ -57,6 +57,9 @@ public class AddStaffView extends JFrame {
         setSize(900, 700);
         setLocationRelativeTo(null);
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setAlwaysOnTop(true);
+
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.add(addStaffHeader);
         mainPanel.add(staffNameLabel);
@@ -65,6 +68,7 @@ public class AddStaffView extends JFrame {
         mainPanel.add(staffPositionPanel);
         mainPanel.add(addStaffButton);
         add(mainPanel);
+
 
         setOnChangeEvent(this, staffModel);
 

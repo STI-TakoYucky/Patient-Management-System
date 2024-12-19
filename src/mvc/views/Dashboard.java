@@ -62,14 +62,92 @@ public class Dashboard extends JFrame implements ActionListener  {
          patientsbtn= new JButton("Patients");
          medicalstaffBtn = new JButton("Medical Staffs");
 
-        //Button sizes
-        roombtn.setPreferredSize(new Dimension(150, 50));
-        patientsbtn.setPreferredSize(new Dimension(150,50));
-        medicalstaffBtn.setPreferredSize(new Dimension(150,50));
+        roombtn.setFont(new Font("Arial", Font.PLAIN, 20));
+        patientsbtn.setFont(new Font("Arial", Font.PLAIN, 20));
+        medicalstaffBtn.setFont(new Font("Arial", Font.PLAIN, 20));
 
+
+        //Button sizes
+        roombtn.setPreferredSize(new Dimension(200, 50));
+        patientsbtn.setPreferredSize(new Dimension(200,50));
+        medicalstaffBtn.setPreferredSize(new Dimension(200,50));
+
+        // clear button background
+        roombtn.setOpaque(false);
+        roombtn.setContentAreaFilled(false);
+        roombtn.setBorderPainted(false);
+
+        patientsbtn.setOpaque(false);
+        patientsbtn.setContentAreaFilled(false);
+        patientsbtn.setBorderPainted(false);
+
+        medicalstaffBtn.setOpaque(false);
+        medicalstaffBtn.setContentAreaFilled(false);
+        medicalstaffBtn.setBorderPainted(false);
+
+        roombtn.setHorizontalAlignment(SwingConstants.LEFT);
+        patientsbtn.setHorizontalAlignment(SwingConstants.LEFT);
+        medicalstaffBtn.setHorizontalAlignment(SwingConstants.LEFT);
+
+
+
+        // set text color
+        roombtn.setForeground(Color.WHITE);
+        patientsbtn.setForeground(Color.WHITE);
+        medicalstaffBtn.setForeground(Color.WHITE);
+
+        buttons.setBackground(Constants.primary);
         // Action listener
-        buttons.setLayout(new FlowLayout(FlowLayout.CENTER , 20, 20));
+        buttons.setLayout(new FlowLayout(FlowLayout.CENTER , 50, 30));
         buttons.setPreferredSize(new Dimension(200,600));
+
+
+        roombtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                roombtn.setBackground(Constants.secondary);// Change background color on hover
+                roombtn.setForeground(Constants.primary);
+                roombtn.setOpaque(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                roombtn.setOpaque(false);// Revert background color
+                roombtn.setForeground(Color.WHITE);
+            }
+
+        });
+
+        patientsbtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                patientsbtn.setBackground(Constants.secondary); // Change background color on hover
+                patientsbtn.setForeground(Constants.primary);
+                patientsbtn.setOpaque(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                patientsbtn.setOpaque(false); // Revert background color
+                patientsbtn.setForeground(Color.WHITE);
+            }
+        });
+
+        medicalstaffBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                medicalstaffBtn.setBackground(Constants.secondary); // Change background color on hover
+                medicalstaffBtn.setForeground(Constants.primary);
+                medicalstaffBtn.setOpaque(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                medicalstaffBtn.setOpaque(false); // Revert background color
+                medicalstaffBtn.setForeground(Color.WHITE);
+            }
+        });
+
         // add buttons
         if (userRole == "staff") {
             buttons.add(roombtn);
