@@ -25,25 +25,24 @@ public class EditStaffController {
 
             MongoCollection<Document> collection = database.getCollection("medical staff");
 
-            String id = model.getId();
-            String newFirstName = model.getFirstName();
-            String newLastName = model.getLastName();
-            String newPosition = model.getPosition();
 
-            updateStaffData(collection, id, newFirstName, newLastName, newPosition);
+            updateStaffData(collection);
 
             System.out.println("Data inserted successfully!");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-        public void updateStaffData(MongoCollection<Document> collection, String id, String firstName, String lastName, String position) {
-            Bson filter = Filters.eq("_id", id);
+        public void updateStaffData(MongoCollection<Document> collection) {
+            Bson filter = Filters.eq("_id", model.getId());
 
             Bson update = Updates.combine(
-                    Updates.set("First Name", firstName),
-                    Updates.set("Last Name", lastName)  ,
-                    Updates.set("Position", position)
+                    Updates.set("First Name", model.getFirstName()),
+                    Updates.set("Last Name", model.getLastName())  ,
+                    Updates.set("Position", model.getPosition()),
+                    Updates.set("Middle Name", model.getMiddleName()),
+                    Updates.set("Username", model.getUsername())  ,
+                    Updates.set("Password", model.getPassword())
             );
 
             UpdateResult result = collection.updateOne(filter, update);

@@ -19,9 +19,11 @@ import java.util.List;
 public class PatientView extends Panel {
 
     PatientView patientView = this;
+    RoomView roomView;
     Dashboard dashboard;
 
-    public PatientView(Dashboard dashboard) {
+    public PatientView(Dashboard dashboard, RoomView roomView) {
+        this.roomView = roomView;
         this.dashboard = dashboard;
         initComponents();
     }
@@ -91,7 +93,7 @@ public class PatientView extends Panel {
             dashboard.setEnabled(false);
             dashboard.setFocusable(false);
             dashboard.setAlwaysOnTop(false);
-            new AddPatientView(new PatientModel(), patientView, dashboard);
+            new AddPatientView(new PatientModel(), patientView, dashboard, roomView);
         }
     }
 

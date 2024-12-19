@@ -1,5 +1,6 @@
 package mvc.views;
 import mvc.controllers.*;
+import mvc.models.PatientModel;
 import mvc.models.RoomModel;
 import mvc.views.components.PatientItem;
 import mvc.views.constants.Constants;
@@ -28,21 +29,25 @@ public class EditRoomView extends JFrame {
     Dashboard dashboard;
     EditRoomView addRoomView = this;
     Map<String, String> assignedPatients = new HashMap<>();
+    Map<String, String> oldAssignedPatients = new HashMap<>();
     Document roomData;
     String roomID;
+    PatientModel patientModel;
 
     public EditRoomView() {
         System.out.println("Default Constructor");
     }
 
-    public EditRoomView(String roomID, RoomModel roomModel, RoomView roomView, Dashboard dashboard) {
+    public EditRoomView(String roomID, RoomModel roomModel, RoomView roomView, Dashboard dashboard, PatientModel patientModel) {
         this.dashboard = dashboard;
         this.roomModel = roomModel;
         this.roomView = roomView;
+        this.patientModel = patientModel;
         this.roomID = roomID;
         GetRooms getRooms = new GetRooms();
         this.roomData = getRooms.getRoomDataByID(roomID);
         initComponents();
+        oldAssignedPatients = (Map<String, String>) roomData.get("Patients");
     }
     JPanel patientListPanel;
     JPanel toBeAssignedPanel = new JPanel();
@@ -230,7 +235,7 @@ public class EditRoomView extends JFrame {
                             assignedPatients.put(PatientsIDArray.get(i - 1), PatientsNameArray.get(i - 1));
                         }
                         roomModel.setAssignedPatients(assignedPatients);
-                        new EditRoomController(roomModel);
+                        EditRoomController editRoom = new EditRoomController(roomModel, oldAssignedPatients);
                         JOptionPane.showMessageDialog(null, "Successfully edited a room");
                         roomView.updateUI();
 
@@ -286,6 +291,11 @@ public class EditRoomView extends JFrame {
 
 
     }
+
+    public boolean isPatientAssigned(String patientID) {
+        return assignedPatients.containsKey(patientID); // Check if patientID exists in the assigned patients map
+    }
+
 
     public void assignPatientsToRoom(String name, String id) {
         try {
@@ -360,11 +370,13 @@ public class EditRoomView extends JFrame {
             patientListPanel.add(noPatient);
         } else {
             for (Document patient : patientList) {
+                if (!patient.getBoolean("Assigned")) {
                 PatientItem item = new PatientItem(patient, 780, addRoomView);
                 patientListPanel.add(item);
                 patientListPanel.add(Box.createVerticalStrut(20));
                 item.revalidate();
                 item.repaint();
+            }
             }
         }
         revalidate();

@@ -1,5 +1,8 @@
 package mvc.views.components;
 
+import mvc.models.RoomModel;
+import mvc.models.StaffModel;
+import mvc.views.Dashboard;
 import mvc.views.EditStaffView;
 import mvc.views.MedicalStaffView;
 import org.bson.Document;
@@ -12,7 +15,7 @@ import java.awt.event.MouseEvent;
 
 public class MedicalStaffItem extends CustomRoundedPanel {
     MedicalStaffView view;
-    public MedicalStaffItem(Document staffList, MedicalStaffView view) {
+    public MedicalStaffItem(Document staffList, MedicalStaffView view, Dashboard dashboard) {
         this.view = view;
         JLabel staffID = new JLabel("Staff ID: " + staffList.getString("_id"));
         JLabel staffName = new JLabel(staffList.getString("First Name") + " " +  staffList.getString("Last Name"));
@@ -37,11 +40,10 @@ public class MedicalStaffItem extends CustomRoundedPanel {
         editStaffItemButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                String id = staffList.getString("_id");
-                String firstName = staffList.getString("First Name");
-                String lastName = staffList.getString("Last Name");
-                String position = staffList.getString("Position");
-                new EditStaffView(id, firstName, lastName, position, view);
+                dashboard.setEnabled(false);
+                dashboard.setFocusable(false);
+                dashboard.setAlwaysOnTop(false);
+                new EditStaffView(staffList.getString("_id"), new StaffModel(), view, dashboard, staffList);
             }
         });
 

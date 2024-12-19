@@ -5,13 +5,30 @@ import java.util.Date;
 
 public class PatientModel {
     private String firstName, lastName, middleName, id, sex, email, region,  streetName, city, civilStatus, municipality, nationality;
-    private String room, phoneNumber, emergencyContactNumber, assignedStaff;
+    private String room, roomID, phoneNumber, emergencyContactNumber, assignedStaff;
     private ArrayList<String> symptoms, medication, allergies;
     private int  postalCode;
+    private String oldRoom;
     private Date birthdate, admissionDate;
 
     // Setters
 
+
+    public String getOldRoom() {
+        return oldRoom;
+    }
+
+    public void setOldRoom(String oldRoom) {
+        this.oldRoom = oldRoom;
+    }
+
+    public String getRoomID() {
+        return roomID;
+    }
+
+    public void setRoomID(String roomID) {
+        this.roomID = roomID;
+    }
 
     public void setMunicipality(String municipality) {
         this.municipality = municipality;

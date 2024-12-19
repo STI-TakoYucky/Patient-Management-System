@@ -1,10 +1,7 @@
 package mvc.views;
 
 import com.toedter.calendar.JDateChooser;
-import mvc.controllers.AddPatientController;
-import mvc.controllers.DeletePatientController;
-import mvc.controllers.EditPatientController;
-import mvc.controllers.GetPatients;
+import mvc.controllers.*;
 import mvc.models.PatientModel;
 import mvc.views.constants.Constants;
 import mvc.views.utility.SetDefaultFont;
@@ -13,15 +10,13 @@ import mvc.views.utility.SetFocusListenerToJTextFields;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
+
 import org.bson.Document;
-import java.util.Date;
-import java.util.Objects;
 
 public class EditPatientView extends JFrame {
     PatientModel patientModel = new PatientModel();
@@ -59,12 +54,13 @@ public class EditPatientView extends JFrame {
     public JTextField streetAddressField;
     public JTextField cityField;
     public JTextField regionField;
-    public JTextField provinceField;
+    public JTextField municipalityField;
     public JTextField postalCodeField;
     public JTextField nationalityTextField;
     public JTextField civilStatusField;
     public JRadioButton maleRadioButtonn;
     public JRadioButton femaleRadioButton;
+    JComboBox<String> chooseRoomComboBox;
 
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
     Image image = closeButtonIcon.getImage();
@@ -102,14 +98,14 @@ public class EditPatientView extends JFrame {
             allergiesTextField = new JTextField("", 15);
             Object phoneNumberValue = patientDocument.get("Phone Number");
             phoneNumberField = new JTextField(phoneNumberValue.toString(), 15);
-            emailAddressField = new JTextField("Email",20);
+            emailAddressField = new JTextField(patientDocument.getString("Email"),20);
             Object emergencyContactNumberValue = patientDocument.get("Emergency Contact Number");
             emergencyContactNumberField = new JTextField(emergencyContactNumberValue.toString(),15);
             streetAddressField = new JTextField(patientDocument.getString("Street Name"),20);
             cityField = new JTextField(patientDocument.getString("City"),20);
             regionField = new JTextField(patientDocument.getString("Region"),20);
-            provinceField = new JTextField(patientDocument.getString("Municipality"),20);
-            Object postalCodeValue = patientDocument.get("Phone Number");
+            municipalityField = new JTextField(patientDocument.getString("Municipality"),20);
+            Object postalCodeValue = patientDocument.get("Postal Code");
             postalCodeField = new JTextField(postalCodeValue.toString(),8);
             nationalityTextField = new JTextField(patientDocument.getString("Nationality"), 15);
             civilStatusField = new JTextField(patientDocument.getString("Civil Status"), 15);
@@ -124,6 +120,8 @@ public class EditPatientView extends JFrame {
             }
 
             symptomsArray = new ArrayList<>(patientDocument.getList("Symptoms", String.class));
+            medicationArray = new ArrayList<>(patientDocument.getList("Medication", String.class));
+            allergiesArray = new ArrayList<>(patientDocument.getList("Allergies", String.class));
 
         }
 
@@ -246,7 +244,7 @@ public class EditPatientView extends JFrame {
         gbc.gridy = 1;
         addressPanel.add(regionField, gbc);
         gbc.gridx = 1;
-        addressPanel.add(provinceField, gbc);
+        addressPanel.add(municipalityField, gbc);
         gbc.gridy = 2;
         gbc.gridx = 0;
         addressPanel.add(cityField, gbc);
@@ -319,10 +317,15 @@ public class EditPatientView extends JFrame {
 
         // Add Symptoms Button Listener
         addSymptomsBttn.addActionListener(_ -> {
-            String symptomText = symptomsTextField.getText();
-            if (!symptomText.isEmpty()) {
-                symptomsArray.add(symptomText);
+            String text = symptomsTextField.getText();
+            if (!text.isEmpty()) {
+                if(symptomsArray.contains(symptomsTextField.getText())){
+                    symptomsTextField.setText("");
+                    return;
+                };
+                symptomsArray.add(text);
                 updateSymptomsContainer();
+                symptomsTextField.setText("");
             }
         });
 
@@ -351,10 +354,15 @@ public class EditPatientView extends JFrame {
         medicationContainer.setLayout(new GridBagLayout());
 
         addMedication.addActionListener(_ -> {
-            String medicationText = medicationTextField.getText();
-            if (!medicationText.isEmpty()) {
-                medicationArray.add(medicationText);
+            String text = medicationTextField.getText();
+            if (!text.isEmpty()) {
+                if(medicationArray.contains(medicationTextField.getText())){
+                    medicationTextField.setText("");
+                    return;
+                };
+                medicationArray.add(text);
                 updateMedicationContainer();
+                medicationTextField.setText("");
             }
         });
 
@@ -382,12 +390,15 @@ public class EditPatientView extends JFrame {
         allergiesContainer.setLayout(new GridBagLayout());
 
         addAllergy.addActionListener(_ -> {
-            String allergyText = allergiesTextField.getText();
-            System.out.println(allergyText);
-            if (!allergyText.isEmpty()) {
-                allergiesArray.add(allergyText); // Add to the allergies list
-                SwingUtilities.invokeLater(this::updateAllergiesContainer);    // Refresh the container to display the new allergy
-
+            String text = allergiesTextField.getText();
+            if (!text.isEmpty()) {
+                if(allergiesArray.contains(allergiesTextField.getText())){
+                    allergiesTextField.setText("");
+                    return;
+                };
+                allergiesArray.add(text);
+                updateAllergiesContainer();
+                allergiesTextField.setText("");
             }
         });
 
@@ -396,18 +407,41 @@ public class EditPatientView extends JFrame {
 
         JPanel chooseRoomAndStaffPanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel chooseRoomAndStaffPanel = new JPanel(new GridBagLayout());
-        String[] options = { "Option 1", "Option 2", "Option 3", "Option 4" , "Option 2", "Option 3", "Option 4" , "Option 2", "Option 3", "Option 4" , "Option 2", "Option 3", "Option 4" };
-        JComboBox<String> chooseRoomComboBox = new JComboBox<>(options);
-        JComboBox<String> chooseMedicalStaffComboBox = new JComboBox<>(options);
-        JLabel chooseRoomAndStaffLabel = new JLabel("Room and Medical Staff");
+        GetRooms getRooms = new GetRooms();
+        List<Document> roomData = getRooms.getRoomData();
+
+
+        JComboBox<String> chooseRoomComboBox = new JComboBox<>();
+        JComboBox<String> chooseMedicalStaffComboBox = new JComboBox<>();
+
+        chooseRoomComboBox.addItem("Select Room");
+
+
+
+        if (roomData != null) {
+            for (Document room : roomData) {
+                Map<String, String> patientMap = (Map<String, String>) room.get("Patients");
+                int patientMapSize = patientMap.size();
+                String roomName = room.getString("Room Name");
+                if (roomName != null && !(room.getInteger("Room Capacity") == patientMapSize)) { // Ensure roomName is not null
+                    chooseRoomComboBox.addItem(roomName);
+                    chooseMedicalStaffComboBox.addItem(roomName);
+                }
+            }
+        }
+
+        if (Objects.equals(patientModel.getRoom(), "Select Room")) {
+            chooseRoomComboBox.setSelectedItem("Select Room");
+        } else {
+            chooseRoomComboBox.setSelectedItem(patientModel.getRoom());
+        }
+        JLabel chooseRoomAndStaffLabel = new JLabel("Assigned Medical Staff");
 
         gbc.gridx = 0;
         gbc.gridy = 0;
         chooseRoomAndStaffPanel.add(chooseRoomAndStaffLabel, gbc);
+
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        chooseRoomAndStaffPanel.add(chooseRoomComboBox, gbc);
-        gbc.gridx = 1;
         gbc.gridy = 1;
         chooseRoomAndStaffPanel.add(chooseMedicalStaffComboBox, gbc);
 
@@ -436,35 +470,37 @@ public class EditPatientView extends JFrame {
         });
 
         editPatientBttn.addActionListener(e -> {
-            int choice = JOptionPane.showConfirmDialog(null, "Confirm Edit?",
-                    "Edit Patient", JOptionPane.YES_NO_OPTION);
-            if (choice == JOptionPane.YES_OPTION) {
-                try {
-                    patientModel.setBirthdate(birthDate.getDate());
-                    patientModel.setAdmissionDate(admissionDate.getDate());
-                    if (maleRadioButtonn.isSelected()) {
-                        patientModel.setSex(maleRadioButtonn.getText());
-                    } else if (femaleRadioButton.isSelected()) {
-                        patientModel.setSex(femaleRadioButton.getText());
-                    }
-                    patientModel.setSymptoms(symptomsArray);
-                    patientModel.setMedication(medicationArray);
-                    patientModel.setAllergies(allergiesArray);
-                    patientModel.setPostalCode(Integer.parseInt(postalCodeField.getText()));
-                    new EditPatientController(patientModel);
-                    patientView.updateUI();
-                    JOptionPane.showMessageDialog(null, "Edited Successfully");
-                    dispose();
-                    dashboard.setEnabled(true);
-                    dashboard.setFocusable(true);
-                    dashboard.setAlwaysOnTop(true);
-                }catch (NumberFormatException err) {
-                    System.out.println(err);
-                } catch (Exception err) {
-                    System.out.println("System Error");
-                }
-
+            patientModel.setFirstName(patientNameFieldFN.getText());
+            patientModel.setLastName(patientNameFieldLN.getText());
+            patientModel.setMiddleName(patientNameFieldMN.getText());
+            patientModel.setEmail(emailAddressField.getText());
+            patientModel.setStreetName(streetAddressField.getText());
+            patientModel.setCity(cityField.getText());
+            patientModel.setRegion(regionField.getText());
+            patientModel.setCivilStatus(civilStatusField.getText());
+            patientModel.setPhoneNumber(phoneNumberField.getText());
+            patientModel.setEmergencyContactNumber(emergencyContactNumberField.getText());
+            patientModel.setMunicipality(municipalityField.getText());
+            patientModel.setNationality(nationalityTextField.getText());
+            patientModel.setBirthdate(birthDate.getDate());
+            patientModel.setOldRoom(patientModel.getRoom());
+            patientModel.setRoom((String) chooseRoomComboBox.getSelectedItem());
+            chooseRoomComboBox.setSelectedItem(patientModel.getRoom());
+            if (maleRadioButtonn.isSelected()) {
+                patientModel.setSex(maleRadioButtonn.getText());
+            } else if (femaleRadioButton.isSelected()) {
+                patientModel.setSex(femaleRadioButton.getText());
             }
+            patientModel.setSymptoms(symptomsArray);
+            patientModel.setMedication(medicationArray);
+            patientModel.setAllergies(allergiesArray);
+            patientModel.setPostalCode(Integer.parseInt(postalCodeField.getText()));
+            if (validatePatientModel(patientModel)) {
+                editPatientInDatabase();
+            } else {
+                System.out.println("Validation failed.");
+            }
+
         });
 
         // Add All Sections to Main Panel
@@ -514,7 +550,6 @@ public class EditPatientView extends JFrame {
         addPatientHeader.setFont(Constants.HEADING_FONT);
         setJTextFieldPadding(this);
 
-        setOnChangeEvent(this, patientModel);
         new SetFocusListenerToJTextFields(this);
 
         this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -527,6 +562,26 @@ public class EditPatientView extends JFrame {
         updateAllergiesContainer();
         updateMedicationContainer();
 
+    }
+
+    public void editPatientInDatabase() {
+        int choice = JOptionPane.showConfirmDialog(null, "Confirm?",
+                "Edit patient", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            try {
+                new EditPatientController(patientModel);
+                patientView.updateUI();
+                JOptionPane.showMessageDialog(null, "Successfully edited a patient");
+            }catch (NumberFormatException err) {
+                System.out.println(err);
+            } catch (Exception err) {
+                System.out.println("System Error");
+            }
+                dispose();
+                dashboard.setEnabled(true);
+                dashboard.setFocusable(true);
+                dashboard.setAlwaysOnTop(true);
+        }
     }
 
 
@@ -713,60 +768,60 @@ public class EditPatientView extends JFrame {
             }
         }
     }
-
-    private void setOnChangeEvent(Container container, PatientModel model) {
-        for (Component component : container.getComponents()) {
-            if (component instanceof JTextField) {
-                JTextField textField = (JTextField) component;
-                ((JTextField) component).getDocument().addDocumentListener(new DocumentListener() {
-                    @Override
-                    public void insertUpdate(DocumentEvent e) {
-                        handleTextChange();
-                    }
-
-                    @Override
-                    public void removeUpdate(DocumentEvent e) {
-                        handleTextChange();
-                    }
-
-                    @Override
-                    public void changedUpdate(DocumentEvent e) {
-                        handleTextChange();
-                    }
-
-                    private void handleTextChange() {
-                        JTextField source = (JTextField) component;
-                        String text = source.getText();
-
-                        // Handle text change for specific fields
-                        if (component == patientNameFieldFN) {
-                            model.setFirstName(text);
-                        } else if (component == patientNameFieldLN) {
-                            model.setLastName(text);
-                        } else if (component == patientNameFieldMN) {
-                            model.setMiddleName(text);
-                        } else if (component == emailAddressField) {
-                            model.setEmail(text);
-                        } else if (component == streetAddressField) {
-                            model.setStreetName(text);
-                        } else if (component == cityField) {
-                            model.setCity(text);
-                        } else if (component == regionField) {
-                            model.setRegion(text);
-                        } else if (component == civilStatusField) {
-                            model.setCivilStatus(text);
-                        } else if (component == phoneNumberField) {
-                            model.setPhoneNumber(text);
-                        } else if (component == emergencyContactNumberField) {
-                            model.setEmergencyContactNumber(text);
-                        }
-
-                }});
-            } else if (component instanceof Container) {
-                setOnChangeEvent((Container) component, model);
-            }
-        }
-    }
+//
+//    private void setOnChangeEvent(Container container, PatientModel model) {
+//        for (Component component : container.getComponents()) {
+//            if (component instanceof JTextField) {
+//                JTextField textField = (JTextField) component;
+//                ((JTextField) component).getDocument().addDocumentListener(new DocumentListener() {
+//                    @Override
+//                    public void insertUpdate(DocumentEvent e) {
+//                        handleTextChange();
+//                    }
+//
+//                    @Override
+//                    public void removeUpdate(DocumentEvent e) {
+//                        handleTextChange();
+//                    }
+//
+//                    @Override
+//                    public void changedUpdate(DocumentEvent e) {
+//                        handleTextChange();
+//                    }
+//
+//                    private void handleTextChange() {
+//                        JTextField source = (JTextField) component;
+//                        String text = source.getText();
+//
+//                        // Handle text change for specific fields
+//                        if (component == patientNameFieldFN) {
+//                            model.setFirstName(text);
+//                        } else if (component == patientNameFieldLN) {
+//                            model.setLastName(text);
+//                        } else if (component == patientNameFieldMN) {
+//                            model.setMiddleName(text);
+//                        } else if (component == emailAddressField) {
+//                            model.setEmail(text);
+//                        } else if (component == streetAddressField) {
+//                            model.setStreetName(text);
+//                        } else if (component == cityField) {
+//                            model.setCity(text);
+//                        } else if (component == regionField) {
+//                            model.setRegion(text);
+//                        } else if (component == civilStatusField) {
+//                            model.setCivilStatus(text);
+//                        } else if (component == phoneNumberField) {
+//                            model.setPhoneNumber(text);
+//                        } else if (component == emergencyContactNumberField) {
+//                            model.setEmergencyContactNumber(text);
+//                        }
+//
+//                }});
+//            } else if (component instanceof Container) {
+//                setOnChangeEvent((Container) component, model);
+//            }
+//        }
+//    }
 
     public void setValuesToModels() {
         // Assuming patientModel is an instance of your PatientModel class
@@ -792,6 +847,128 @@ public class EditPatientView extends JFrame {
         patientModel.setBirthdate(patientDocument.getDate("Birthdate")); // Date field
         patientModel.setAdmissionDate(patientDocument.getDate("Admission Date")); // Date field
 
+    }
+
+    public boolean validatePatientModel(PatientModel patientModel) {
+        // Regex patterns
+        String NAME_REGEX = "^[A-Za-z]+$"; // Letters only for names
+        String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"; // Basic email regex
+        String GENERAL_TEXT_REGEX = "^[A-Za-z0-9-.\\s]+$"; // Allow letters and numbers with spaces
+        String PH_PHONE_NUMBER_REGEX = "^(09|\\+639)\\d{9}$"; // Philippine phone number (starts with 09 or +639)
+
+        // Validate first name
+        if (patientModel.getFirstName() == null || !patientModel.getFirstName().matches(NAME_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid first name. It must contain only letters.");
+            return false;
+        }
+
+        // Validate last name
+        if (patientModel.getLastName() == null || !patientModel.getLastName().matches(NAME_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid last name. It must contain only letters.");
+            return false;
+        }
+
+        // Validate middle name
+        if (patientModel.getMiddleName() == null || !patientModel.getMiddleName().matches(NAME_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid middle name. It must contain only letters.");
+            return false;
+        }
+
+        // Validate email
+        if (patientModel.getEmail() == null || !patientModel.getEmail().matches(EMAIL_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid email address.");
+            return false;
+        }
+
+        // Validate street name
+        if (patientModel.getStreetName() == null || !patientModel.getStreetName().matches(GENERAL_TEXT_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid street name.");
+            return false;
+        }
+
+        // Validate city name
+        if (patientModel.getCity() == null || !patientModel.getCity().matches(GENERAL_TEXT_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid city name. It must contain only letters.");
+            return false;
+        }
+
+        // Validate region name
+        if (patientModel.getRegion() == null || !patientModel.getRegion().matches(GENERAL_TEXT_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid region name. It must contain only letters.");
+            return false;
+        }
+
+        // Validate civil status
+        if (patientModel.getCivilStatus() == null || !patientModel.getCivilStatus().matches(NAME_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid civil status. It must contain only letters.");
+            return false;
+        }
+
+        // Validate phone number
+        if (patientModel.getPhoneNumber() == null || !patientModel.getPhoneNumber().matches(PH_PHONE_NUMBER_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid phone number.");
+            return false;
+        }
+
+        // Validate emergency contact number
+        if (patientModel.getEmergencyContactNumber() == null || !patientModel.getEmergencyContactNumber().matches(PH_PHONE_NUMBER_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid emergency contact number.");
+            return false;
+        }
+
+        // Validate municipality name
+        if (patientModel.getMunicipality() == null || !patientModel.getMunicipality().matches(GENERAL_TEXT_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid municipality name. It must contain only letters.");
+            return false;
+        }
+
+        // Validate postal code
+        if (patientModel.getPostalCode() == 0) {
+            JOptionPane.showMessageDialog(null, "Postal code must be provided.");
+            return false;
+        }
+        int postalCode = patientModel.getPostalCode();
+        if (postalCode < 1000 || postalCode > 9999) {
+            JOptionPane.showMessageDialog(null, "Postal code must be a 4-digit number.");
+            return false;
+        }
+
+        // Validate nationality
+        if (patientModel.getNationality() == null || !patientModel.getNationality().matches(NAME_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid nationality. It must contain only letters.");
+            return false;
+        }
+
+        // Validate birthdate
+        if (patientModel.getBirthdate() == null) {
+            JOptionPane.showMessageDialog(null, "Birthdate cannot be empty.");
+            return false;
+        }
+
+        // Validate admission date
+        if (patientModel.getAdmissionDate() == null) {
+            JOptionPane.showMessageDialog(null, "Admission date cannot be empty.");
+            return false;
+        }
+
+        // Validate sex
+        if (patientModel.getSex() == null) {
+            JOptionPane.showMessageDialog(null, "Please select the patient's sex.");
+            return false;
+        }
+
+        // Validate Philippine phone numbers (start with 09 and contain 10 digits)
+        if (patientModel.getPhoneNumber() != null && !patientModel.getPhoneNumber().matches(PH_PHONE_NUMBER_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid phone number. It must start with '09' and contain 10 digits.");
+            return false;
+        }
+
+        if (patientModel.getEmergencyContactNumber() != null && !patientModel.getEmergencyContactNumber().matches(PH_PHONE_NUMBER_REGEX)) {
+            JOptionPane.showMessageDialog(null, "Invalid emergency contact number. It must start with '09' and contain 10 digits.");
+            return false;
+        }
+
+        return true; // All validations passed
     }
 
 }

@@ -9,62 +9,97 @@ import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
 import database.URI;
 import mvc.models.PatientModel;
-import mvc.models.StaffModel;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
-
-import javax.print.Doc;
 
 public class EditPatientController {
-    PatientModel model;
+    private PatientModel patientModel;
+
     public EditPatientController(PatientModel model) {
-        this.model = model;
+        this.patientModel = model;
 
         try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
             MongoDatabase database = mongoClient.getDatabase("patientDB");
-
             MongoCollection<Document> collection = database.getCollection("patients");
 
+            updatePatientData(collection);
 
-            updateStaffData(collection);
-
+            if (patientModel.getRoom() != null && !patientModel.getRoom().equals("Select Room")) {
+                movePatientToNewRoom(mongoClient);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void updateStaffData(MongoCollection<Document> collection) {
-        Bson filter = Filters.eq("_id", model.getId());
+
+    public void updatePatientData(MongoCollection<Document> collection) {
+        Bson filter = Filters.eq("_id", patientModel.getId());
 
         Bson update = Updates.combine(
-                Updates.set("First Name", model.getFirstName()),
-                Updates.set("Last Name", model.getLastName()),
-                Updates.set("Middle Name", model.getMiddleName()),
-                Updates.set("Municipality", model.getMunicipality()),
-                Updates.set("Sex", model.getSex()),
-                Updates.set("Email", model.getEmail()),
-                Updates.set("Region", model.getRegion()),
-                Updates.set("Street Name", model.getStreetName()),
-                Updates.set("City", model.getCity()),
-                Updates.set("Civil Status", model.getCivilStatus()),
-                Updates.set("Room", model.getRoom()),
-                Updates.set("Assigned Staff", model.getAssignedStaff()),
-                Updates.set("Symptoms", model.getSymptoms()),
-                Updates.set("Medication", model.getMedication()),
-                Updates.set("Allergies", model.getAllergies()),
-                Updates.set("Phone Number", model.getPhoneNumber()),
-                Updates.set("Emergency Contact Number", model.getEmergencyContactNumber()),
-                Updates.set("Postal Code", model.getPostalCode()),
-                Updates.set("Birthdate", model.getBirthdate()),
-                Updates.set("Admission Date", model.getAdmissionDate())
+                Updates.set("First Name", patientModel.getFirstName()),
+                Updates.set("Last Name", patientModel.getLastName()),
+                Updates.set("Middle Name", patientModel.getMiddleName()),
+                Updates.set("Municipality", patientModel.getMunicipality()),
+                Updates.set("Sex", patientModel.getSex()),
+                Updates.set("Email", patientModel.getEmail()),
+                Updates.set("Region", patientModel.getRegion()),
+                Updates.set("Street Name", patientModel.getStreetName()),
+                Updates.set("City", patientModel.getCity()),
+                Updates.set("Civil Status", patientModel.getCivilStatus()),
+                Updates.set("Assigned Staff", patientModel.getAssignedStaff()),
+                Updates.set("Symptoms", patientModel.getSymptoms()),
+                Updates.set("Medication", patientModel.getMedication()),
+                Updates.set("Allergies", patientModel.getAllergies()),
+                Updates.set("Phone Number", patientModel.getPhoneNumber()),
+                Updates.set("Emergency Contact Number", patientModel.getEmergencyContactNumber()),
+                Updates.set("Postal Code", patientModel.getPostalCode()),
+                Updates.set("Nationality", patientModel.getNationality()),
+                Updates.set("Birthdate", patientModel.getBirthdate()),
+                Updates.set("Admission Date", patientModel.getAdmissionDate())
         );
 
         UpdateResult result = collection.updateOne(filter, update);
-
         if (result.getMatchedCount() > 0) {
             System.out.println("Document updated successfully.");
         } else {
             System.out.println("No document found with the given ID.");
         }
     }
+
+    private void movePatientToNewRoom(MongoClient mongoClient) {
+        try {
+            MongoDatabase roomDB = mongoClient.getDatabase("roomDB");
+            MongoCollection<Document> roomCollection = roomDB.getCollection("rooms");
+
+
+            // If the room is changing, we need to remove the patient from the old room
+            if (patientModel.getOldRoom() != null || !patientModel.getOldRoom().equals(patientModel.getRoom())) {
+                Bson oldRoomFilter = Filters.eq("Room Name", patientModel.getOldRoom());
+                Bson removePatientFromOldRoom = Updates.unset("Patients." + patientModel.getId());  // Remove the patient by their ID
+                UpdateResult oldRoomUpdate = roomCollection.updateOne(oldRoomFilter, removePatientFromOldRoom);
+
+                if (oldRoomUpdate.getMatchedCount() > 0) {
+                    System.out.println("Patient successfully removed from the old room.");
+                } else {
+                    System.out.println("No matching old room found for the patient.");
+                }
+            }
+
+            // Add the patient to the new room
+            Bson newRoomFilter = Filters.eq("Room Name", patientModel.getRoom());
+            Bson addPatientToNewRoom = Updates.set("Patients." + patientModel.getId(), patientModel.getFirstName() + " " + patientModel.getMiddleName() + " " + patientModel.getLastName());
+            UpdateResult newRoomUpdate = roomCollection.updateOne(newRoomFilter, addPatientToNewRoom);
+
+            if (newRoomUpdate.getMatchedCount() > 0) {
+                System.out.println("Patient successfully moved to the new room.");
+            } else {
+                System.out.println("No matching room found to move the patient.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error moving patient between rooms: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
 }
