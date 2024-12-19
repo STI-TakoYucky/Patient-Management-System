@@ -23,8 +23,10 @@ public class RoomView extends Panel {
 
     RoomView roomView = this;
     Dashboard dashboard;
+    PatientModel patientModel;
 
-    public RoomView(Dashboard dashboard) {
+    public RoomView(Dashboard dashboard, PatientModel patientModel) {
+        this.patientModel = patientModel;
         this.dashboard = dashboard;
         initComponents();
     }
@@ -75,7 +77,7 @@ public class RoomView extends Panel {
             roomListPanel.add(noRooms);
         } else {
             for (Document room : roomList) {
-                RoomListItem item = new RoomListItem(room, roomView, dashboard);
+                RoomListItem item = new RoomListItem(room, roomView, dashboard, patientModel);
                 roomListPanel.add(item);
                 roomListPanel.add(Box.createVerticalStrut(20));
                 item.revalidate();

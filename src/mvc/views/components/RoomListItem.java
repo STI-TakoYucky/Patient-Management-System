@@ -1,5 +1,6 @@
 package mvc.views.components;
 import mvc.controllers.GetPatients;
+import mvc.models.PatientModel;
 import mvc.models.RoomModel;
 import mvc.views.Dashboard;
 import mvc.views.EditRoomView;
@@ -22,8 +23,10 @@ public class RoomListItem extends CustomRoundedPanel {
     Document roomItem;
     RoomView roomView;
     Dashboard dashboard;
-    public RoomListItem(Document room, RoomView roomView, Dashboard dashboard) {
+    PatientModel patientModel;
+    public RoomListItem(Document room, RoomView roomView, Dashboard dashboard, PatientModel patientModel) {
         this.roomItem = room;
+        this.patientModel = patientModel;
         this.roomView = roomView;
         this.dashboard = dashboard;
         initComponents();
@@ -37,10 +40,12 @@ public class RoomListItem extends CustomRoundedPanel {
         Map<String, String> patientMap = (Map<String, String>) roomItem.get("Patients");
         int patientMapSize = patientMap.size();
 
+
         setLayout(new BorderLayout());
         gbc.insets = new Insets(0, 12, 0, 0);
         gbc.anchor = GridBagConstraints.CENTER;
         JPanel roomHeaderPanel = new CustomRoundedPanel();
+        roomHeaderPanel.setPreferredSize(new Dimension(1060, 50));
         roomHeaderPanel.setLayout(new GridBagLayout());
         roomHeaderPanel.setBackground(Constants.secondary);
         JLabel roomName = new JLabel(roomItem.getString("Room Name"));
@@ -55,7 +60,7 @@ public class RoomListItem extends CustomRoundedPanel {
                 dashboard.setEnabled(false);
                 dashboard.setAlwaysOnTop(false);
                 dashboard.setFocusable(false);
-                new EditRoomView(roomItem.getString("_id"), new RoomModel(), roomView, dashboard);
+                new EditRoomView(roomItem.getString("_id"), new RoomModel(), roomView, dashboard, patientModel);
             }
         });
 

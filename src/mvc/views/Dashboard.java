@@ -1,30 +1,36 @@
 package mvc.views;
 
+import mvc.models.PatientModel;
 import mvc.views.constants.Constants;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Objects;
 
 public class Dashboard extends JFrame implements ActionListener  {
-    String userRole = "admin";
+    String role;
 
     JButton roombtn,patientsbtn,medicalstaffBtn,medicalrecordBtn;
     public Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
     CardLayout cl1 = new CardLayout();
     JPanel container = new JPanel(cl1);
+    RoomView roomView = new RoomView(this, new PatientModel());
 
-    public Dashboard() {
+    public Dashboard(String userRole) {
+        this.role = userRole;
         initComponents();
     }
 
     public void initComponents() {
+        String userRole = role;
 
         JPanel header = new JPanel();
         JPanel buttons = new JPanel();
 
-        JLabel appName = new JLabel("App Name");
+        JLabel appName = new JLabel("HealthSync");
+        appName.setForeground(Color.white);
         JTextField searchField = new RoundJTextField("Search", 30);
         JLabel patientCount = new JLabel("Patient Count: ");
 
@@ -69,8 +75,11 @@ public class Dashboard extends JFrame implements ActionListener  {
 
         //Button sizes
         roombtn.setPreferredSize(new Dimension(200, 50));
+        roombtn.setBorder(new EmptyBorder(0, 47, 0, 0));
         patientsbtn.setPreferredSize(new Dimension(200,50));
+        patientsbtn.setBorder(new EmptyBorder(0, 47, 0, 0));
         medicalstaffBtn.setPreferredSize(new Dimension(200,50));
+        medicalstaffBtn.setBorder(new EmptyBorder(0, 47, 0, 0));
 
         // clear button background
         roombtn.setOpaque(false);
@@ -149,20 +158,18 @@ public class Dashboard extends JFrame implements ActionListener  {
         });
 
         // add buttons
-        if (userRole == "staff") {
+        if (Objects.equals(userRole, "Staff")) {
             buttons.add(roombtn);
             buttons.add(patientsbtn);
-        } else if (userRole == "admin") {
+        } else if (Objects.equals(userRole, "Admin")) {
             buttons.add(roombtn);
             buttons.add(patientsbtn);
             buttons.add(medicalstaffBtn);
 
         }
+        MedicalStaffView medicalStaffList = new MedicalStaffView(this);
+        PatientView patientView = new PatientView(this, roomView);
 
-
-        MedicalStaffView medicalStaffList = new MedicalStaffView();
-        PatientView patientView = new PatientView(this);
-        RoomView roomView = new RoomView(this);
 
         //
         roombtn.addActionListener(this);
@@ -188,6 +195,9 @@ public class Dashboard extends JFrame implements ActionListener  {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == roombtn){
         cl1.show(container, "roomView");
+        roomView.updateUI();
+        roomView.repaint();
+        roomView.revalidate();
         }
         if(e.getSource() == patientsbtn){
             cl1.show(container, "patientView");

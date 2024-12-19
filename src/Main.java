@@ -4,7 +4,7 @@ import mvc.views.Register;
 
 public class Main {
     public static void main(String[] args) {
-        new Dashboard() ;
+        new LogIn() ;
         //comment
     }
 }

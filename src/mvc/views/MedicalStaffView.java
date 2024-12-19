@@ -1,6 +1,8 @@
 package mvc.views;
 
 import mvc.controllers.GetStaff;
+import mvc.models.RoomModel;
+import mvc.models.StaffModel;
 import mvc.views.components.MedicalStaffItem;
 import mvc.views.constants.Constants;
 import mvc.views.utility.SetDefaultFont;
@@ -16,8 +18,10 @@ import java.awt.event.ActionListener;
 public class MedicalStaffView extends Panel {
 
     MedicalStaffView medView = this;
+    Dashboard dashboard;
 
-    public MedicalStaffView() {
+    public MedicalStaffView(Dashboard dashboard) {
+        this.dashboard = dashboard;
         initComponents();
     }
     JPanel staffListItemPanel = new JPanel();
@@ -67,7 +71,7 @@ public class MedicalStaffView extends Panel {
             staffListItemPanel.add(noStaff);
         } else {
             for (Document staff : staffList) {
-                MedicalStaffItem item = new MedicalStaffItem(staff, medView);
+                MedicalStaffItem item = new MedicalStaffItem(staff, medView, dashboard);
                 staffListItemPanel.add(item);
                 staffListItemPanel.add(Box.createVerticalStrut(20));
                 item.revalidate();
@@ -83,7 +87,10 @@ public class MedicalStaffView extends Panel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            AddStaffView view = new AddStaffView(medView);
+            AddStaffView view = new AddStaffView(new StaffModel(), medView, dashboard);
+            dashboard.setEnabled(false);
+            dashboard.setFocusable(false);
+            dashboard.setAlwaysOnTop(false);
         }
     }
 

@@ -2,6 +2,7 @@ package mvc.views;
 import com.mongodb.client.FindIterable;
 import mvc.controllers.AddPatientController;
 import mvc.controllers.AddRoomController;
+import mvc.controllers.GetAssignedPatients;
 import mvc.controllers.GetPatients;
 import mvc.models.RoomModel;
 import mvc.views.components.PatientItem;
@@ -284,6 +285,30 @@ public class AddRoomView extends JFrame {
         }
     }
 
+    public void updateUI(JPanel patientListPanel){
+        patientListPanel.removeAll();
+        GetPatients getPatients = new GetPatients();
+        List<Document> patientList = getPatients.getPatientData();
+
+        if (patientList == null) {
+            JLabel noPatient = new JLabel("No Patients Yet");
+            patientListPanel.add(noPatient);
+        } else {
+            for (Document patient : patientList) {
+                if (!patient.getBoolean("Assigned")) {
+                    PatientItem item = new PatientItem(patient, 780, addRoomView);
+                    patientListPanel.add(item);
+                    patientListPanel.add(Box.createVerticalStrut(20));
+                    item.revalidate();
+                    item.repaint();
+                }
+            }
+        }
+        updateAssignedPatients();
+        revalidate();
+        repaint();
+    }
+
     public void updateAssignedPatients() {
         toBeAssignedPanel.removeAll();
         for (int i = 0; i <= PatientsNameArray.size() - 1; i++) {
@@ -323,27 +348,6 @@ public class AddRoomView extends JFrame {
         }
     }
 
-    public void updateUI(JPanel patientListPanel){
-        patientListPanel.removeAll();
-        GetPatients getPatients = new GetPatients();
-        List<Document> patientList = getPatients.getPatientData();
-
-        if (patientList == null) {
-            JLabel noPatient = new JLabel("No Patients Yet");
-            patientListPanel.add(noPatient);
-        } else {
-            for (Document patient : patientList) {
-                PatientItem item = new PatientItem(patient, 780, addRoomView);
-                patientListPanel.add(item);
-                patientListPanel.add(Box.createVerticalStrut(20));
-                item.revalidate();
-                item.repaint();
-            }
-        }
-        revalidate();
-        repaint();
-    }
-
     public void setJTextFieldPadding(Container container) {
         for (Component component: container.getComponents()) {
             if (component instanceof JTextField) {
@@ -357,6 +361,11 @@ public class AddRoomView extends JFrame {
             }
         }
     }
+
+    public boolean isPatientAssigned(String patientID) {
+        return assignedPatients.containsKey(patientID); // Check if patientID exists in the assigned patients map
+    }
+
 
     private void setOnChangeEvent(Container container, RoomModel model) {
         for (Component component : container.getComponents()) {

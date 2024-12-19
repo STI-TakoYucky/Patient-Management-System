@@ -3,8 +3,32 @@ package mvc.models;
 import org.bson.types.ObjectId;
 
 public class StaffModel {
-    private String firstName, lastName, position;
-    private String id;
+    private String firstName, lastName, position, middleName;
+    private String id, username, password;
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;

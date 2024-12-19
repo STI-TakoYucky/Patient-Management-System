@@ -20,9 +20,13 @@ public class AddStaffController {
             MongoCollection<Document> collection = database.getCollection("medical staff");
 
             Document document = new Document("_id", IDGenerator.generateShortId())
+                    .append("Role", "Staff")
                     .append("First Name", model.getFirstName())
+                    .append("Middle Name", model.getMiddleName())
                     .append("Last Name", model.getLastName())
-                    .append("Position", model.getPosition());
+                    .append("Position", model.getPosition())
+            .append("Username", model.getUsername())
+            .append("Password", model.getPassword());
 
             collection.insertOne(document);
 

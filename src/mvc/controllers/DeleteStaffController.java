@@ -10,13 +10,12 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 public class DeleteStaffController {
-    public DeleteStaffController(StaffModel model) {
+    public DeleteStaffController(String id) {
 
         try(MongoClient mongoClient = MongoClients.create(URI.URI)) {
             MongoDatabase database = mongoClient.getDatabase("staffDB");
             MongoCollection<Document> collection = database.getCollection("medical staff");
 
-            String id = model.getId();
             Document deleteOneFilter = new Document("_id", id);
 
             collection.deleteOne(deleteOneFilter);
