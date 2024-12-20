@@ -1,5 +1,6 @@
 package mvc.views;
 
+import mvc.controllers.AddPatientController;
 import mvc.models.PatientModel;
 import mvc.views.constants.Constants;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
 public class Dashboard extends JFrame implements ActionListener  {
     String role;
 
-    JButton roombtn,patientsbtn,medicalstaffBtn,medicalrecordBtn;
+    JButton roombtn,patientsbtn,medicalstaffBtn,medicalrecordBtn, adminBttn;
     public Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
     CardLayout cl1 = new CardLayout();
     JPanel container = new JPanel(cl1);
@@ -33,6 +34,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         appName.setForeground(Color.white);
         JTextField searchField = new RoundJTextField("Search", 30);
         JLabel patientCount = new JLabel("Patient Count: ");
+        JLabel logoutBtn = new JLabel("Logout");
 
         //Jframe setup
         setVisible(true);
@@ -53,6 +55,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         appName.setFont(new Font("Arial", Font.BOLD, 32));
         header.add(appName);
 
+
         searchField.setMaximumSize(new Dimension(250, 35));
         searchField.setMargin(new Insets(0,10,0,10));
         searchField.addFocusListener(new searchFieldClicked(searchField));
@@ -60,18 +63,46 @@ public class Dashboard extends JFrame implements ActionListener  {
         header.add(searchField);
 
         patientCount.setFont(DEFAULT_FONT);
-        patientCount.setBorder(new EmptyBorder(0, 50, 0, 0));
+        patientCount.setForeground(Color.white);
+        patientCount.setBorder(new EmptyBorder(0, 50, 0, 430));
         header.add(patientCount);
+        header.add(logoutBtn);
+        logoutBtn.setFont(DEFAULT_FONT);
+        logoutBtn.setForeground(Color.white);
+        logoutBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        logoutBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                setAlwaysOnTop(false);
+                int choice = JOptionPane.showConfirmDialog(null, "Confirm?",
+                        "Logout", JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    new LogIn();
+                    dispose();
+
+                }
+            }
+
+        });
 
         // Buttons
          roombtn = new JButton("Rooms");
          patientsbtn= new JButton("Patients");
          medicalstaffBtn = new JButton("Medical Staffs");
+         adminBttn = new JButton("Admins");
+        roombtn.setFocusPainted(false);
+        roombtn.setBorderPainted(false);
+        patientsbtn.setFocusPainted(false);
+        patientsbtn.setBorderPainted(false);
+        medicalstaffBtn.setFocusPainted(false);
+        medicalstaffBtn.setBorderPainted(false);
+        adminBttn.setFocusPainted(false);
+        adminBttn.setBorderPainted(false);
 
         roombtn.setFont(new Font("Arial", Font.PLAIN, 20));
         patientsbtn.setFont(new Font("Arial", Font.PLAIN, 20));
         medicalstaffBtn.setFont(new Font("Arial", Font.PLAIN, 20));
-
+        adminBttn.setFont(new Font("Arial", Font.PLAIN, 20));
 
         //Button sizes
         roombtn.setPreferredSize(new Dimension(200, 50));
@@ -80,12 +111,15 @@ public class Dashboard extends JFrame implements ActionListener  {
         patientsbtn.setBorder(new EmptyBorder(0, 47, 0, 0));
         medicalstaffBtn.setPreferredSize(new Dimension(200,50));
         medicalstaffBtn.setBorder(new EmptyBorder(0, 47, 0, 0));
-
+        adminBttn.setPreferredSize(new Dimension(200,50));
+                adminBttn.setBorder(new EmptyBorder(0, 47, 0, 0));
         // clear button background
         roombtn.setOpaque(false);
         roombtn.setContentAreaFilled(false);
         roombtn.setBorderPainted(false);
-
+        adminBttn.setBorderPainted(false);
+        adminBttn.setContentAreaFilled(false);
+        adminBttn.setOpaque(false);
         patientsbtn.setOpaque(false);
         patientsbtn.setContentAreaFilled(false);
         patientsbtn.setBorderPainted(false);
@@ -97,14 +131,14 @@ public class Dashboard extends JFrame implements ActionListener  {
         roombtn.setHorizontalAlignment(SwingConstants.LEFT);
         patientsbtn.setHorizontalAlignment(SwingConstants.LEFT);
         medicalstaffBtn.setHorizontalAlignment(SwingConstants.LEFT);
-
+        adminBttn.setHorizontalAlignment(SwingConstants.LEFT);
 
 
         // set text color
         roombtn.setForeground(Color.WHITE);
         patientsbtn.setForeground(Color.WHITE);
         medicalstaffBtn.setForeground(Color.WHITE);
-
+        adminBttn.setForeground(Color.WHITE);
         buttons.setBackground(Constants.primary);
         // Action listener
         buttons.setLayout(new FlowLayout(FlowLayout.CENTER , 50, 30));
@@ -114,8 +148,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         roombtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                roombtn.setBackground(Constants.secondary);// Change background color on hover
-                roombtn.setForeground(Constants.primary);
+                roombtn.setBackground(Constants.hoverColor2);// Change background color on hover
                 roombtn.setOpaque(true);
             }
 
@@ -130,23 +163,20 @@ public class Dashboard extends JFrame implements ActionListener  {
         patientsbtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                patientsbtn.setBackground(Constants.secondary); // Change background color on hover
-                patientsbtn.setForeground(Constants.primary);
+                patientsbtn.setBackground(Constants.hoverColor2); // Change background color on hover
                 patientsbtn.setOpaque(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 patientsbtn.setOpaque(false); // Revert background color
-                patientsbtn.setForeground(Color.WHITE);
             }
         });
 
         medicalstaffBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                medicalstaffBtn.setBackground(Constants.secondary); // Change background color on hover
-                medicalstaffBtn.setForeground(Constants.primary);
+                medicalstaffBtn.setBackground(Constants.hoverColor2); // Change background color on hover
                 medicalstaffBtn.setOpaque(true);
             }
 
@@ -154,6 +184,20 @@ public class Dashboard extends JFrame implements ActionListener  {
             public void mouseExited(MouseEvent e) {
                 medicalstaffBtn.setOpaque(false); // Revert background color
                 medicalstaffBtn.setForeground(Color.WHITE);
+            }
+        });
+
+        adminBttn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                adminBttn.setBackground(Constants.hoverColor2); // Change background color on hover
+                adminBttn.setOpaque(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                adminBttn.setOpaque(false); // Revert background color
+                adminBttn.setForeground(Color.WHITE);
             }
         });
 
@@ -166,19 +210,27 @@ public class Dashboard extends JFrame implements ActionListener  {
             buttons.add(patientsbtn);
             buttons.add(medicalstaffBtn);
 
+        }else if (Objects.equals(userRole, "Superadmin")) {
+            buttons.add(roombtn);
+            buttons.add(patientsbtn);
+            buttons.add(medicalstaffBtn);
+            buttons.add(adminBttn);
         }
         MedicalStaffView medicalStaffList = new MedicalStaffView(this);
         PatientView patientView = new PatientView(this, roomView);
+        AdminView adminView = new AdminView(this);
 
 
         //
         roombtn.addActionListener(this);
+        adminBttn.addActionListener(this);
         medicalstaffBtn.addActionListener(this);
         patientsbtn.addActionListener(this);
         //container
         container.add(roomView, "roomView");
         container.add(medicalStaffList, "med");
         container.add(patientView, "patientView");
+        container.add(adminView, "admin");
 
         //add all main panels to the JFrame
         add(header, BorderLayout.NORTH);
@@ -204,6 +256,10 @@ public class Dashboard extends JFrame implements ActionListener  {
         }
         if(e.getSource() == medicalstaffBtn){
             cl1.show(container, "med");
+        }
+
+        if (e.getSource() == adminBttn) {
+            cl1.show(container, "admin");
         }
 
     }

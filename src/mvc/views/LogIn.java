@@ -36,12 +36,14 @@ public class LogIn extends JFrame implements ActionListener {
         registerBtn.addActionListener(this);
 
         JPanel Logheader = new JPanel();
-        JLabel headerName = new JLabel("Log In");
+        JLabel headerName = new JLabel("Welcome to HealthSync!");
+        headerName.setForeground(Color.white);
         Logheader.add(headerName);
         Logheader.setLayout(new FlowLayout(FlowLayout.CENTER));
         Logheader.setBorder(new EmptyBorder(30, 0, 30, 0));
 
         Logheader.setBackground(Constants.primary);
+        setResizable(false);
 
         text = new JTextField("Username", 20);
         JLabel userLabel = new JLabel("Enter username: ");
@@ -55,7 +57,6 @@ public class LogIn extends JFrame implements ActionListener {
         logPanel.add(PasswordLabel);
         logPanel.add(LogPassword);
         logPanel.add(logInbtn);
-        logPanel.add(registerBtn);
         add(logPanel);
 
         add(Logheader, BorderLayout.NORTH);
@@ -92,15 +93,36 @@ public class LogIn extends JFrame implements ActionListener {
 
     private boolean authenticate(String username, String password) {
         try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
-            MongoDatabase database = mongoClient.getDatabase("staffDB");
-            MongoCollection<Document> users = database.getCollection("medical staff");
+            // Check in adminDB -> admins collection
+            MongoDatabase adminDatabase = mongoClient.getDatabase("adminDB");
+            MongoCollection<Document> adminUsers = adminDatabase.getCollection("admins");
+            Document adminUser = adminUsers.find(Filters.eq("Username", username)).first();
 
-            Document user = users.find(Filters.eq("Username", username)).first();
-
-            if (user != null && user.getString("Password").equals(password)) {
-                Role = user.getString("Role");
-                return true; // Authentication successful
+            if (adminUser != null) {
+                if (adminUser.getString("Password").equals(password)) {
+                    Role = adminUser.getString("Role"); // Set role if necessary
+                    return true; // Authentication successful for admin
+                } else {
+                    JOptionPane.showMessageDialog(this, "Incorrect password for Admin.", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
             }
+
+            // Check in staffDB -> medical staff collection
+            MongoDatabase staffDatabase = mongoClient.getDatabase("staffDB");
+            MongoCollection<Document> medicalStaff = staffDatabase.getCollection("medical staff");
+            Document staffUser = medicalStaff.find(Filters.eq("Username", username)).first();
+
+            if (staffUser != null) {
+                if (staffUser.getString("Password").equals(password)) {
+                    Role = staffUser.getString("Role"); // Set role from staff document
+                    return true; // Authentication successful for staff
+                } else {
+                    JOptionPane.showMessageDialog(this, "Incorrect password for Medical Staff.", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -108,4 +130,5 @@ public class LogIn extends JFrame implements ActionListener {
 
         return false; // Authentication failed
     }
+
 }

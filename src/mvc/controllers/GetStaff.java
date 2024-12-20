@@ -31,4 +31,25 @@ public class GetStaff {
         }
         return null;
     }
+
+    public List<Document> getAdminData() {
+
+        List<Document> staffList = new ArrayList<>();
+
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
+            MongoDatabase database = mongoClient.getDatabase("adminDB");
+
+            MongoCollection<Document> collection = database.getCollection("admins");
+
+            for (Document doc : collection.find()) {
+                staffList.add(doc);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!staffList.isEmpty()) {
+            return staffList;
+        }
+        return null;
+    }
 }

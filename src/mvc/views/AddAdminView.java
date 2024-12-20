@@ -1,4 +1,11 @@
 package mvc.views;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import database.URI;
+import mvc.controllers.AddAdminController;
 import mvc.controllers.AddPatientController;
 import mvc.controllers.AddStaffController;
 import mvc.models.PatientModel;
@@ -13,22 +20,23 @@ import java.awt.event.*;
 
 import mvc.views.utility.SetDefaultFont;
 import mvc.views.utility.SetFocusListenerToJTextFields;
+import org.bson.Document;
 
-public class AddStaffView extends JFrame {
+public class AddAdminView extends JFrame {
     StaffModel staffModel;
-    MedicalStaffView medicalStaffView;
+    AdminView adminView;
     Dashboard dashboard;
     RoomView roomView;
     JFrame frame = this;
 
-    public AddStaffView() {
+    public AddAdminView() {
         System.out.println("Default Constructor");
     }
 
-    public AddStaffView(StaffModel staffModel, MedicalStaffView medicalStaffView, Dashboard dashboard) {
+    public AddAdminView(StaffModel staffModel, AdminView adminView, Dashboard dashboard) {
         this.dashboard = dashboard;
         this.staffModel = staffModel;
-        this.medicalStaffView = medicalStaffView;
+        this.adminView = adminView;
         initComponents();
     }
 
@@ -73,7 +81,7 @@ public class AddStaffView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
         // Header Section
-        JLabel addPatientHeader = new JLabel("Add Medical Staff");
+        JLabel addPatientHeader = new JLabel("Add Admin");
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel headerPanel = new JPanel();
@@ -96,7 +104,7 @@ public class AddStaffView extends JFrame {
 
 
         // Patient Name Section
-        JLabel staffName = new JLabel("Medical Staff Name");
+        JLabel staffName = new JLabel("Admin Name");
 
         JPanel namePanel = new JPanel(new GridBagLayout());
         JPanel namePanelWrapper = new JPanel();
@@ -118,8 +126,7 @@ public class AddStaffView extends JFrame {
 
 
 
-        JLabel staffDetailsPanel = new JLabel("Medical Staff Details");
-        JLabel staffAccount = new JLabel("Medical Staff Account");
+        JLabel staffDetailsPanel = new JLabel("Admin Account");
 
         JPanel detailsPanel = new JPanel(new GridBagLayout());
         JPanel detailsPanelWrappeer = new JPanel();
@@ -128,26 +135,21 @@ public class AddStaffView extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         detailsPanel.add(staffDetailsPanel, gbc);
+        gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridx = 0;
-        detailsPanel.add(staffPosition, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        detailsPanel.add(staffAccount, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 4;
         detailsPanel.add(staffUserName, gbc);
         gbc.gridx = 1;
-        gbc.gridy = 4;
+        gbc.gridy = 1;
         detailsPanel.add(staffPassword, gbc);
 
         // Add Patient Button
-        JButton addPatientButton = new JButton("Add Staff");
+        JButton addPatientButton = new JButton("Add Admin");
         JPanel addPatientButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         addPatientButtonPanel.add(addPatientButton);
 
 
         addPatientButton.addActionListener(e -> {
+            setAlwaysOnTop(false);
             staffModel.setFirstName(staffNameFieldFN.getText());
             staffModel.setMiddleName(staffNameFieldMN.getText());
             staffModel.setLastName(staffNameFieldLN.getText());
@@ -178,6 +180,8 @@ public class AddStaffView extends JFrame {
         setLocationRelativeTo(null);
         setUndecorated(true);
         setVisible(true);
+        setAlwaysOnTop(true);
+
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
@@ -305,14 +309,51 @@ public class AddStaffView extends JFrame {
 //        }
 //    }
 
+    private boolean isUsernameTaken(String username) {
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
+            // Check in adminDB -> admins collection
+            MongoDatabase adminDatabase = mongoClient.getDatabase("adminDB");
+            MongoCollection<Document> adminUsers = adminDatabase.getCollection("admins");
+            Document adminUser = adminUsers.find(Filters.eq("Username", username)).first();
+
+            if (adminUser != null) {
+                return true; // Username already exists in adminDB
+            }
+
+            // Check in staffDB -> medical staff collection
+            MongoDatabase staffDatabase = mongoClient.getDatabase("staffDB");
+            MongoCollection<Document> medicalStaff = staffDatabase.getCollection("medical staff");
+            Document staffUser = medicalStaff.find(Filters.eq("Username", username)).first();
+
+            if (staffUser != null) {
+                return true; // Username already exists in staffDB
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+
+        return false; // Username does not exist in either database
+    }
+
+
     public void addStaffToDatabase() {
+        String username = staffModel.getUsername();
+
+        if (isUsernameTaken(username)) {
+            JOptionPane.showMessageDialog(this, "Username already exists in the system. Please choose a different username.",
+                    "Validation Error", JOptionPane.ERROR_MESSAGE);
+            return; // Exit the method if the username is already taken
+        }
+
         int choice = JOptionPane.showConfirmDialog(null, "Confirm?",
-                "Add Staff", JOptionPane.YES_NO_OPTION);
+                "Add Admin", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
             try {
-                new AddStaffController(staffModel);
-                medicalStaffView.updateUI();
-                JOptionPane.showMessageDialog(null, "Successfully added a staff");
+                new AddAdminController(staffModel);
+                adminView.updateUI();
+                JOptionPane.showMessageDialog(null, "Successfully added an admin");
             }catch (NumberFormatException err) {
                 System.out.println(err);
             } catch (Exception err) {
@@ -359,12 +400,6 @@ public class AddStaffView extends JFrame {
         // Validate password using the password regex
         if (staffModel.getPassword() == null || !staffModel.getPassword().matches(PASSWORD_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid password! Password must be at least 8 characters long, include uppercase, lowercase, a number, and a special character.", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        // Validate position (optional, but should not be empty)
-        if (staffModel.getPosition() != null && staffModel.getPosition().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Position cannot be empty!", "Validation Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 

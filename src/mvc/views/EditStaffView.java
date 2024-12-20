@@ -132,6 +132,7 @@ public class EditStaffView extends JFrame {
 
 
         JLabel staffDetailsPanel = new JLabel("Medical Staff Details");
+        JLabel staffAccount = new JLabel("Medical Staff Account");
 
         JPanel detailsPanel = new JPanel(new GridBagLayout());
         JPanel detailsPanelWrappeer = new JPanel();
@@ -143,9 +144,14 @@ public class EditStaffView extends JFrame {
         gbc.gridy = 1;
         gbc.gridx = 0;
         detailsPanel.add(staffPosition, gbc);
-        gbc.gridx = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        detailsPanel.add(staffAccount, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
         detailsPanel.add(staffUserName, gbc);
-        gbc.gridx = 2;
+        gbc.gridx = 1;
+        gbc.gridy = 4;
         detailsPanel.add(staffPassword, gbc);
 
         // Add Patient Button

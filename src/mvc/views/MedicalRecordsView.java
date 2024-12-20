@@ -1,4 +1,5 @@
 package mvc.views;
+import com.toedter.calendar.JDateChooser;
 import mvc.controllers.AddPatientController;
 import mvc.controllers.AddStaffController;
 import mvc.models.PatientModel;
@@ -10,34 +11,33 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.function.BiConsumer;
 
 import mvc.views.utility.SetDefaultFont;
 import mvc.views.utility.SetFocusListenerToJTextFields;
+import org.bson.Document;
 
-public class AddStaffView extends JFrame {
+public class MedicalRecordsView extends JFrame {
     StaffModel staffModel;
     MedicalStaffView medicalStaffView;
     Dashboard dashboard;
     RoomView roomView;
     JFrame frame = this;
+    Document patientDocument;
 
-    public AddStaffView() {
+    public MedicalRecordsView() {
         System.out.println("Default Constructor");
     }
 
-    public AddStaffView(StaffModel staffModel, MedicalStaffView medicalStaffView, Dashboard dashboard) {
+    public MedicalRecordsView(Document patient, Dashboard dashboard) {
+        this.patientDocument = patient;
         this.dashboard = dashboard;
         this.staffModel = staffModel;
         this.medicalStaffView = medicalStaffView;
         initComponents();
     }
-
-    public JTextField staffNameFieldFN = new JTextField("First Name",18);
-    public JTextField staffNameFieldLN = new JTextField("Last Name",18);
-    public JTextField staffNameFieldMN = new JTextField("Middle Name",18);
-    public JTextField staffPosition = new JTextField("Position",18);
-    public JTextField staffUserName = new JTextField("Username",18);
-    public JTextField staffPassword = new JTextField("Password",18);
 
 
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
@@ -57,28 +57,18 @@ public class AddStaffView extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(2, 0, 2, 7);
+        gbc.insets = new Insets(5, 15, 5, 15);
 
-        // Main Panel with BoxLayout for Vertical Stacking
-        JPanel mainPanel = new JPanel();
-        JPanel mainContent = new JPanel();
+        // Main Panel with BorderLayout
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        // Header Panel
         JPanel mainHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        mainPanel.setLayout(new BorderLayout());
-        mainContent.setAlignmentX(Component.LEFT_ALIGNMENT);
-        mainHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
         mainHeader.setBackground(Constants.secondary);
-        mainHeader.setBorder(new EmptyBorder(15, 25, 15, 25));
-        mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
+        mainHeader.setBorder(new EmptyBorder(25, 25, 25, 25));
 
-        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        JLabel addPatientHeader = new JLabel("Medical Records");
 
-        // Header Section
-        JLabel addPatientHeader = new JLabel("Add Medical Staff");
-        addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        headerPanel.add(addPatientHeader);
         closeButton.setBorder(new EmptyBorder(0, 580, 0, 0));
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
@@ -91,89 +81,51 @@ public class AddStaffView extends JFrame {
             }
         });
 
-        headerPanel.add(closeButton);
-        headerPanel.setBackground(Constants.secondary);
+        mainHeader.add(addPatientHeader);
+        mainHeader.add(closeButton);
 
+        // Content Panel for Patient Data
+        JPanel mainContent = new JPanel();
+        mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
+        mainContent.setBorder(new EmptyBorder(15, 25, 15, 25));
+        mainContent.setBackground(Color.WHITE);
 
-        // Patient Name Section
-        JLabel staffName = new JLabel("Medical Staff Name");
+        // Populate Patient Data
+        mainContent.add(createLabel("First Name", (String) patientDocument.get("First Name")));
+        mainContent.add(createLabel("Last Name", patientDocument.getString("Last Name")));
+        mainContent.add(createLabel("Middle Name", patientDocument.getString("Middle Name")));
+        Date birthDate = patientDocument.getDate("Birthdate");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        String formattedBirthDate = dateFormat.format(birthDate);
 
-        JPanel namePanel = new JPanel(new GridBagLayout());
-        JPanel namePanelWrapper = new JPanel();
-        namePanelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
-        namePanelWrapper.add(namePanel);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        namePanel.add(staffName, gbc);
-        gbc.gridy = 1;
-        gbc.gridx = 0;
-        namePanel.add(staffNameFieldFN, gbc);
-        gbc.gridx = 1;
-        namePanel.add(staffNameFieldMN, gbc);
-        gbc.gridx = 2;
-        namePanel.add(staffNameFieldLN, gbc);
+// Add the formatted birthdate to the label
+        mainContent.add(createLabel("Birthdate", formattedBirthDate));
+        mainContent.add(createLabel("Admission Date", patientDocument.getDate("Admission Date").toString()));
+        mainContent.add(createLabel("Phone Number", patientDocument.get("Phone Number").toString()));
+        mainContent.add(createLabel("Email Address", patientDocument.getString("Email")));
+        mainContent.add(createLabel("Emergency Contact", patientDocument.get("Emergency Contact Number").toString()));
+        mainContent.add(createLabel("Street Address", patientDocument.getString("Street Name")));
+        mainContent.add(createLabel("City", patientDocument.getString("City")));
+        mainContent.add(createLabel("Region", patientDocument.getString("Region")));
+        mainContent.add(createLabel("Municipality", patientDocument.getString("Municipality")));
+        mainContent.add(createLabel("Postal Code", patientDocument.get("Postal Code").toString()));
+        mainContent.add(createLabel("Nationality", patientDocument.getString("Nationality")));
+        mainContent.add(createLabel("Civil Status", patientDocument.getString("Civil Status")));
+        mainContent.add(createLabel("Sex", patientDocument.getString("Sex")));
 
+        // Wrap Content in JScrollPane
+        JScrollPane scrollPane = new JScrollPane(mainContent);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Smooth scrolling
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-
-
-
-
-        JLabel staffDetailsPanel = new JLabel("Medical Staff Details");
-        JLabel staffAccount = new JLabel("Medical Staff Account");
-
-        JPanel detailsPanel = new JPanel(new GridBagLayout());
-        JPanel detailsPanelWrappeer = new JPanel();
-        detailsPanelWrappeer.setLayout(new FlowLayout(FlowLayout.LEFT));
-        detailsPanelWrappeer.add(detailsPanel);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        detailsPanel.add(staffDetailsPanel, gbc);
-        gbc.gridy = 1;
-        gbc.gridx = 0;
-        detailsPanel.add(staffPosition, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        detailsPanel.add(staffAccount, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        detailsPanel.add(staffUserName, gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 4;
-        detailsPanel.add(staffPassword, gbc);
-
-        // Add Patient Button
-        JButton addPatientButton = new JButton("Add Staff");
-        JPanel addPatientButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        addPatientButtonPanel.add(addPatientButton);
-
-
-        addPatientButton.addActionListener(e -> {
-            staffModel.setFirstName(staffNameFieldFN.getText());
-            staffModel.setMiddleName(staffNameFieldMN.getText());
-            staffModel.setLastName(staffNameFieldLN.getText());
-            staffModel.setPosition(staffPosition.getText());
-            staffModel.setUsername(staffUserName.getText());
-            staffModel.setPassword(staffPassword.getText());
-            if (validateStaffModel(staffModel)) {
-                addStaffToDatabase();
-            }
-
-        });
-
-        // Add All Sections to Main Panel
-        mainHeader.add(headerPanel);
-        mainContent.add(namePanelWrapper);
-        mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
-        mainContent.add(detailsPanelWrappeer);
-
-        mainContent.add(addPatientButtonPanel);
-        mainContent.setBorder(new EmptyBorder(25, 25, 25, 25));
+        // Add Components to Main Panel
         mainPanel.add(mainHeader, BorderLayout.NORTH);
-        mainPanel.add(mainContent, BorderLayout.CENTER);
-
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Set Up Frame
-        setContentPane(scrollPane);
+        setContentPane(mainPanel);
         setSize(900, 700);
         setLocationRelativeTo(null);
         setUndecorated(true);
@@ -181,19 +133,44 @@ public class AddStaffView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-        addPatientHeader.setFont(Constants.HEADING_FONT);
-        setJTextFieldPadding(this);
-
         new SetFocusListenerToJTextFields(this);
-
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-                addPatientButton.requestFocusInWindow();
-            }
-        });
-
+        addPatientHeader.setFont(Constants.HEADING_FONT);
     }
+
+    /**
+     * Utility method to create a field-value JLabel pair.
+     */
+    private JPanel createLabel(String fieldName, String value) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setBorder(new EmptyBorder(5, 15, 5, 15));
+        panel.setBackground(Color.WHITE);
+
+        JLabel fieldLabel = new JLabel(fieldName + ": ");
+        fieldLabel.setFont(Constants.DEFAULT_FONT);
+        fieldLabel.setForeground(Color.DARK_GRAY);
+
+        JLabel valueLabel = new JLabel(value);
+        valueLabel.setFont(Constants.DEFAULT_FONT);
+        valueLabel.setForeground(Color.BLACK);
+
+        panel.add(fieldLabel, BorderLayout.WEST);
+        panel.add(valueLabel, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+
+
+    // Helper Method to Add Fields
+    private void addField(JPanel panel, GridBagConstraints gbc, String label, JTextField textField) {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel(label), gbc);
+        gbc.gridx = 1;
+        panel.add(textField, gbc);
+    }
+
 
 
     public void setJTextFieldPadding(Container container) {
@@ -304,77 +281,6 @@ public class AddStaffView extends JFrame {
 //            }
 //        }
 //    }
-
-    public void addStaffToDatabase() {
-        int choice = JOptionPane.showConfirmDialog(null, "Confirm?",
-                "Add Staff", JOptionPane.YES_NO_OPTION);
-        if (choice == JOptionPane.YES_OPTION) {
-            try {
-                new AddStaffController(staffModel);
-                medicalStaffView.updateUI();
-                JOptionPane.showMessageDialog(null, "Successfully added a staff");
-            }catch (NumberFormatException err) {
-                System.out.println(err);
-            } catch (Exception err) {
-                System.out.println("System Error");
-            }
-                dispose();
-                dashboard.setEnabled(true);
-                dashboard.setFocusable(true);
-                dashboard.setAlwaysOnTop(true);
-
-        }
-    }
-
-    public boolean validateStaffModel(StaffModel staffModel) {
-        // Regex patterns
-        String NAME_REGEX = "^[A-Za-z]+$"; // Letters only for names
-        String GENERAL_TEXT_REGEX = "^[A-Za-z0-9-.\\s]+$"; // Allow letters and numbers with spaces
-        String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$"; // Password regex
-
-        // Validate firstName
-        if (staffModel.getFirstName() == null || !staffModel.getFirstName().matches(GENERAL_TEXT_REGEX)) {
-            JOptionPane.showMessageDialog(null, "Invalid first name! Please use letters only.", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        // Validate lastName
-        if (staffModel.getLastName() == null || !staffModel.getLastName().matches(GENERAL_TEXT_REGEX)) {
-            JOptionPane.showMessageDialog(null, "Invalid last name! Please use letters only.", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        // Validate middleName (optional, but must match if provided)
-        if (staffModel.getMiddleName() != null && !staffModel.getMiddleName().matches(GENERAL_TEXT_REGEX)) {
-            JOptionPane.showMessageDialog(null, "Invalid middle name! Please use letters only.", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        // Validate username (optional, but must match if provided)
-        if (staffModel.getUsername() != null && !staffModel.getUsername().matches(GENERAL_TEXT_REGEX)) {
-            JOptionPane.showMessageDialog(null, "Invalid username! Please use alphanumeric characters and valid symbols.", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        // Validate password using the password regex
-        if (staffModel.getPassword() == null || !staffModel.getPassword().matches(PASSWORD_REGEX)) {
-            JOptionPane.showMessageDialog(null, "Invalid password! Password must be at least 8 characters long, include uppercase, lowercase, a number, and a special character.", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        // Validate position (optional, but should not be empty)
-        if (staffModel.getPosition() != null && staffModel.getPosition().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Position cannot be empty!", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        // Validation passed for all fields
-        return true;
-    }
-
-
-
-
 
 
 }

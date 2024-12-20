@@ -1,6 +1,5 @@
 package mvc.views;
-import mvc.controllers.AddPatientController;
-import mvc.controllers.AddStaffController;
+import mvc.controllers.*;
 import mvc.models.PatientModel;
 import mvc.models.StaffModel;
 import mvc.views.constants.Constants;
@@ -13,31 +12,36 @@ import java.awt.event.*;
 
 import mvc.views.utility.SetDefaultFont;
 import mvc.views.utility.SetFocusListenerToJTextFields;
+import org.bson.Document;
 
-public class AddStaffView extends JFrame {
+public class EditAdminView extends JFrame {
     StaffModel staffModel;
-    MedicalStaffView medicalStaffView;
+    AdminView adminView;
     Dashboard dashboard;
     RoomView roomView;
     JFrame frame = this;
+    Document adminList;
+    String adminID;
 
-    public AddStaffView() {
+    public EditAdminView() {
         System.out.println("Default Constructor");
     }
 
-    public AddStaffView(StaffModel staffModel, MedicalStaffView medicalStaffView, Dashboard dashboard) {
+    public EditAdminView(String id, StaffModel staffModel, AdminView adminView, Dashboard dashboard, Document adminList) {
         this.dashboard = dashboard;
+        this.adminID = id;
+        this.adminList = adminList;
         this.staffModel = staffModel;
-        this.medicalStaffView = medicalStaffView;
+        this.adminView = adminView;
         initComponents();
     }
 
-    public JTextField staffNameFieldFN = new JTextField("First Name",18);
-    public JTextField staffNameFieldLN = new JTextField("Last Name",18);
-    public JTextField staffNameFieldMN = new JTextField("Middle Name",18);
-    public JTextField staffPosition = new JTextField("Position",18);
-    public JTextField staffUserName = new JTextField("Username",18);
-    public JTextField staffPassword = new JTextField("Password",18);
+    public JTextField staffNameFieldFN;
+    public JTextField staffNameFieldLN ;
+    public JTextField staffNameFieldMN;
+    public JTextField staffPosition;
+    public JTextField staffUserName;
+    public JTextField staffPassword;
 
 
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
@@ -49,8 +53,18 @@ public class AddStaffView extends JFrame {
     JLabel closeButton = new JLabel(resizedCloseButtonIcon);
 
 
+
     public void initComponents() {
-        setAlwaysOnTop(true);
+
+        if(adminList != null) {
+            staffNameFieldFN = new JTextField(adminList.getString("First Name"),18);
+            staffNameFieldLN = new JTextField(adminList.getString("Last Name"),18);
+            staffNameFieldMN = new JTextField(adminList.getString("Middle Name"),18);
+            staffPosition = new JTextField(adminList.getString("Position"),18);
+            staffUserName = new JTextField(adminList.getString("Username"),18);
+            staffPassword = new JTextField(adminList.getString("Password"),18);
+        }
+
         repaint();
         revalidate();
 
@@ -73,7 +87,7 @@ public class AddStaffView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
         // Header Section
-        JLabel addPatientHeader = new JLabel("Add Medical Staff");
+        JLabel addPatientHeader = new JLabel("Add Admin");
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel headerPanel = new JPanel();
@@ -96,7 +110,7 @@ public class AddStaffView extends JFrame {
 
 
         // Patient Name Section
-        JLabel staffName = new JLabel("Medical Staff Name");
+        JLabel staffName = new JLabel("Admin Name");
 
         JPanel namePanel = new JPanel(new GridBagLayout());
         JPanel namePanelWrapper = new JPanel();
@@ -118,8 +132,7 @@ public class AddStaffView extends JFrame {
 
 
 
-        JLabel staffDetailsPanel = new JLabel("Medical Staff Details");
-        JLabel staffAccount = new JLabel("Medical Staff Account");
+        JLabel staffDetailsPanel = new JLabel("Admin Details");
 
         JPanel detailsPanel = new JPanel(new GridBagLayout());
         JPanel detailsPanelWrappeer = new JPanel();
@@ -128,26 +141,40 @@ public class AddStaffView extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         detailsPanel.add(staffDetailsPanel, gbc);
+        gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridx = 0;
-        detailsPanel.add(staffPosition, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        detailsPanel.add(staffAccount, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 4;
         detailsPanel.add(staffUserName, gbc);
         gbc.gridx = 1;
-        gbc.gridy = 4;
+        gbc.gridy = 1;
         detailsPanel.add(staffPassword, gbc);
 
         // Add Patient Button
-        JButton addPatientButton = new JButton("Add Staff");
+        JButton addPatientButton = new JButton("Edit Admin");
+        JButton deleteAdmin = new JButton("Delete Admin");
         JPanel addPatientButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         addPatientButtonPanel.add(addPatientButton);
+        addPatientButtonPanel.add(deleteAdmin);
+
+        deleteAdmin.addActionListener(e -> {
+            setAlwaysOnTop(false);
+
+            // Display a confirmation dialog with Yes, No, and Cancel options
+            int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this staff?",
+                    "Delete Staff", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                new DeleteAdminController(adminID);
+                adminView.updateUI();
+                JOptionPane.showMessageDialog(null, "Deleted Successfully");
+                dispose();
+                dashboard.setEnabled(true);
+                dashboard.setFocusable(true);
+                dashboard.setAlwaysOnTop(true);
+            }
+        });
 
 
         addPatientButton.addActionListener(e -> {
+            setAlwaysOnTop(false);
             staffModel.setFirstName(staffNameFieldFN.getText());
             staffModel.setMiddleName(staffNameFieldMN.getText());
             staffModel.setLastName(staffNameFieldLN.getText());
@@ -178,6 +205,7 @@ public class AddStaffView extends JFrame {
         setLocationRelativeTo(null);
         setUndecorated(true);
         setVisible(true);
+        setAlwaysOnTop(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
@@ -307,21 +335,21 @@ public class AddStaffView extends JFrame {
 
     public void addStaffToDatabase() {
         int choice = JOptionPane.showConfirmDialog(null, "Confirm?",
-                "Add Staff", JOptionPane.YES_NO_OPTION);
+                "Edit Admin", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
             try {
-                new AddStaffController(staffModel);
-                medicalStaffView.updateUI();
-                JOptionPane.showMessageDialog(null, "Successfully added a staff");
+                new EditAdminController(staffModel);
+                adminView.updateUI();
+                JOptionPane.showMessageDialog(null, "Successfully edited an admin");
             }catch (NumberFormatException err) {
                 System.out.println(err);
             } catch (Exception err) {
                 System.out.println("System Error");
             }
-                dispose();
-                dashboard.setEnabled(true);
-                dashboard.setFocusable(true);
-                dashboard.setAlwaysOnTop(true);
+            dispose();
+            dashboard.setEnabled(true);
+            dashboard.setFocusable(true);
+            dashboard.setAlwaysOnTop(true);
 
         }
     }
@@ -359,12 +387,6 @@ public class AddStaffView extends JFrame {
         // Validate password using the password regex
         if (staffModel.getPassword() == null || !staffModel.getPassword().matches(PASSWORD_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid password! Password must be at least 8 characters long, include uppercase, lowercase, a number, and a special character.", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        // Validate position (optional, but should not be empty)
-        if (staffModel.getPosition() != null && staffModel.getPosition().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Position cannot be empty!", "Validation Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 

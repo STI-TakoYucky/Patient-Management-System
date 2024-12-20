@@ -202,16 +202,11 @@ public class AddRoomView extends JFrame {
                 JOptionPane.showMessageDialog(null, "Successfully added a room");
                 roomView.updateUI();
 
-                int addMorePatient = JOptionPane.showConfirmDialog(null, "Add another room?",
-                        "Add room", JOptionPane.YES_NO_OPTION);
-                if (addMorePatient == JOptionPane.YES_OPTION) {
-                    this.setAlwaysOnTop(true);
-                } else {
                     dispose();
                     dashboard.setEnabled(true);
                     dashboard.setFocusable(true);
                     dashboard.setAlwaysOnTop(true);
-                }
+
             }
           }else {
               this.setAlwaysOnTop(false);
