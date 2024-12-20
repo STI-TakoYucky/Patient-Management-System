@@ -807,16 +807,10 @@ public class AddPatientView extends JFrame {
             } catch (Exception err) {
                 System.out.println("System Error");
             }
-            int addMorePatient = JOptionPane.showConfirmDialog(null, "Add another patient?",
-                    "Add patient", JOptionPane.YES_NO_OPTION);
-            if (addMorePatient == JOptionPane.YES_OPTION) {
-
-            } else {
                 dispose();
                 dashboard.setEnabled(true);
                 dashboard.setFocusable(true);
                 dashboard.setAlwaysOnTop(true);
-            }
 
         }
     }
