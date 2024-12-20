@@ -2,6 +2,7 @@ package mvc.views;
 import mvc.controllers.AddPatientController;
 import mvc.controllers.DeletePatientController;
 import mvc.controllers.GetRooms;
+import mvc.controllers.GetStaff;
 import mvc.models.PatientModel;
 import mvc.views.constants.Constants;
 import com.toedter.calendar.JDateChooser;
@@ -247,9 +248,13 @@ public class AddPatientView extends JFrame {
         civilStatusWrapper.add(civilStatusPanel);
 
         // Admission date
-        JLabel admissionDateLabel = new JLabel("Enter Admission Date");
+        JLabel admissionDateLabel = new JLabel("Admission Date");
 
         JTextField admissionDateField = (JTextField) admissionDate.getDateEditor().getUiComponent();
+        admissionDateField.setEnabled(false);
+        admissionDateField.setDisabledTextColor(Color.GRAY);
+        admissionDate.setEnabled(false);
+
 
         admissionDate.setDate(new Date());
         admissionDateField.setMaximumSize(new Dimension(220, 20));
@@ -383,24 +388,18 @@ public class AddPatientView extends JFrame {
         JPanel chooseRoomAndStaffPanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel chooseRoomAndStaffPanel = new JPanel(new GridBagLayout());
 
-        GetRooms getRooms = new GetRooms();
-        List<Document> roomData = getRooms.getRoomData();
+        GetStaff getStaff = new GetStaff();
+        List<Document> staffData = getStaff.getStaffData();
 
 
-        JComboBox<String> chooseRoomComboBox = new JComboBox<>();
         JComboBox<String> chooseMedicalStaffComboBox = new JComboBox<>();
-        chooseRoomComboBox.addItem("Select Room");
-        chooseRoomComboBox.setSelectedItem(0);
+        chooseMedicalStaffComboBox.addItem("Select Medical Staff");
+        chooseMedicalStaffComboBox.setSelectedItem(0);
 
-        if (roomData != null) {
-            for (Document room : roomData) {
-                Map<String, String> patientMap = (Map<String, String>) room.get("Patients");
-                int patientMapSize = patientMap.size();
-                String roomName = room.getString("Room Name");
-                if (roomName != null && !(room.getInteger("Room Capacity") == patientMapSize)) { // Ensure roomName is not null
-                    chooseRoomComboBox.addItem(roomName);
-                    chooseMedicalStaffComboBox.addItem(roomName);
-                }
+        if (staffData != null) {
+            for (Document staff : staffData) {
+                String staffName = staff.getString("First Name") + " " + staff.getString("Last Name");
+                    chooseMedicalStaffComboBox.addItem(staffName);
             }
         }
 
@@ -437,7 +436,7 @@ public class AddPatientView extends JFrame {
             patientModel.setNationality(nationalityTextField.getText());
             patientModel.setBirthdate(birthDate.getDate());
             patientModel.setAdmissionDate(admissionDate.getDate());
-            patientModel.setRoom((String) chooseRoomComboBox.getSelectedItem());
+            patientModel.setAssignedStaff(String.valueOf(chooseMedicalStaffComboBox.getSelectedItem()));
             if (maleRadioButtonn.isSelected()) {
                 patientModel.setSex(maleRadioButtonn.getText());
             } else if (femaleRadioButton.isSelected()) {

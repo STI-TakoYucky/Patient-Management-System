@@ -1,6 +1,7 @@
 package mvc.views.components;
 
 import mvc.controllers.GetAssignedPatients;
+import mvc.controllers.GetPatients;
 import mvc.models.PatientModel;
 import mvc.views.*;
 import mvc.views.utility.SetDefaultFont;
@@ -134,8 +135,66 @@ public class PatientItem extends CustomRoundedPanel {
 
     public void initComponents() {
 
-        JLabel patientInfoBttn = new JLabel("Medical Records");
-        JLabel editBttn = new JLabel("Edit Info");
+        JButton patientInfoBttn = new JButton("Medical Records");
+        patientInfoBttn.setFocusPainted(false);
+        patientInfoBttn.setBorderPainted(false);
+
+        // Custom Painting
+        patientInfoBttn.setContentAreaFilled(false);
+        patientInfoBttn.setOpaque(true);
+        patientInfoBttn.setBackground(Constants.primary);
+        patientInfoBttn.setForeground(Color.WHITE);
+        patientInfoBttn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Add Hover Effect
+        patientInfoBttn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                patientInfoBttn.setBackground(Constants.hoverColor2);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                patientInfoBttn.setBackground(Constants.primary);
+                patientInfoBttn.setForeground(Color.white);
+            }
+        });
+
+
+        JButton editBttn = new JButton("Edit Info");
+        editBttn.setFocusPainted(false);
+        editBttn.setBorderPainted(false);
+
+        // Custom Painting
+        editBttn.setContentAreaFilled(false);
+        editBttn.setOpaque(true);
+        editBttn.setBackground(Constants.primary);
+        editBttn.setForeground(Color.WHITE);
+        editBttn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Add Hover Effect
+        editBttn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                editBttn.setBackground(Constants.hoverColor2);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                editBttn.setBackground(Constants.primary);
+                editBttn.setForeground(Color.white);
+            }
+        });
+
+        patientInfoBttn.addActionListener(e -> {
+            GetPatients getPatients = new GetPatients();
+            Document patientItem = getPatients.getPatientDataById(patientID);
+            dashboard.setEnabled(false);
+            dashboard.setFocusable(false);
+            dashboard.setAlwaysOnTop(false);
+            new MedicalRecordsView(patientItem, dashboard);
+            System.out.println(patientID);
+        });
 
         setLayout(new GridBagLayout());
         GridBagConstraints itemgbc = new GridBagConstraints();

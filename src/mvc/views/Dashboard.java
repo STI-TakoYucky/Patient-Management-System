@@ -90,6 +90,14 @@ public class Dashboard extends JFrame implements ActionListener  {
          patientsbtn= new JButton("Patients");
          medicalstaffBtn = new JButton("Medical Staffs");
          adminBttn = new JButton("Admins");
+        roombtn.setFocusPainted(false);
+        roombtn.setBorderPainted(false);
+        patientsbtn.setFocusPainted(false);
+        patientsbtn.setBorderPainted(false);
+        medicalstaffBtn.setFocusPainted(false);
+        medicalstaffBtn.setBorderPainted(false);
+        adminBttn.setFocusPainted(false);
+        adminBttn.setBorderPainted(false);
 
         roombtn.setFont(new Font("Arial", Font.PLAIN, 20));
         patientsbtn.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -140,8 +148,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         roombtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                roombtn.setBackground(Constants.secondary);// Change background color on hover
-                roombtn.setForeground(Constants.primary);
+                roombtn.setBackground(Constants.hoverColor2);// Change background color on hover
                 roombtn.setOpaque(true);
             }
 
@@ -156,23 +163,20 @@ public class Dashboard extends JFrame implements ActionListener  {
         patientsbtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                patientsbtn.setBackground(Constants.secondary); // Change background color on hover
-                patientsbtn.setForeground(Constants.primary);
+                patientsbtn.setBackground(Constants.hoverColor2); // Change background color on hover
                 patientsbtn.setOpaque(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 patientsbtn.setOpaque(false); // Revert background color
-                patientsbtn.setForeground(Color.WHITE);
             }
         });
 
         medicalstaffBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                medicalstaffBtn.setBackground(Constants.secondary); // Change background color on hover
-                medicalstaffBtn.setForeground(Constants.primary);
+                medicalstaffBtn.setBackground(Constants.hoverColor2); // Change background color on hover
                 medicalstaffBtn.setOpaque(true);
             }
 
@@ -186,8 +190,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         adminBttn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                adminBttn.setBackground(Constants.secondary); // Change background color on hover
-                adminBttn.setForeground(Constants.primary);
+                adminBttn.setBackground(Constants.hoverColor2); // Change background color on hover
                 adminBttn.setOpaque(true);
             }
 
