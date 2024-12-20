@@ -1,6 +1,7 @@
 package mvc.views;
 
 import mvc.controllers.AddPatientController;
+import mvc.controllers.GetPatients;
 import mvc.models.PatientModel;
 import mvc.views.constants.Constants;
 
@@ -22,18 +23,31 @@ public class Dashboard extends JFrame implements ActionListener  {
     public Dashboard(String userRole) {
         this.role = userRole;
         initComponents();
+
+    }
+    static String count;
+    static JLabel patientCount = new JLabel("Patient Count: " + count);
+    public static void updatePatientCount() {
+        // Fetch the updated patient count
+        count = String.valueOf(GetPatients.getPatientCount());
+        patientCount.setText("Patient Count: " + count);
     }
 
     public void initComponents() {
         String userRole = role;
+        updatePatientCount(); // Update the patient count dynamically
 
         JPanel header = new JPanel();
         JPanel buttons = new JPanel();
 
         JLabel appName = new JLabel("HealthSync");
         appName.setForeground(Color.white);
+
         JTextField searchField = new RoundJTextField("Search", 30);
-        JLabel patientCount = new JLabel("Patient Count: ");
+
+        // Label that displays the current patient count
+
+
         JLabel logoutBtn = new JLabel("Logout");
 
         //Jframe setup
@@ -60,11 +74,10 @@ public class Dashboard extends JFrame implements ActionListener  {
         searchField.setMargin(new Insets(0,10,0,10));
         searchField.addFocusListener(new searchFieldClicked(searchField));
         searchField.setFont(DEFAULT_FONT);
-        header.add(searchField);
 
         patientCount.setFont(DEFAULT_FONT);
         patientCount.setForeground(Color.white);
-        patientCount.setBorder(new EmptyBorder(0, 50, 0, 430));
+        patientCount.setBorder(new EmptyBorder(0, 50, 0, 830));
         header.add(patientCount);
         header.add(logoutBtn);
         logoutBtn.setFont(DEFAULT_FONT);

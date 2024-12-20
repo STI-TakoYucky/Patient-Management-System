@@ -148,6 +148,7 @@ public class AddStaffView extends JFrame {
 
 
         addPatientButton.addActionListener(e -> {
+            setAlwaysOnTop(false);
             staffModel.setFirstName(staffNameFieldFN.getText());
             staffModel.setMiddleName(staffNameFieldMN.getText());
             staffModel.setLastName(staffNameFieldLN.getText());

@@ -11,42 +11,36 @@ import java.util.Date;
 import java.util.List;
 
 public class GetPatients {
+
+    // Existing method to get patient data
     public List<Document> getPatientData() {
-
         List<Document> patientList = new ArrayList<>();
-
         try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
             MongoDatabase database = mongoClient.getDatabase("patientDB");
-
             MongoCollection<Document> collection = database.getCollection("patients");
-
             for (Document doc : collection.find()) {
                 patientList.add(doc);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (!patientList.isEmpty()) {
-            return patientList;
-        }
-        return null;
+        return patientList.isEmpty() ? null : patientList;
     }
 
+    // Existing method to get patient data by ID
     public Document getPatientDataById(String patientID) {
-
         try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
             MongoDatabase database = mongoClient.getDatabase("patientDB");
             MongoCollection<Document> collection = database.getCollection("patients");
             Document patientDoc = collection.find(new Document("_id", patientID)).first();
-            System.out.println(patientDoc);
-            System.out.println();
-            return (Document) patientDoc;
-        }catch (Exception err) {
+            return patientDoc;
+        } catch (Exception err) {
             err.printStackTrace();
         }
         return null;
     }
 
+    // Existing method to get patient admission date by ID
     public static String getPatientAdmissionDate(String patientID) {
         try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
             MongoDatabase database = mongoClient.getDatabase("patientDB");
@@ -57,11 +51,7 @@ public class GetPatients {
             if (patientDoc != null) {
                 Date admissionDate = patientDoc.getDate("Admission Date");
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d, yyyy h:mm a");
-                String formattedDate = simpleDateFormat.format(admissionDate);
-                System.out.println("Admission Date: " + formattedDate);
-                return formattedDate;
-            } else {
-                System.out.println("Patient not found.");
+                return simpleDateFormat.format(admissionDate);
             }
         } catch (Exception err) {
             err.printStackTrace();
@@ -69,7 +59,7 @@ public class GetPatients {
         return null;
     }
 
-
+    // Existing method to filter patient data by search field input
     public static List<Document> filterPatientData(String searchFieldInput) {
         List<Document> patientList = new ArrayList<>();
         try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
@@ -79,15 +69,13 @@ public class GetPatients {
             String searchText = searchFieldInput.trim();
 
             if (!searchText.isEmpty()) {
-                // Filters for the search criteria
                 FindIterable<Document> results = collection.find(Filters.or(
-                        Filters.regex("First Name", "^" + searchText, "i"),  // Starts with
-                        Filters.regex("Last Name", "^" + searchText, "i"),   // Starts with
-                        Filters.regex("Middle Name", "^" + searchText, "i"), // Starts with
+                        Filters.regex("First Name", "^" + searchText, "i"),
+                        Filters.regex("Last Name", "^" + searchText, "i"),
+                        Filters.regex("Middle Name", "^" + searchText, "i"),
                         Filters.regex("_id", "^" + searchText, "i")
                 ));
 
-                // Add the filtered documents to the list
                 for (Document doc : results) {
                     patientList.add(doc);
                 }
@@ -95,8 +83,21 @@ public class GetPatients {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return patientList.isEmpty() ? null : patientList;
+    }
 
-        // Return the list of documents (patients)
-        return (List<Document>) patientList;
+    // New method to get the count of patients in the database
+    public static long getPatientCount() {
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
+            MongoDatabase database = mongoClient.getDatabase("patientDB");
+            MongoCollection<Document> collection = database.getCollection("patients");
+
+            // Get the count of documents in the collection
+            long patientCount = collection.countDocuments();
+            return patientCount;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0; // Return 0 if any exception occurs
     }
 }

@@ -466,6 +466,7 @@ public class EditPatientView extends JFrame {
                 dashboard.setEnabled(true);
                 dashboard.setFocusable(true);
                 dashboard.setAlwaysOnTop(true);
+                Dashboard.updatePatientCount();
             }
         });
 
