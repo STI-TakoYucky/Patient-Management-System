@@ -810,6 +810,7 @@ public class AddPatientView extends JFrame {
                 dashboard.setEnabled(true);
                 dashboard.setFocusable(true);
                 dashboard.setAlwaysOnTop(true);
+                dashboard.updatePatientCount();
 
         }
     }

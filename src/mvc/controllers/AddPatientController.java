@@ -42,9 +42,6 @@ public class AddPatientController {
             // Insert the patient data
             patientCollection.insertOne(patientDocument);
 
-            if (!patientModel.getRoom().equals("Select Room")) {
-                addPatientToRoom(mongoClient);
-            }
 
             System.out.println("Patient added successfully!");
         } catch (Exception e) {
