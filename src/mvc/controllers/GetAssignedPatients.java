@@ -31,4 +31,25 @@ public class GetAssignedPatients {
         }
         return null;
     }
+
+    public List<Document> getAssignedPatientsByID(String id) {
+
+        List<Document> patientList = new ArrayList<>();
+
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
+            MongoDatabase database = mongoClient.getDatabase("patientDB");
+
+            MongoCollection<Document> collection = database.getCollection("isPatientsAssigned");
+
+            for (Document doc : collection.find()) {
+                patientList.add(doc);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!patientList.isEmpty()) {
+            return patientList;
+        }
+        return null;
+    }
 }

@@ -4,15 +4,37 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class PatientModel {
-    private String firstName, lastName, middleName, id, sex, email, region,  streetName, city, civilStatus, municipality, nationality;
+    private String firstName, lastName, middleName, id, sex, email, region,  streetName, city, civilStatus, municipality, nationality, bloodType, block, lot;
     private String room, roomID, phoneNumber, emergencyContactNumber, assignedStaff;
     private ArrayList<String> symptoms, medication, allergies;
     private int  postalCode;
     private String oldRoom;
     private Date birthdate, admissionDate;
 
-    // Setters
 
+    public String getBloodType() {
+        return bloodType;
+    }
+
+    public void setBloodType(String bloodType) {
+        this.bloodType = bloodType;
+    }
+
+    public String getBlock() {
+        return block;
+    }
+
+    public void setBlock(String block) {
+        this.block = block;
+    }
+
+    public String getLot() {
+        return lot;
+    }
+
+    public void setLot(String lot) {
+        this.lot = lot;
+    }
 
     public String getOldRoom() {
         return oldRoom;

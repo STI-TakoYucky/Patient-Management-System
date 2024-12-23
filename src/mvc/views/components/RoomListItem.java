@@ -45,7 +45,7 @@ public class RoomListItem extends CustomRoundedPanel {
         gbc.insets = new Insets(0, 12, 0, 0);
         gbc.anchor = GridBagConstraints.CENTER;
         JPanel roomHeaderPanel = new CustomRoundedPanel();
-        roomHeaderPanel.setPreferredSize(new Dimension(1060, 50));
+//        roomHeaderPanel.setPreferredSize(new Dimension(1060, 50));
         roomHeaderPanel.setLayout(new GridBagLayout());
         roomHeaderPanel.setBackground(Constants.secondary);
         JLabel roomName = new JLabel(roomItem.getString("Room Name"));
@@ -93,6 +93,7 @@ public class RoomListItem extends CustomRoundedPanel {
         add(roomMainContentPanel, BorderLayout.CENTER);
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
         roomName.setFont(new Font("Arial", Font.BOLD, 20));
+        setBackground(Constants.primary);
     }
 
 

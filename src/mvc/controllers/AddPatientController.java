@@ -63,6 +63,7 @@ public class AddPatientController {
                 .append("Last Name", patientModel.getLastName())
                 .append("Middle Name", patientModel.getMiddleName())
                 .append("Sex", patientModel.getSex())
+                .append("Blood Type", patientModel.getBloodType())
                 .append("Email", patientModel.getEmail())
                 .append("Region", patientModel.getRegion())
                 .append("Street Name", patientModel.getStreetName())
