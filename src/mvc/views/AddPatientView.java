@@ -61,6 +61,9 @@ public class AddPatientView extends JFrame {
     public JTextField civilStatusField = new JTextField("Civil Status", 15);
     public JRadioButton maleRadioButtonn = new JRadioButton("Male");
     public JRadioButton femaleRadioButton = new JRadioButton("Female");
+    String[] bloodTypes = {"Blood Type", "A+", "A-", "B+","B-", "O+", "O-", "AB+", "AB-" };
+    public JComboBox<String> bloodType = new JComboBox<String>(bloodTypes);
+
 
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
     Image image = closeButtonIcon.getImage();
@@ -176,6 +179,20 @@ public class AddPatientView extends JFrame {
         genderPanel.add(genderFieldLabel);
         genderPanel.add(maleRadioButtonn);
         genderPanel.add(femaleRadioButton);
+
+        //bloodtype section
+        JPanel bloodTypePanel = new JPanel(new GridBagLayout());
+        JPanel bloodTypePanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel bloodTypeHeader = new JLabel("Blood Type");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        bloodTypePanel.add(bloodTypeHeader, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        bloodTypePanel.add(bloodType, gbc);
+        bloodTypePanelWrapper.add(bloodTypePanel);
+
+
 
         // Contact Information Section
         JLabel contactInfoLabel = new JLabel("Contact Information");
@@ -437,6 +454,8 @@ public class AddPatientView extends JFrame {
             patientModel.setBirthdate(birthDate.getDate());
             patientModel.setAdmissionDate(admissionDate.getDate());
             patientModel.setAssignedStaff(String.valueOf(chooseMedicalStaffComboBox.getSelectedItem()));
+            patientModel.setBloodType((String) bloodType.getSelectedItem());
+
             if (maleRadioButtonn.isSelected()) {
                 patientModel.setSex(maleRadioButtonn.getText());
             } else if (femaleRadioButton.isSelected()) {
@@ -446,6 +465,7 @@ public class AddPatientView extends JFrame {
             patientModel.setMedication(medicationArray);
             patientModel.setAllergies(allergiesArray);
             patientModel.setPostalCode(Integer.parseInt(postalCodeField.getText()));
+
             if (validatePatientModel(patientModel)) {
                 addPatientToDatabase();
             } else {
@@ -462,6 +482,8 @@ public class AddPatientView extends JFrame {
         mainContent.add(datePanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(genderPanel);
+        mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
+        mainContent.add(bloodTypePanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(contactInfoPanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -931,6 +953,11 @@ public class AddPatientView extends JFrame {
 
         if (patientModel.getEmergencyContactNumber() != null && !patientModel.getEmergencyContactNumber().matches(PH_PHONE_NUMBER_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid emergency contact number. It must start with '09' and contain 10 digits.");
+            return false;
+        }
+
+        if (patientModel.getBloodType() == "Blood Type") {
+            JOptionPane.showMessageDialog(null, "Please choose a blood type.");
             return false;
         }
 

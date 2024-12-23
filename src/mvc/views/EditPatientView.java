@@ -60,7 +60,7 @@ public class EditPatientView extends JFrame {
     public JTextField civilStatusField;
     public JRadioButton maleRadioButtonn;
     public JRadioButton femaleRadioButton;
-    JComboBox<String> chooseRoomComboBox;
+    public JComboBox<String> chooseMedicalStaffComboBox;
 
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
     Image image = closeButtonIcon.getImage();
@@ -407,34 +407,21 @@ public class EditPatientView extends JFrame {
 
         JPanel chooseRoomAndStaffPanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel chooseRoomAndStaffPanel = new JPanel(new GridBagLayout());
-        GetRooms getRooms = new GetRooms();
-        List<Document> roomData = getRooms.getRoomData();
+        GetStaff getStaff = new GetStaff();
+        List<Document> staffData = getStaff.getStaffData();
 
 
-        JComboBox<String> chooseRoomComboBox = new JComboBox<>();
-        JComboBox<String> chooseMedicalStaffComboBox = new JComboBox<>();
+        chooseMedicalStaffComboBox = new JComboBox<>();
+        chooseMedicalStaffComboBox.addItem("Select Medical Staff");
+        chooseMedicalStaffComboBox.setSelectedItem(0);
 
-        chooseRoomComboBox.addItem("Select Room");
-
-
-
-        if (roomData != null) {
-            for (Document room : roomData) {
-                Map<String, String> patientMap = (Map<String, String>) room.get("Patients");
-                int patientMapSize = patientMap.size();
-                String roomName = room.getString("Room Name");
-                if (roomName != null && !(room.getInteger("Room Capacity") == patientMapSize)) { // Ensure roomName is not null
-                    chooseRoomComboBox.addItem(roomName);
-                    chooseMedicalStaffComboBox.addItem(roomName);
-                }
+        if (staffData != null) {
+            for (Document staff : staffData) {
+                String staffName = staff.getString("First Name") + " " + staff.getString("Last Name");
+                chooseMedicalStaffComboBox.addItem(staffName);
             }
         }
-
-        if (Objects.equals(patientModel.getRoom(), "Select Room")) {
-            chooseRoomComboBox.setSelectedItem("Select Room");
-        } else {
-            chooseRoomComboBox.setSelectedItem(patientModel.getRoom());
-        }
+        chooseMedicalStaffComboBox.setSelectedItem(patientDocument.getString("Assigned Staff"));
         JLabel chooseRoomAndStaffLabel = new JLabel("Assigned Medical Staff");
 
         gbc.gridx = 0;
@@ -484,9 +471,7 @@ public class EditPatientView extends JFrame {
             patientModel.setMunicipality(municipalityField.getText());
             patientModel.setNationality(nationalityTextField.getText());
             patientModel.setBirthdate(birthDate.getDate());
-            patientModel.setOldRoom(patientModel.getRoom());
-            patientModel.setRoom((String) chooseRoomComboBox.getSelectedItem());
-            chooseRoomComboBox.setSelectedItem(patientModel.getRoom());
+            patientModel.setAssignedStaff((String) chooseMedicalStaffComboBox.getSelectedItem());
             if (maleRadioButtonn.isSelected()) {
                 patientModel.setSex(maleRadioButtonn.getText());
             } else if (femaleRadioButton.isSelected()) {
@@ -518,8 +503,6 @@ public class EditPatientView extends JFrame {
         mainContent.add(addressPanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(civilStatusWrapper);
-        mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
-        mainContent.add(admissionDatePanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(chooseRoomAndStaffPanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -847,7 +830,7 @@ public class EditPatientView extends JFrame {
         patientModel.setPostalCode(patientDocument.getInteger("Postal Code")); // Integer field
         patientModel.setBirthdate(patientDocument.getDate("Birthdate")); // Date field
         patientModel.setAdmissionDate(patientDocument.getDate("Admission Date")); // Date field
-
+        patientModel.setAssignedStaff(patientDocument.getString("Assigned Staff"));
     }
 
     public boolean validatePatientModel(PatientModel patientModel) {
