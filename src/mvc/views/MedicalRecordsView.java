@@ -1,11 +1,6 @@
 package mvc.views;
-import com.toedter.calendar.JDateChooser;
-import mvc.controllers.AddPatientController;
-import mvc.controllers.AddStaffController;
-import mvc.models.PatientModel;
-import mvc.models.StaffModel;
+import mvc.controllers.GetPatients;
 import mvc.views.constants.Constants;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -13,29 +8,30 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.function.BiConsumer;
-
-import mvc.views.utility.SetDefaultFont;
 import mvc.views.utility.SetFocusListenerToJTextFields;
 import org.bson.Document;
 
 public class MedicalRecordsView extends JFrame {
-    StaffModel staffModel;
-    MedicalStaffView medicalStaffView;
     Dashboard dashboard;
-    RoomView roomView;
     JFrame frame = this;
     Document patientDocument;
+    String patientID;
 
     public MedicalRecordsView() {
         System.out.println("Default Constructor");
     }
 
+    public MedicalRecordsView(String patientID, Dashboard dashboard) {
+        this.patientID = patientID;
+        GetPatients getPatients = new GetPatients();
+        this.patientDocument = getPatients.getPatientDataById(this.patientID);
+        this.dashboard = dashboard;
+        initComponents();
+    }
+
     public MedicalRecordsView(Document patient, Dashboard dashboard) {
         this.patientDocument = patient;
         this.dashboard = dashboard;
-        this.staffModel = staffModel;
-        this.medicalStaffView = medicalStaffView;
         initComponents();
     }
 
@@ -50,6 +46,9 @@ public class MedicalRecordsView extends JFrame {
 
 
     public void initComponents() {
+        dashboard.setEnabled(false);
+        dashboard.setFocusable(false);
+        dashboard.setAlwaysOnTop(false);
         setAlwaysOnTop(true);
         repaint();
         revalidate();
@@ -75,9 +74,14 @@ public class MedicalRecordsView extends JFrame {
         mainHeader.setBackground(Constants.secondary);
         mainHeader.setBorder(new EmptyBorder(25, 25, 25, 25));
 
+<<<<<<< Updated upstream
         JLabel addPatientHeader = new JLabel("Medical Records",EPHedIcon, JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
         closeButton.setBorder(new EmptyBorder(0, 580, 0, 0));
+=======
+        JLabel Header = new JLabel("Medical Records");
+        Header.setBorder(new EmptyBorder(0, 0, 0, 600));
+>>>>>>> Stashed changes
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -89,7 +93,7 @@ public class MedicalRecordsView extends JFrame {
             }
         });
 
-        mainHeader.add(addPatientHeader);
+        mainHeader.add(Header);
         mainHeader.add(closeButton);
 
         // Content Panel for Patient Data
@@ -107,6 +111,11 @@ public class MedicalRecordsView extends JFrame {
         String formattedBirthDate = dateFormat.format(birthDate);
 
 // Add the formatted birthdate to the label
+<<<<<<< Updated upstream
+=======
+        mainContent.add(createLabel("Admission Date", patientDocument.getDate("Admission Date").toString()));
+        mainContent.add(createLabel("Blood Type", patientDocument.getString("Blood Type")));
+>>>>>>> Stashed changes
         mainContent.add(createLabel("Birthdate", formattedBirthDate));
         mainContent.add(createLabel("Admission Date", patientDocument.getDate("Admission Date").toString()));
         mainContent.add(createLabel("Phone Number", patientDocument.get("Phone Number").toString()));
@@ -139,10 +148,8 @@ public class MedicalRecordsView extends JFrame {
         setUndecorated(true);
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
         new SetFocusListenerToJTextFields(this);
-        addPatientHeader.setFont(Constants.HEADING_FONT);
+        Header.setFont(Constants.HEADING_FONT);
     }
 
     /**
@@ -151,11 +158,11 @@ public class MedicalRecordsView extends JFrame {
     private JPanel createLabel(String fieldName, String value) {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.setBorder(new EmptyBorder(5, 15, 5, 15));
+        panel.setBorder(new EmptyBorder(8, 15, 8, 15));
         panel.setBackground(Color.WHITE);
 
         JLabel fieldLabel = new JLabel(fieldName + ": ");
-        fieldLabel.setFont(Constants.DEFAULT_FONT);
+        fieldLabel.setFont(new Font("Arial", Font.BOLD, 20));
         fieldLabel.setForeground(Color.DARK_GRAY);
 
         JLabel valueLabel = new JLabel(value);

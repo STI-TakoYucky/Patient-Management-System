@@ -12,6 +12,7 @@ import mvc.views.constants.Constants;
 import mvc.views.utility.SetDefaultFont;
 import org.bson.Document;
 
+import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -77,11 +78,29 @@ public class RoomView extends Panel {
             roomListPanel.add(noRooms);
         } else {
             for (Document room : roomList) {
-                RoomListItem item = new RoomListItem(room, roomView, dashboard, patientModel);
+                RoomListItem item = new RoomListItem(room, roomView, dashboard);
                 roomListPanel.add(item);
                 roomListPanel.add(Box.createVerticalStrut(20));
                 item.revalidate();
                 item.repaint();
+            }
+        }
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+        revalidate();
+        repaint();
+    }
+
+    public void updateUI(List<Document> rooms){
+        roomListPanel.removeAll();
+
+        if (rooms == null) {
+            JLabel noRooms = new JLabel("No Rooms Yet");
+            roomListPanel.add(noRooms);
+        } else {
+            for (Document room : rooms) {
+                RoomListItem item = new RoomListItem(room, roomView, dashboard);
+                roomListPanel.add(item);
+                roomListPanel.add(Box.createVerticalStrut(20));
             }
         }
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);

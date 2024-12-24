@@ -95,6 +95,7 @@ public class EditStaffView extends JFrame {
         resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
         EPHedIcon = new ImageIcon(resizedEPHed);
         // Header Section
+<<<<<<< Updated upstream
         JLabel addPatientHeader = new JLabel(" Edit Medical Staff",EPHedIcon,JLabel.LEFT );
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -102,6 +103,14 @@ public class EditStaffView extends JFrame {
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(addPatientHeader);
         closeButton.setBorder(new EmptyBorder(0, 560, 0, 0));
+=======
+        JLabel Header = new JLabel("Add Medical Staff");
+        Header.setAlignmentX(Component.LEFT_ALIGNMENT);
+        Header.setBorder(new EmptyBorder(0, 0, 0, 590));
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        headerPanel.add(Header);
+>>>>>>> Stashed changes
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -221,7 +230,7 @@ public class EditStaffView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-        addPatientHeader.setFont(Constants.HEADING_FONT);
+        Header.setFont(Constants.HEADING_FONT);
         setJTextFieldPadding(this);
 
         new SetFocusListenerToJTextFields(this);

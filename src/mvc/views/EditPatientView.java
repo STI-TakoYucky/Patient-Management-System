@@ -60,7 +60,13 @@ public class EditPatientView extends JFrame {
     public JTextField civilStatusField;
     public JRadioButton maleRadioButtonn;
     public JRadioButton femaleRadioButton;
+<<<<<<< Updated upstream
     JComboBox<String> chooseRoomComboBox;
+=======
+    public JComboBox<String> chooseMedicalStaffComboBox;
+    String[] bloodTypes = {"Blood Type", "A+", "A-", "B+","B-", "O+", "O-", "AB+", "AB-" };
+    public JComboBox<String> bloodType = new JComboBox<String>(bloodTypes);
+>>>>>>> Stashed changes
 
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
     Image image = closeButtonIcon.getImage();
@@ -109,6 +115,7 @@ public class EditPatientView extends JFrame {
             postalCodeField = new JTextField(postalCodeValue.toString(),8);
             nationalityTextField = new JTextField(patientDocument.getString("Nationality"), 15);
             civilStatusField = new JTextField(patientDocument.getString("Civil Status"), 15);
+            bloodType.setSelectedItem(patientDocument.getString("Blood Type"));
 
             maleRadioButtonn = new JRadioButton("Male");
             femaleRadioButton = new JRadioButton("Female");
@@ -152,6 +159,7 @@ public class EditPatientView extends JFrame {
         resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
         EPHedIcon = new ImageIcon(resizedEPHed);
         // Header Section
+<<<<<<< Updated upstream
         JLabel addPatientHeader = new JLabel(" Edit Patient",EPHedIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -159,6 +167,15 @@ public class EditPatientView extends JFrame {
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(addPatientHeader);
         closeButton.setBorder(new EmptyBorder(0, 610, 0, 0));
+=======
+        JLabel Header = new JLabel("Edit Patient");
+        Header.setAlignmentX(Component.LEFT_ALIGNMENT);
+        Header.setBorder(new EmptyBorder(0, 0, 0, 650));
+
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        headerPanel.add(Header);
+>>>>>>> Stashed changes
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -221,6 +238,18 @@ public class EditPatientView extends JFrame {
         genderPanel.add(genderFieldLabel);
         genderPanel.add(maleRadioButtonn);
         genderPanel.add(femaleRadioButton);
+
+        //bloodtype section
+        JPanel bloodTypePanel = new JPanel(new GridBagLayout());
+        JPanel bloodTypePanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel bloodTypeHeader = new JLabel("Blood Type");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        bloodTypePanel.add(bloodTypeHeader, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        bloodTypePanel.add(bloodType, gbc);
+        bloodTypePanelWrapper.add(bloodTypePanel);
 
         // Contact Information Section
         JLabel contactInfoLabel = new JLabel("Contact Information");
@@ -504,6 +533,7 @@ public class EditPatientView extends JFrame {
             patientModel.setMedication(medicationArray);
             patientModel.setAllergies(allergiesArray);
             patientModel.setPostalCode(Integer.parseInt(postalCodeField.getText()));
+            patientModel.setBloodType(String.valueOf(bloodType.getSelectedItem()));
             if (validatePatientModel(patientModel)) {
                 editPatientInDatabase();
             } else {
@@ -520,6 +550,8 @@ public class EditPatientView extends JFrame {
         mainContent.add(datePanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(genderPanel);
+        mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
+        mainContent.add(bloodTypePanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(contactInfoPanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -556,7 +588,7 @@ public class EditPatientView extends JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-        addPatientHeader.setFont(Constants.HEADING_FONT);
+        Header.setFont(Constants.HEADING_FONT);
         setJTextFieldPadding(this);
 
         new SetFocusListenerToJTextFields(this);
@@ -974,6 +1006,11 @@ public class EditPatientView extends JFrame {
 
         if (patientModel.getEmergencyContactNumber() != null && !patientModel.getEmergencyContactNumber().matches(PH_PHONE_NUMBER_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid emergency contact number. It must start with '09' and contain 10 digits.");
+            return false;
+        }
+
+        if (patientModel.getBloodType() == "Blood Type") {
+            JOptionPane.showMessageDialog(null, "Please choose a blood type.");
             return false;
         }
 

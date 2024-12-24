@@ -1,6 +1,5 @@
 package mvc.views;
 import mvc.controllers.*;
-import mvc.models.PatientModel;
 import mvc.models.RoomModel;
 import mvc.views.components.PatientItem;
 import mvc.views.constants.Constants;
@@ -32,17 +31,15 @@ public class EditRoomView extends JFrame {
     Map<String, String> oldAssignedPatients = new HashMap<>();
     Document roomData;
     String roomID;
-    PatientModel patientModel;
 
     public EditRoomView() {
         System.out.println("Default Constructor");
     }
 
-    public EditRoomView(String roomID, RoomModel roomModel, RoomView roomView, Dashboard dashboard, PatientModel patientModel) {
+    public EditRoomView(String roomID, RoomModel roomModel, RoomView roomView, Dashboard dashboard) {
         this.dashboard = dashboard;
         this.roomModel = roomModel;
         this.roomView = roomView;
-        this.patientModel = patientModel;
         this.roomID = roomID;
         GetRooms getRooms = new GetRooms();
         this.roomData = getRooms.getRoomDataByID(roomID);
@@ -112,11 +109,10 @@ public class EditRoomView extends JFrame {
         // Header Section
         JLabel Header = new JLabel(" Edit Room",EPHedIcon,JLabel.LEFT);
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        Header.setBorder(new EmptyBorder(0, 0, 0, 650));
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(Header);
-        closeButton.setBorder(new EmptyBorder(0, 650, 0, 0));
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override

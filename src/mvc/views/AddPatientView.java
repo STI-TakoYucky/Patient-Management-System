@@ -1,23 +1,16 @@
 package mvc.views;
 import mvc.controllers.AddPatientController;
-import mvc.controllers.DeletePatientController;
-import mvc.controllers.GetRooms;
 import mvc.controllers.GetStaff;
 import mvc.models.PatientModel;
 import mvc.views.constants.Constants;
 import com.toedter.calendar.JDateChooser;
-
-import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
-
 import mvc.views.utility.SetDefaultFont;
 import mvc.views.utility.SetFocusListenerToJTextFields;
 import org.bson.Document;
@@ -115,11 +108,15 @@ public class AddPatientView extends JFrame {
         // Header Section
         JLabel addPatientHeader = new JLabel("Add Patient",addPatientIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
+        addPatientHeader.setBorder(new EmptyBorder(0, 0, 0, 650));
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(addPatientHeader);
+<<<<<<< Updated upstream
         closeButton.setBorder(new EmptyBorder(0, 610, 0, 0));
+=======
+>>>>>>> Stashed changes
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override

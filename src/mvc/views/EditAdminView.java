@@ -95,13 +95,18 @@ public class EditAdminView extends JFrame {
         resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
         EPHedIcon = new ImageIcon(resizedEPHed);
         // Header Section
+<<<<<<< Updated upstream
         JLabel addPatientHeader = new JLabel(" Edit Admin", EPHedIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+=======
+        JLabel Header = new JLabel("Add Admin");
+        Header.setAlignmentX(Component.LEFT_ALIGNMENT);
+        Header.setBorder(new EmptyBorder(0, 0, 0, 650));
+>>>>>>> Stashed changes
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        headerPanel.add(addPatientHeader);
-        closeButton.setBorder(new EmptyBorder(0, 580, 0, 0));
+        headerPanel.add(Header);
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -217,7 +222,7 @@ public class EditAdminView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-        addPatientHeader.setFont(Constants.HEADING_FONT);
+        Header.setFont(Constants.HEADING_FONT);
         setJTextFieldPadding(this);
 
         new SetFocusListenerToJTextFields(this);

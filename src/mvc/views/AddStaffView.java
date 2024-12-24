@@ -83,6 +83,7 @@ public class AddStaffView extends JFrame {
         addStaffIcon = new ImageIcon(resizedStaff);
 
         // Header Section
+<<<<<<< Updated upstream
         JLabel addPatientHeader = new JLabel("Add Medical Staff",addStaffIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -90,6 +91,15 @@ public class AddStaffView extends JFrame {
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(addPatientHeader);
         closeButton.setBorder(new EmptyBorder(0, 550, 0, 0));
+=======
+        JLabel Header = new JLabel("Add Medical Staff");
+        Header.setAlignmentX(Component.LEFT_ALIGNMENT);
+        Header.setBorder(new EmptyBorder(0, 0, 0, 590));
+
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        headerPanel.add(Header);
+>>>>>>> Stashed changes
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -192,7 +202,7 @@ public class AddStaffView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-        addPatientHeader.setFont(Constants.HEADING_FONT);
+        Header.setFont(Constants.HEADING_FONT);
         setJTextFieldPadding(this);
 
         new SetFocusListenerToJTextFields(this);

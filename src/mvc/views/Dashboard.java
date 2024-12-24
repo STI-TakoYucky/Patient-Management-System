@@ -1,30 +1,40 @@
 package mvc.views;
 
-import mvc.controllers.AddPatientController;
 import mvc.controllers.GetPatients;
+import mvc.controllers.GetRooms;
 import mvc.models.PatientModel;
+import mvc.views.components.RoomListItem;
 import mvc.views.constants.Constants;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import org.bson.Document;
 import java.awt.*;
+import java.util.List;
 import java.awt.event.*;
 import java.util.Objects;
 
 public class Dashboard extends JFrame implements ActionListener  {
     String role;
+    //default view because the room view is what you can see first when opening the app
+    String currentView = "Room View";
+    Dashboard dashboard = this;
 
     JButton roombtn,patientsbtn,medicalstaffBtn,medicalrecordBtn, adminBttn;
     public Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
     CardLayout cl1 = new CardLayout();
     JPanel container = new JPanel(cl1);
     RoomView roomView = new RoomView(this, new PatientModel());
+    public JTextField searchField;
 
     public Dashboard(String userRole) {
         this.role = userRole;
         initComponents();
 
     }
+
     static String count;
     static JLabel patientCount = new JLabel("Patient Count: " + count);
     public static void updatePatientCount() {
@@ -53,7 +63,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         JLabel appName = new JLabel("HealthSync",MainHdrIcon,JLabel.LEFT);
         appName.setForeground(Color.white);
 
-        JTextField searchField = new RoundJTextField("Search", 30);
+        searchField = new RoundJTextField("Search", 30);
 
         // Label that displays the current patient count
 
@@ -81,13 +91,19 @@ public class Dashboard extends JFrame implements ActionListener  {
 
 
         searchField.setMaximumSize(new Dimension(250, 35));
+        searchField.setMinimumSize(new Dimension(250, 35));
         searchField.setMargin(new Insets(0,10,0,10));
         searchField.addFocusListener(new searchFieldClicked(searchField));
         searchField.setFont(DEFAULT_FONT);
 
         patientCount.setFont(DEFAULT_FONT);
         patientCount.setForeground(Color.white);
+<<<<<<< Updated upstream
         patientCount.setBorder(new EmptyBorder(0, 50, 0, 770));
+=======
+        patientCount.setBorder(new EmptyBorder(0, 50, 0, 420));
+        header.add(searchField);
+>>>>>>> Stashed changes
         header.add(patientCount);
         header.add(logoutBtn);
         logoutBtn.setFont(DEFAULT_FONT);
@@ -105,6 +121,7 @@ public class Dashboard extends JFrame implements ActionListener  {
 
                 }
             }
+
 
         });
         // icon paths
@@ -289,6 +306,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         add(header, BorderLayout.NORTH);
         add(container, BorderLayout.CENTER);
         add(buttons, BorderLayout.WEST);
+        setOnChangeEvent(dashboard);
 
         revalidate();
         repaint();
@@ -299,19 +317,23 @@ public class Dashboard extends JFrame implements ActionListener  {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == roombtn){
+            currentView = "Room View";
         cl1.show(container, "roomView");
         roomView.updateUI();
         roomView.repaint();
         roomView.revalidate();
         }
         if(e.getSource() == patientsbtn){
+            currentView = "Patients View";
             cl1.show(container, "patientView");
         }
         if(e.getSource() == medicalstaffBtn){
+            currentView = "Staff View";
             cl1.show(container, "med");
         }
 
         if (e.getSource() == adminBttn) {
+            currentView = "Admin View";
             cl1.show(container, "admin");
         }
 
@@ -336,6 +358,46 @@ public class Dashboard extends JFrame implements ActionListener  {
         }
     }
 
+    private void setOnChangeEvent(Container container) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JTextField) {
+                JTextField textField = (JTextField) component;
+                textField.getDocument().addDocumentListener(new DocumentListener() {
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        handleTextChange(textField);
+                    }
+
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        handleTextChange(textField);
+                    }
+
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {
+                        handleTextChange(textField);
+                    }
+
+                    private void handleTextChange(JTextField source){
+                        if (source == searchField) {
+                            GetRooms getRooms = new GetRooms();
+                            List<Document> rooms = getRooms.getRoomDataByInputtedText(source.getText());
+
+                            if (rooms != null && !rooms.isEmpty()) {
+                                    roomView.updateUI(rooms);
+                            } else {
+                                roomView.updateUI(rooms);
+                            }
+
+                            System.out.println(source.getText());
+                        }
+                    }
+                });
+            } else if (component instanceof Container) {
+                setOnChangeEvent((Container) component);
+            }
+        }
+    }
 
     //To create a custom textField with rounded borders
     class RoundJTextField extends JTextField {

@@ -90,14 +90,22 @@ public class AddRoomView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
         // Header Section
+<<<<<<< Updated upstream
         JLabel Header = new JLabel(" Add Room",addRoomIcon,JLabel.LEFT);
+=======
+        JLabel Header = new JLabel("Add Room");
+        Header.setBorder(new EmptyBorder(0, 0, 0, 650));
+>>>>>>> Stashed changes
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(Header);
+<<<<<<< Updated upstream
         closeButton.setBorder(new EmptyBorder(0, 630, 0, 0));
+=======
+>>>>>>> Stashed changes
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override

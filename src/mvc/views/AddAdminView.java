@@ -90,13 +90,19 @@ public class AddAdminView extends JFrame {
         resizedAdmin =addAdminP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
         addAdminIcon = new ImageIcon(resizedAdmin);
         // Header Section
+<<<<<<< Updated upstream
         JLabel addPatientHeader = new JLabel("Add Admin",addAdminIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
+=======
+        JLabel addAdminHeader = new JLabel("Add Admin");
+        addAdminHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
+        addAdminHeader.setBorder(new EmptyBorder(0, 0, 0, 650));
+>>>>>>> Stashed changes
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        headerPanel.add(addPatientHeader);
-        closeButton.setBorder(new EmptyBorder(0, 580, 0, 0));
+        headerPanel.add(addAdminHeader);
+
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -194,7 +200,7 @@ public class AddAdminView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-        addPatientHeader.setFont(Constants.HEADING_FONT);
+        addAdminHeader.setFont(Constants.HEADING_FONT);
         setJTextFieldPadding(this);
 
         new SetFocusListenerToJTextFields(this);
