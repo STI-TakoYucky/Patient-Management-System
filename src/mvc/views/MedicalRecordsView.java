@@ -74,14 +74,9 @@ public class MedicalRecordsView extends JFrame {
         mainHeader.setBackground(Constants.secondary);
         mainHeader.setBorder(new EmptyBorder(25, 25, 25, 25));
 
-<<<<<<< Updated upstream
-        JLabel addPatientHeader = new JLabel("Medical Records",EPHedIcon, JLabel.LEFT);
-        addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
-        closeButton.setBorder(new EmptyBorder(0, 580, 0, 0));
-=======
-        JLabel Header = new JLabel("Medical Records");
+        JLabel Header = new JLabel("Medical Records",EPHedIcon, JLabel.LEFT);
+        Header.setAlignmentX(Component.LEFT_ALIGNMENT);
         Header.setBorder(new EmptyBorder(0, 0, 0, 600));
->>>>>>> Stashed changes
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
