@@ -100,9 +100,17 @@ public class EditRoomView extends JFrame {
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-
+        // Header Icon
+        ImageIcon EPHedP;
+        Image resizedEPHed;
+        ImageIcon EPHedIcon;
+        int wid = 45;
+        int hei = 45;
+        EPHedP = new ImageIcon("src/assets/images/icons8-edit-24(1).png");
+        resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        EPHedIcon = new ImageIcon(resizedEPHed);
         // Header Section
-        JLabel Header = new JLabel("Edit Room");
+        JLabel Header = new JLabel(" Edit Room",EPHedIcon,JLabel.LEFT);
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel headerPanel = new JPanel();

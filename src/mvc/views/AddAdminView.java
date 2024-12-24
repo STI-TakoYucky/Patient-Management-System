@@ -53,6 +53,7 @@ public class AddAdminView extends JFrame {
     Image resizedImage = image.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
     ImageIcon resizedCloseButtonIcon = new ImageIcon(resizedImage);
 
+
     // Create a JLabel with the PNG image
     JLabel closeButton = new JLabel(resizedCloseButtonIcon);
 
@@ -79,9 +80,17 @@ public class AddAdminView extends JFrame {
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-
+        // Header Icon
+        ImageIcon addAdminP;
+        Image resizedAdmin;
+        ImageIcon addAdminIcon;
+        int wid = 50;
+        int hei = 50;
+        addAdminP = new ImageIcon("src/assets/images/admin.png");
+        resizedAdmin =addAdminP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        addAdminIcon = new ImageIcon(resizedAdmin);
         // Header Section
-        JLabel addPatientHeader = new JLabel("Add Admin");
+        JLabel addPatientHeader = new JLabel("Add Admin",addAdminIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel headerPanel = new JPanel();
@@ -237,7 +246,7 @@ public class AddAdminView extends JFrame {
 //
 //                    private void handleTextChange() {
 //                        SwingUtilities.invokeLater(() -> {
-////                        String pattern = "^[a-zA-Z\\s]*$";
+////                        String pattern = "^[a-zA-Zs]*$";
 ////                        String pattern2 = "^09\\d{9}$";    // Numbers starting with 09, exactly 11 digits
 ////                        String pattern3 = "^\\d{4}$";
 //                        JTextField source = (JTextField) component;

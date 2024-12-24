@@ -85,9 +85,17 @@ public class EditAdminView extends JFrame {
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-
+        // Header Icon
+        ImageIcon EPHedP;
+        Image resizedEPHed;
+        ImageIcon EPHedIcon;
+        int wid = 45;
+        int hei = 45;
+        EPHedP = new ImageIcon("src/assets/images/icons8-edit-24(1).png");
+        resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        EPHedIcon = new ImageIcon(resizedEPHed);
         // Header Section
-        JLabel addPatientHeader = new JLabel("Add Admin");
+        JLabel addPatientHeader = new JLabel(" Edit Admin", EPHedIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel headerPanel = new JPanel();
@@ -261,7 +269,7 @@ public class EditAdminView extends JFrame {
 //
 //                    private void handleTextChange() {
 //                        SwingUtilities.invokeLater(() -> {
-////                        String pattern = "^[a-zA-Z\\s]*$";
+////                        String pattern = "^[a-zA-Zs]*$";
 ////                        String pattern2 = "^09\\d{9}$";    // Numbers starting with 09, exactly 11 digits
 ////                        String pattern3 = "^\\d{4}$";
 //                        JTextField source = (JTextField) component;

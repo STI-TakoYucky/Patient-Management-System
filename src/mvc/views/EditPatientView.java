@@ -142,15 +142,23 @@ public class EditPatientView extends JFrame {
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-
+        // Header Icon
+        ImageIcon EPHedP;
+        Image resizedEPHed;
+        ImageIcon EPHedIcon;
+        int wid = 45;
+        int hei = 45;
+        EPHedP = new ImageIcon("src/assets/images/icons8-edit-24(1).png");
+        resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        EPHedIcon = new ImageIcon(resizedEPHed);
         // Header Section
-        JLabel addPatientHeader = new JLabel("Edit Patient");
+        JLabel addPatientHeader = new JLabel(" Edit Patient",EPHedIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(addPatientHeader);
-        closeButton.setBorder(new EmptyBorder(0, 650, 0, 0));
+        closeButton.setBorder(new EmptyBorder(0, 610, 0, 0));
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
