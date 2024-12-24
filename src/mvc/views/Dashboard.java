@@ -34,13 +34,23 @@ public class Dashboard extends JFrame implements ActionListener  {
     }
 
     public void initComponents() {
+        // Header Icon
+        ImageIcon MainHdrP;
+        Image resizedMainHdr;
+        ImageIcon MainHdrIcon;
+        int wid = 65;
+        int hei = 65;
+        MainHdrP = new ImageIcon("src/assets/images/JWWy8xWz-removebg-preview.png");
+        resizedMainHdr = MainHdrP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        MainHdrIcon = new ImageIcon(resizedMainHdr);
+
         String userRole = role;
         updatePatientCount(); // Update the patient count dynamically
 
         JPanel header = new JPanel();
         JPanel buttons = new JPanel();
 
-        JLabel appName = new JLabel("HealthSync");
+        JLabel appName = new JLabel("HealthSync",MainHdrIcon,JLabel.LEFT);
         appName.setForeground(Color.white);
 
         JTextField searchField = new RoundJTextField("Search", 30);
@@ -77,7 +87,7 @@ public class Dashboard extends JFrame implements ActionListener  {
 
         patientCount.setFont(DEFAULT_FONT);
         patientCount.setForeground(Color.white);
-        patientCount.setBorder(new EmptyBorder(0, 50, 0, 830));
+        patientCount.setBorder(new EmptyBorder(0, 50, 0, 770));
         header.add(patientCount);
         header.add(logoutBtn);
         logoutBtn.setFont(DEFAULT_FONT);
@@ -97,12 +107,41 @@ public class Dashboard extends JFrame implements ActionListener  {
             }
 
         });
+        // icon paths
+        ImageIcon roomPath, patientPath,staffPath,adminPath;
+         roomPath = new ImageIcon("src/assets/images/hospital-bed.png");
+        patientPath = new ImageIcon("src/assets/images/patient.png");
+        staffPath = new ImageIcon("src/assets/images/surgeon.png");
+        adminPath = new ImageIcon("src/assets/images/admin.png");
+
+
+        int width = 45;
+        int height = 45;
+
+        // Resize the image to the desired width and height
+        Image resizedRoom, resizedPatient,resizedStaff,resizedAdmin;
+        resizedRoom = roomPath.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        resizedStaff = staffPath.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        resizedPatient = patientPath.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        resizedAdmin = adminPath.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+
+        // Create a new ImageIcon with the resized image
+        ImageIcon roomIcon, patientIcon,staffIcon,adminIcon;
+        roomIcon = new ImageIcon(resizedRoom);
+        patientIcon = new ImageIcon(resizedPatient);
+        staffIcon = new ImageIcon(resizedStaff);
+        adminIcon = new ImageIcon(resizedAdmin);
+
 
         // Buttons
-         roombtn = new JButton("Rooms");
-         patientsbtn= new JButton("Patients");
-         medicalstaffBtn = new JButton("Medical Staffs");
-         adminBttn = new JButton("Admins");
+         roombtn = new JButton(" Rooms",roomIcon);
+
+         patientsbtn= new JButton(" Patients",patientIcon);
+
+         medicalstaffBtn = new JButton(" Medical Staffs", staffIcon);
+
+         adminBttn = new JButton(" Admins",adminIcon);
+
         roombtn.setFocusPainted(false);
         roombtn.setBorderPainted(false);
         patientsbtn.setFocusPainted(false);
@@ -112,20 +151,21 @@ public class Dashboard extends JFrame implements ActionListener  {
         adminBttn.setFocusPainted(false);
         adminBttn.setBorderPainted(false);
 
-        roombtn.setFont(new Font("Arial", Font.PLAIN, 20));
-        patientsbtn.setFont(new Font("Arial", Font.PLAIN, 20));
-        medicalstaffBtn.setFont(new Font("Arial", Font.PLAIN, 20));
-        adminBttn.setFont(new Font("Arial", Font.PLAIN, 20));
+        roombtn.setFont(new Font("Arial", Font.PLAIN, 15));
+        patientsbtn.setFont(new Font("Arial", Font.PLAIN, 15));
+        medicalstaffBtn.setFont(new Font("Arial", Font.PLAIN, 15));
+        adminBttn.setFont(new Font("Arial", Font.PLAIN, 15));
 
         //Button sizes
-        roombtn.setPreferredSize(new Dimension(200, 50));
+        roombtn.setPreferredSize(new Dimension(200, 85));
         roombtn.setBorder(new EmptyBorder(0, 47, 0, 0));
-        patientsbtn.setPreferredSize(new Dimension(200,50));
+        patientsbtn.setPreferredSize(new Dimension(200,85));
         patientsbtn.setBorder(new EmptyBorder(0, 47, 0, 0));
-        medicalstaffBtn.setPreferredSize(new Dimension(200,50));
+        medicalstaffBtn.setPreferredSize(new Dimension(200,85));
         medicalstaffBtn.setBorder(new EmptyBorder(0, 47, 0, 0));
-        adminBttn.setPreferredSize(new Dimension(200,50));
-                adminBttn.setBorder(new EmptyBorder(0, 47, 0, 0));
+        adminBttn.setPreferredSize(new Dimension(200,85));
+        adminBttn.setBorder(new EmptyBorder(0, 47, 0, 0));
+
         // clear button background
         roombtn.setOpaque(false);
         roombtn.setContentAreaFilled(false);
@@ -154,7 +194,7 @@ public class Dashboard extends JFrame implements ActionListener  {
         adminBttn.setForeground(Color.WHITE);
         buttons.setBackground(Constants.primary);
         // Action listener
-        buttons.setLayout(new FlowLayout(FlowLayout.CENTER , 50, 30));
+        buttons.setLayout(new FlowLayout(FlowLayout.CENTER , 50, 40));
         buttons.setPreferredSize(new Dimension(200,600));
 
 

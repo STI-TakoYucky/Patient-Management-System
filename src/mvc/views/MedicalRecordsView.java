@@ -61,14 +61,22 @@ public class MedicalRecordsView extends JFrame {
 
         // Main Panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
-
+        // Header Icon
+        ImageIcon EPHedP;
+        Image resizedEPHed;
+        ImageIcon EPHedIcon;
+        int wid = 45;
+        int hei = 45;
+        EPHedP = new ImageIcon("src/assets/images/icons8-medical-records-66.png");
+        resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        EPHedIcon = new ImageIcon(resizedEPHed);
         // Header Panel
         JPanel mainHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
         mainHeader.setBackground(Constants.secondary);
         mainHeader.setBorder(new EmptyBorder(25, 25, 25, 25));
 
-        JLabel addPatientHeader = new JLabel("Medical Records");
-
+        JLabel addPatientHeader = new JLabel("Medical Records",EPHedIcon, JLabel.LEFT);
+        addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
         closeButton.setBorder(new EmptyBorder(0, 580, 0, 0));
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
@@ -212,7 +220,7 @@ public class MedicalRecordsView extends JFrame {
 //
 //                    private void handleTextChange() {
 //                        SwingUtilities.invokeLater(() -> {
-////                        String pattern = "^[a-zA-Z\\s]*$";
+////                        String pattern = "^[a-zA-Zs]*$";
 ////                        String pattern2 = "^09\\d{9}$";    // Numbers starting with 09, exactly 11 digits
 ////                        String pattern3 = "^\\d{4}$";
 //                        JTextField source = (JTextField) component;
