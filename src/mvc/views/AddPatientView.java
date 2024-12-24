@@ -106,15 +106,23 @@ public class AddPatientView extends JFrame {
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
+        ImageIcon addPatientP;
+        Image resiAddPa;
+        ImageIcon addPatientIcon;
+        int wid = 50;
+        int hei = 50;
+        addPatientP = new ImageIcon("src/assets/images/patient.png");
+        resiAddPa =addPatientP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        addPatientIcon = new ImageIcon(resiAddPa);
 
         // Header Section
-        JLabel addPatientHeader = new JLabel("Add Patient");
+        JLabel addPatientHeader = new JLabel("Add Patient",addPatientIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(addPatientHeader);
-        closeButton.setBorder(new EmptyBorder(0, 650, 0, 0));
+        closeButton.setBorder(new EmptyBorder(0, 610, 0, 0));
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -743,7 +751,7 @@ public class AddPatientView extends JFrame {
 //
 //                    private void handleTextChange() {
 //                        SwingUtilities.invokeLater(() -> {
-////                        String pattern = "^[a-zA-Z\\s]*$";
+////                        String pattern = "^[a-zA-Zs]*$";
 ////                        String pattern2 = "^09\\d{9}$";    // Numbers starting with 09, exactly 11 digits
 ////                        String pattern3 = "^\\d{4}$";
 //                        JTextField source = (JTextField) component;

@@ -44,9 +44,9 @@ public class AddRoomView extends JFrame {
         initComponents();
     }
 
-    public JTextField roomName = new JTextField("Room Name",18);
-    public JTextField roomType = new JTextField("Room Type",18);
-    public JTextField roomCapacity = new JTextField("Capacity",7);
+    public JTextField roomName = new JTextField(" Room Name",18);
+    public JTextField roomType = new JTextField(" Room Type",18);
+    public JTextField roomCapacity = new JTextField(" Capacity",7);
     public JTextField patientSearchField = new JTextField("Search Patient",18);
     JPanel patientListPanel;
     JPanel toBeAssignedPanel = new JPanel();
@@ -62,6 +62,14 @@ public class AddRoomView extends JFrame {
     JLabel closeButton = new JLabel(resizedCloseButtonIcon);
 
     public void initComponents() {
+        ImageIcon addRoomP;
+        Image resizedAdd;
+        ImageIcon addRoomIcon;
+        int wid = 50;
+        int hei = 50;
+        addRoomP = new ImageIcon("src/assets/images/hospital-bed.png");
+        resizedAdd =addRoomP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        addRoomIcon = new ImageIcon(resizedAdd);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
@@ -82,13 +90,14 @@ public class AddRoomView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
         // Header Section
-        JLabel Header = new JLabel("Add Room");
+        JLabel Header = new JLabel(" Add Room",addRoomIcon,JLabel.LEFT);
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
+
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(Header);
-        closeButton.setBorder(new EmptyBorder(0, 650, 0, 0));
+        closeButton.setBorder(new EmptyBorder(0, 630, 0, 0));
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -104,10 +113,12 @@ public class AddRoomView extends JFrame {
         headerPanel.setBackground(Constants.secondary);
 
 
+
         // RoomDetails Section
-        JLabel RoomDetailsLabel = new JLabel("Room Name");
-        JLabel RoomTypeLabel = new JLabel("Room Type");
-        JLabel roomCapacityLabel = new JLabel("Room Capacity");
+        JLabel RoomDetailsLabel = new JLabel(" Room Name");
+        JLabel RoomTypeLabel = new JLabel(" Room Type");
+        JLabel roomCapacityLabel = new JLabel(" Room Capacity");
+
         JPanel RoomDetailsWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel RoomDetailsPanel = new JPanel(new GridBagLayout());
         gbc.gridx = 0;
@@ -132,7 +143,8 @@ public class AddRoomView extends JFrame {
 
 
         //Assign Patients Section
-        JLabel AssignPatientsLabel = new JLabel("Assign Patient/s");
+        JLabel AssignPatientsLabel = new JLabel(" Assign Patient/s");
+
 
         JPanel assignPatientsWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel AssignPatientsPanel = new JPanel(new GridBagLayout());

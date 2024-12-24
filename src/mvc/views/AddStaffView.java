@@ -72,14 +72,24 @@ public class AddStaffView extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
+        // Hearder Icon
+        ImageIcon addStaffP;
+        Image resizedStaff;
+        ImageIcon addStaffIcon;
+        int wid = 50;
+        int hei = 50;
+        addStaffP = new ImageIcon("src/assets/images/surgeon.png");
+        resizedStaff =addStaffP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        addStaffIcon = new ImageIcon(resizedStaff);
+
         // Header Section
-        JLabel addPatientHeader = new JLabel("Add Medical Staff");
+        JLabel addPatientHeader = new JLabel("Add Medical Staff",addStaffIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(addPatientHeader);
-        closeButton.setBorder(new EmptyBorder(0, 580, 0, 0));
+        closeButton.setBorder(new EmptyBorder(0, 550, 0, 0));
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -239,7 +249,7 @@ public class AddStaffView extends JFrame {
 //
 //                    private void handleTextChange() {
 //                        SwingUtilities.invokeLater(() -> {
-////                        String pattern = "^[a-zA-Z\\s]*$";
+////                        String pattern = "^[a-zA-Zs]*$";
 ////                        String pattern2 = "^09\\d{9}$";    // Numbers starting with 09, exactly 11 digits
 ////                        String pattern3 = "^\\d{4}$";
 //                        JTextField source = (JTextField) component;
