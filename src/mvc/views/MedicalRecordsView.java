@@ -99,12 +99,8 @@ public class MedicalRecordsView extends JFrame {
         String formattedBirthDate = dateFormat.format(birthDate);
 
 // Add the formatted birthdate to the label
-        mainContent.add(createLabel("Admission Date", patientDocument.getDate("Admission Date").toString()));
-        mainContent.add(createLabel("Blood Type", patientDocument.getString("BloodType")));
         mainContent.add(createLabel("Birthdate", formattedBirthDate));
-        mainContent.add(createLabel("Sex", patientDocument.getString("Sex")));
-        mainContent.add(createLabel("Nationality", patientDocument.getString("Nationality")));
-        mainContent.add(createLabel("Civil Status", patientDocument.getString("Civil Status")));
+        mainContent.add(createLabel("Admission Date", patientDocument.getDate("Admission Date").toString()));
         mainContent.add(createLabel("Phone Number", patientDocument.get("Phone Number").toString()));
         mainContent.add(createLabel("Email Address", patientDocument.getString("Email")));
         mainContent.add(createLabel("Emergency Contact", patientDocument.get("Emergency Contact Number").toString()));
@@ -113,7 +109,9 @@ public class MedicalRecordsView extends JFrame {
         mainContent.add(createLabel("Region", patientDocument.getString("Region")));
         mainContent.add(createLabel("Municipality", patientDocument.getString("Municipality")));
         mainContent.add(createLabel("Postal Code", patientDocument.get("Postal Code").toString()));
-
+        mainContent.add(createLabel("Nationality", patientDocument.getString("Nationality")));
+        mainContent.add(createLabel("Civil Status", patientDocument.getString("Civil Status")));
+        mainContent.add(createLabel("Sex", patientDocument.getString("Sex")));
 
         // Wrap Content in JScrollPane
         JScrollPane scrollPane = new JScrollPane(mainContent);

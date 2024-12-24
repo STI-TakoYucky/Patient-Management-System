@@ -100,10 +100,6 @@ public class AddStaffView extends JFrame {
 
         JPanel namePanel = new JPanel(new GridBagLayout());
         JPanel namePanelWrapper = new JPanel();
-        namePanelWrapper.setBorder(new EmptyBorder(0, 0, 0, 0));
-        namePanelWrapper.setMaximumSize(new Dimension(850, 120));
-
-
         namePanelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
         namePanelWrapper.add(namePanel);
         gbc.gridx = 0;
@@ -123,7 +119,6 @@ public class AddStaffView extends JFrame {
 
 
         JLabel staffDetailsPanel = new JLabel("Medical Staff Details");
-        staffDetailsPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
         JLabel staffAccount = new JLabel("Medical Staff Account");
 
         JPanel detailsPanel = new JPanel(new GridBagLayout());
@@ -169,7 +164,7 @@ public class AddStaffView extends JFrame {
         // Add All Sections to Main Panel
         mainHeader.add(headerPanel);
         mainContent.add(namePanelWrapper);
-//        mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
+        mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(detailsPanelWrappeer);
 
         mainContent.add(addPatientButtonPanel);
