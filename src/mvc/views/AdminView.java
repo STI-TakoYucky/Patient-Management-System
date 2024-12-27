@@ -44,6 +44,11 @@ public class AdminView extends Panel {
         gbc.insets = new Insets(5, 20, 5, 20);
 
         addStaffBttn.addActionListener(new addStaffBttn());
+        addStaffBttn.setContentAreaFilled(false);
+        addStaffBttn.setOpaque(true);
+        addStaffBttn.setBackground(Constants.secondary);
+        addStaffBttn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        addStaffBttn.setFocusPainted(false);
 
         addStaffPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         addStaffPanel.setBorder(new EmptyBorder(30,80,0,0));
@@ -71,6 +76,23 @@ public class AdminView extends Panel {
             JLabel noStaff = new JLabel("No Admins Yet");
             staffListItemPanel.add(noStaff);
         } else {
+            for (Document staff : adminList) {
+                AdminItem item = new AdminItem(staff, this, dashboard);
+                staffListItemPanel.add(item);
+                staffListItemPanel.add(Box.createVerticalStrut(20));
+                item.revalidate();
+                item.repaint();
+            }
+        }
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+        revalidate();
+        repaint();
+    }
+
+    public void updateUI(List<Document> adminList){
+        staffListItemPanel.removeAll();
+
+        if (adminList != null){
             for (Document staff : adminList) {
                 AdminItem item = new AdminItem(staff, this, dashboard);
                 staffListItemPanel.add(item);

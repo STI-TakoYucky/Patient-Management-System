@@ -45,6 +45,11 @@ public class PatientView extends Panel {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 20, 5, 20);
 
+        addPatientBttn.setContentAreaFilled(false);
+        addPatientBttn.setOpaque(true);
+        addPatientBttn.setBackground(Constants.secondary);
+        addPatientBttn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        addPatientBttn.setFocusPainted(false);
         addPatientBttn.addActionListener(new addPatientBttn());
 
         addPatientPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -73,6 +78,23 @@ public class PatientView extends Panel {
             JLabel noPatient = new JLabel("No Patients Yet");
             patientListPanel.add(noPatient);
         } else {
+            for (Document patient : patientList) {
+                PatientItem item = new PatientItem(patient, patientView, this.dashboard);
+                patientListPanel.add(item);
+                patientListPanel.add(Box.createVerticalStrut(20));
+                item.revalidate();
+                item.repaint();
+            }
+        }
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+        revalidate();
+        repaint();
+    }
+
+    public void updateUI(List<Document> patientList){
+        patientListPanel.removeAll();
+
+        if (patientList != null) {
             for (Document patient : patientList) {
                 PatientItem item = new PatientItem(patient, patientView, this.dashboard);
                 patientListPanel.add(item);

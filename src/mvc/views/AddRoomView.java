@@ -1,9 +1,6 @@
 package mvc.views;
 import com.mongodb.client.FindIterable;
-import mvc.controllers.AddPatientController;
-import mvc.controllers.AddRoomController;
-import mvc.controllers.GetAssignedPatients;
-import mvc.controllers.GetPatients;
+import mvc.controllers.*;
 import mvc.models.RoomModel;
 import mvc.views.components.PatientItem;
 import mvc.views.constants.Constants;
@@ -62,14 +59,6 @@ public class AddRoomView extends JFrame {
     JLabel closeButton = new JLabel(resizedCloseButtonIcon);
 
     public void initComponents() {
-        ImageIcon addRoomP;
-        Image resizedAdd;
-        ImageIcon addRoomIcon;
-        int wid = 50;
-        int hei = 50;
-        addRoomP = new ImageIcon("src/assets/images/hospital-bed.png");
-        resizedAdd =addRoomP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
-        addRoomIcon = new ImageIcon(resizedAdd);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
@@ -89,23 +78,25 @@ public class AddRoomView extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
+        ImageIcon addRoomP;
+        Image resizedAdd;
+        ImageIcon addRoomIcon;
+        int wid = 45;
+        int hei = 45;
+        addRoomP = new ImageIcon("src/assets/images/hospital-bed.png");
+        resizedAdd =addRoomP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        addRoomIcon = new ImageIcon(resizedAdd);
+
         // Header Section
-<<<<<<< Updated upstream
-        JLabel Header = new JLabel(" Add Room",addRoomIcon,JLabel.LEFT);
-=======
-        JLabel Header = new JLabel("Add Room");
-        Header.setBorder(new EmptyBorder(0, 0, 0, 650));
->>>>>>> Stashed changes
+        JLabel Header = new JLabel("  Add Patient",addRoomIcon,JLabel.LEFT);
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
+        Header.setBorder(new EmptyBorder(0, 0, 0, 570));
 
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(Header);
-<<<<<<< Updated upstream
-        closeButton.setBorder(new EmptyBorder(0, 630, 0, 0));
-=======
->>>>>>> Stashed changes
+
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -226,6 +217,8 @@ public class AddRoomView extends JFrame {
                     dashboard.setEnabled(true);
                     dashboard.setFocusable(true);
                     dashboard.setAlwaysOnTop(true);
+                String newCount = String.valueOf(GetRooms.getRoomCount());
+                Dashboard.HeaderCount("Room Count: " , newCount);
 
             }
           }else {

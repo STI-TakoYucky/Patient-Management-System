@@ -77,39 +77,85 @@ public class RoomListItem extends CustomRoundedPanel {
 
         roomMainContentPanel.setLayout(new BoxLayout(roomMainContentPanel, BoxLayout.Y_AXIS));
 
-
         createPatientListItem(patientMap);
 
         add(roomHeaderWrapper, BorderLayout.NORTH);
         add(roomMainContentPanel, BorderLayout.CENTER);
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-<<<<<<< Updated upstream
-        roomName.setFont(new Font("Arial", Font.BOLD, 20));
-=======
-        roomMainContentPanel.setBackground(Constants.primary);
+
+        roomMainContentPanel.setOpaque(false);
         roomHeaderWrapper.setBackground(Constants.secondary);
         roomHeaderPanel.setBackground(Constants.secondary);
-        roomName.setFont(new Font("Arial", Font.BOLD, 24));
->>>>>>> Stashed changes
     }
 
 
 
     public void createPatientListItem(Map<String, String> patientMap) {
-        if (patientMap != null) {
+        System.out.println(patientMap);
+        if (!patientMap.isEmpty()) {
             for (Map.Entry<String, String> entry : patientMap.entrySet()) {
-            JPanel patientItemPanel = new CustomRoundedPanel();
+            JPanel patientItemPanel = new JPanel();
             patientItemPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
             patientItemPanel.setLayout(new GridBagLayout());
             JLabel patientName = new JLabel("Patient Name: " + entry.getValue());
-            JLabel assignedStaff = new JLabel("Assigned Staff");
-            JLabel medicalRecords = new JLabel("Medical Records");
-            JLabel confinedDate = new JLabel("Confined Since: " + GetPatients.getPatientAdmissionDate(entry.getKey()));
+            JButton assignedStaff = new JButton("Assigned Staff");
+                assignedStaff.setFocusPainted(false);
+                assignedStaff.setBorderPainted(false);
+
+                // Custom Painting
+                assignedStaff.setContentAreaFilled(false);
+                assignedStaff.setOpaque(true);
+                assignedStaff.setBackground(Constants.primary);
+                assignedStaff.setForeground(Color.WHITE);
+                assignedStaff.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+                // Add Hover Effect
+                assignedStaff.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        assignedStaff.setBackground(Constants.hoverColor2);
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        assignedStaff.setBackground(Constants.primary);
+                        assignedStaff.setForeground(Color.white);
+                    }
+                });
+                assignedStaff.setMaximumSize(new Dimension(199,55));
+                assignedStaff.setPreferredSize(new Dimension(199,55));
+
+            JButton medicalRecords = new JButton("Medical Records");
+                medicalRecords.setFocusPainted(false);
+                medicalRecords.setBorderPainted(false);
+
+                // Custom Painting
+                medicalRecords.setContentAreaFilled(false);
+                medicalRecords.setOpaque(true);
+                medicalRecords.setBackground(Constants.primary);
+                medicalRecords.setForeground(Color.WHITE);
+                medicalRecords.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+                // Add Hover Effect
+                medicalRecords.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        medicalRecords.setBackground(Constants.hoverColor2);
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        medicalRecords.setBackground(Constants.primary);
+                        medicalRecords.setForeground(Color.white);
+                    }
+                });
+                medicalRecords.setMaximumSize(new Dimension(220,55));
+                medicalRecords.setPreferredSize(new Dimension(220,55));
+                JLabel confinedDate = new JLabel("Confined Since: " + GetPatients.getPatientAdmissionDate(entry.getKey()));
 
             gbc.weightx = 1;
             gbc.weighty = 1;
             gbc.anchor = GridBagConstraints.WEST;
-            gbc.fill = GridBagConstraints.BOTH;
             gbc.insets = new Insets(0, 29, 0, 0);
 
             gbc.gridx = 0;
@@ -145,6 +191,24 @@ public class RoomListItem extends CustomRoundedPanel {
                     }
                 });
             }
+        } else {
+            JLabel roomEmpty  = new JLabel("Room is empty.");
+            JPanel patientItemPanel = new JPanel();
+            patientItemPanel.setBackground(Constants.primary);
+            patientItemPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
+            patientItemPanel.setLayout(new GridBagLayout());
+            gbc.gridy = 0;
+            gbc.gridx = 0;
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            gbc.anchor = GridBagConstraints.WEST;
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.insets = new Insets(0, 29, 0, 0);
+            patientItemPanel.add(roomEmpty, gbc);
+            roomMainContentPanel.add(patientItemPanel);
+
+            fixedJLabel(patientItemPanel);
+            roomMainContentPanel.add(Box.createVerticalStrut(12));
         }
     }
 
@@ -152,9 +216,9 @@ public class RoomListItem extends CustomRoundedPanel {
         for (Component component : container.getComponents()) {
             if (component instanceof JLabel) {
                 JLabel label = (JLabel) component;
-                label.setBorder(new EmptyBorder(20,70,20,70));    // Adjusted size
+                label.setBorder(new EmptyBorder(20,43,20,70));    // Adjusted size
                 label.setForeground(Color.white);                // Set text color
-                label.setFont(new Font("Arial", Font.PLAIN, 15)); // Set font
+                label.setFont(new Font("Arial", Font.PLAIN, 18)); // Set font
             } else if (component instanceof Container) {
                 fixedJLabel((Container) component);  // Recursive call for nested containers
             }

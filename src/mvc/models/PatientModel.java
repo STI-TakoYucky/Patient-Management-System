@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class PatientModel {
-    private String firstName, lastName, middleName, id, sex, email, region,  streetName, city, civilStatus, municipality, nationality;
+    private String firstName, lastName, middleName, id, sex, email, region,  streetName, city, civilStatus, municipality, nationality, bloodType;
     private String room, roomID, phoneNumber, emergencyContactNumber, assignedStaff;
     private ArrayList<String> symptoms, medication, allergies;
     private int  postalCode;
@@ -13,6 +13,14 @@ public class PatientModel {
 
     // Setters
 
+
+    public String getBloodType() {
+        return bloodType;
+    }
+
+    public void setBloodType(String bloodType) {
+        this.bloodType = bloodType;
+    }
 
     public String getOldRoom() {
         return oldRoom;

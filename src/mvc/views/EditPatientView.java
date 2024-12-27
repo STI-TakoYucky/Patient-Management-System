@@ -60,13 +60,9 @@ public class EditPatientView extends JFrame {
     public JTextField civilStatusField;
     public JRadioButton maleRadioButtonn;
     public JRadioButton femaleRadioButton;
-<<<<<<< Updated upstream
-    JComboBox<String> chooseRoomComboBox;
-=======
     public JComboBox<String> chooseMedicalStaffComboBox;
     String[] bloodTypes = {"Blood Type", "A+", "A-", "B+","B-", "O+", "O-", "AB+", "AB-" };
     public JComboBox<String> bloodType = new JComboBox<String>(bloodTypes);
->>>>>>> Stashed changes
 
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
     Image image = closeButtonIcon.getImage();
@@ -149,33 +145,23 @@ public class EditPatientView extends JFrame {
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-        // Header Icon
-        ImageIcon EPHedP;
-        Image resizedEPHed;
-        ImageIcon EPHedIcon;
+        ImageIcon addPatientP;
+        Image resiAddPa;
+        ImageIcon addPatientIcon;
         int wid = 45;
         int hei = 45;
-        EPHedP = new ImageIcon("src/assets/images/icons8-edit-24(1).png");
-        resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
-        EPHedIcon = new ImageIcon(resizedEPHed);
+        addPatientP = new ImageIcon("src/assets/images/patient.png");
+        resiAddPa =addPatientP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        addPatientIcon = new ImageIcon(resiAddPa);
+
         // Header Section
-<<<<<<< Updated upstream
-        JLabel addPatientHeader = new JLabel(" Edit Patient",EPHedIcon,JLabel.LEFT);
+        JLabel addPatientHeader = new JLabel("  Edit Patient",addPatientIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
+        addPatientHeader.setBorder(new EmptyBorder(0, 0, 0, 570));
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(addPatientHeader);
-        closeButton.setBorder(new EmptyBorder(0, 610, 0, 0));
-=======
-        JLabel Header = new JLabel("Edit Patient");
-        Header.setAlignmentX(Component.LEFT_ALIGNMENT);
-        Header.setBorder(new EmptyBorder(0, 0, 0, 650));
-
-        JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        headerPanel.add(Header);
->>>>>>> Stashed changes
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -503,7 +489,8 @@ public class EditPatientView extends JFrame {
                 dashboard.setEnabled(true);
                 dashboard.setFocusable(true);
                 dashboard.setAlwaysOnTop(true);
-                Dashboard.updatePatientCount();
+                String newCount = String.valueOf(GetPatients.getPatientCount());
+                Dashboard.HeaderCount("Patient Count: " , newCount);
             }
         });
 
@@ -588,7 +575,7 @@ public class EditPatientView extends JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-        Header.setFont(Constants.HEADING_FONT);
+        addPatientHeader.setFont(Constants.HEADING_FONT);
         setJTextFieldPadding(this);
 
         new SetFocusListenerToJTextFields(this);

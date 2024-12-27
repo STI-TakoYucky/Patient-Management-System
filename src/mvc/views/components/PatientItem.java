@@ -199,7 +199,7 @@ public class PatientItem extends CustomRoundedPanel {
         setLayout(new GridBagLayout());
         GridBagConstraints itemgbc = new GridBagConstraints();
         itemgbc.anchor = GridBagConstraints.WEST;
-        itemgbc.insets = new Insets(5, 50, 5, 0);
+        itemgbc.insets = new Insets(5, 50, 5, 10);
         itemgbc.fill = GridBagConstraints.BOTH; // Fill the cell both horizontally and vertically
         itemgbc.weightx = 1;  // Evenly distribute horizontally
         itemgbc.weighty = 1;

@@ -76,7 +76,7 @@ public class MedicalRecordsView extends JFrame {
 
         JLabel Header = new JLabel("Medical Records",EPHedIcon, JLabel.LEFT);
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
-        Header.setBorder(new EmptyBorder(0, 0, 0, 600));
+        Header.setBorder(new EmptyBorder(0, 0, 0, 560));
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -106,11 +106,8 @@ public class MedicalRecordsView extends JFrame {
         String formattedBirthDate = dateFormat.format(birthDate);
 
 // Add the formatted birthdate to the label
-<<<<<<< Updated upstream
-=======
         mainContent.add(createLabel("Admission Date", patientDocument.getDate("Admission Date").toString()));
         mainContent.add(createLabel("Blood Type", patientDocument.getString("Blood Type")));
->>>>>>> Stashed changes
         mainContent.add(createLabel("Birthdate", formattedBirthDate));
         mainContent.add(createLabel("Admission Date", patientDocument.getDate("Admission Date").toString()));
         mainContent.add(createLabel("Phone Number", patientDocument.get("Phone Number").toString()));

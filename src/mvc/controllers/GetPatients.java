@@ -60,31 +60,31 @@ public class GetPatients {
     }
 
     // Existing method to filter patient data by search field input
-    public static List<Document> filterPatientData(String searchFieldInput) {
-        List<Document> patientList = new ArrayList<>();
-        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
-            MongoDatabase database = mongoClient.getDatabase("patientDB");
-            MongoCollection<Document> collection = database.getCollection("patients");
+            public static List<Document> filterPatientData(String searchFieldInput) {
+                List<Document> patientList = new ArrayList<>();
+                try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
+                    MongoDatabase database = mongoClient.getDatabase("patientDB");
+                    MongoCollection<Document> collection = database.getCollection("patients");
 
-            String searchText = searchFieldInput.trim();
+                    String searchText = searchFieldInput.trim();
 
-            if (!searchText.isEmpty()) {
-                FindIterable<Document> results = collection.find(Filters.or(
-                        Filters.regex("First Name", "^" + searchText, "i"),
-                        Filters.regex("Last Name", "^" + searchText, "i"),
-                        Filters.regex("Middle Name", "^" + searchText, "i"),
-                        Filters.regex("_id", "^" + searchText, "i")
-                ));
+                    if (!searchText.isEmpty()) {
+                        FindIterable<Document> results = collection.find(Filters.or(
+                                Filters.regex("First Name", "^" + searchText, "i"),
+                                Filters.regex("Last Name", "^" + searchText, "i"),
+                                Filters.regex("Middle Name", "^" + searchText, "i"),
+                                Filters.regex("_id", "^" + searchText, "i")
+                        ));
 
-                for (Document doc : results) {
-                    patientList.add(doc);
+                        for (Document doc : results) {
+                            patientList.add(doc);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                return patientList.isEmpty() ? null : patientList;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return patientList.isEmpty() ? null : patientList;
-    }
 
     // New method to get the count of patients in the database
     public static long getPatientCount() {

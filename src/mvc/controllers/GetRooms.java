@@ -68,4 +68,18 @@ public class GetRooms {
         }
         return null;
     }
+
+    public static long getRoomCount() {
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
+            MongoDatabase database = mongoClient.getDatabase("roomDB");
+            MongoCollection<Document> collection = database.getCollection("rooms");
+
+            // Get the count of documents in the collection
+            long roomCount = collection.countDocuments();
+            return roomCount;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0; // Return 0 if any exception occurs
+    }
 }

@@ -89,21 +89,16 @@ public class EditAdminView extends JFrame {
         ImageIcon EPHedP;
         Image resizedEPHed;
         ImageIcon EPHedIcon;
-        int wid = 45;
-        int hei = 45;
-        EPHedP = new ImageIcon("src/assets/images/icons8-edit-24(1).png");
+        int wid = 40;
+        int hei = 40;
+        EPHedP = new ImageIcon("src/assets/images/admin.png");
         resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
         EPHedIcon = new ImageIcon(resizedEPHed);
         // Header Section
-<<<<<<< Updated upstream
-        JLabel addPatientHeader = new JLabel(" Edit Admin", EPHedIcon,JLabel.LEFT);
-        addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-=======
-        JLabel Header = new JLabel("Add Admin");
+        JLabel Header = new JLabel("  Edit Admin", EPHedIcon,JLabel.LEFT);
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
-        Header.setBorder(new EmptyBorder(0, 0, 0, 650));
->>>>>>> Stashed changes
+
+        Header.setBorder(new EmptyBorder(0, 0, 0, 590));
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(Header);
@@ -127,6 +122,7 @@ public class EditAdminView extends JFrame {
 
         JPanel namePanel = new JPanel(new GridBagLayout());
         JPanel namePanelWrapper = new JPanel();
+        namePanelWrapper.setMaximumSize(new Dimension(900, 20));
         namePanelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
         namePanelWrapper.add(namePanel);
         gbc.gridx = 0;
@@ -141,24 +137,33 @@ public class EditAdminView extends JFrame {
         namePanel.add(staffNameFieldLN, gbc);
 
 
-
-
-
-
-        JLabel staffDetailsPanel = new JLabel("Admin Details");
+        JLabel staffDetailsLabel = new JLabel("Admin Details");
+        JLabel staffAccount = new JLabel("Admin Account");
 
         JPanel detailsPanel = new JPanel(new GridBagLayout());
         JPanel detailsPanelWrappeer = new JPanel();
+        detailsPanelWrappeer.setMaximumSize(new Dimension(900, 500));
         detailsPanelWrappeer.setLayout(new FlowLayout(FlowLayout.LEFT));
         detailsPanelWrappeer.add(detailsPanel);
+
         gbc.gridx = 0;
         gbc.gridy = 0;
-        detailsPanel.add(staffDetailsPanel, gbc);
-        gbc.gridx = 0;
+        detailsPanel.add(staffDetailsLabel, gbc);
         gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.insets = new Insets(0,0, 20, 0);
+        detailsPanel.add(staffPosition, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(0,0, 5, 0);
+        detailsPanel.add(staffAccount, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.insets = new Insets(0,0, 20, 5);
         detailsPanel.add(staffUserName, gbc);
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 4;
+        gbc.insets = new Insets(0,0, 20, 0);
         detailsPanel.add(staffPassword, gbc);
 
         // Add Patient Button
@@ -182,6 +187,9 @@ public class EditAdminView extends JFrame {
                 dashboard.setEnabled(true);
                 dashboard.setFocusable(true);
                 dashboard.setAlwaysOnTop(true);
+
+                String newCount = String.valueOf(GetStaff.getAdminCount());
+                Dashboard.HeaderCount("Admin Count: " , newCount);
             }
         });
 
@@ -251,101 +259,6 @@ public class EditAdminView extends JFrame {
         }
     }
 
-//    private void setOnChangeEvent(Container container, PatientModel model) {
-//        for (Component component : container.getComponents()) {
-//            if (component instanceof JTextField) {
-//                JTextField textField = (JTextField) component;
-//                String[] previousValue = { textField.getText() };
-//                ((JTextField) component).getDocument().addDocumentListener(new DocumentListener() {
-//                    @Override
-//                    public void insertUpdate(DocumentEvent e) {
-//                        handleTextChange();
-//                    }
-//
-//                    @Override
-//                    public void removeUpdate(DocumentEvent e) {
-//                        handleTextChange();
-//                    }
-//
-//                    @Override
-//                    public void changedUpdate(DocumentEvent e) {
-//                        handleTextChange();
-//                    }
-//
-//                    private void handleTextChange() {
-//                        SwingUtilities.invokeLater(() -> {
-////                        String pattern = "^[a-zA-Zs]*$";
-////                        String pattern2 = "^09\\d{9}$";    // Numbers starting with 09, exactly 11 digits
-////                        String pattern3 = "^\\d{4}$";
-//                        JTextField source = (JTextField) component;
-//                        String text = source.getText();
-////
-////
-////
-////                        if (component == patientNameFieldFN || component == patientNameFieldLN ||
-////                                component == patientNameFieldMN || component == cityField ||
-////                                component == municipalityField || component == nationalityTextField ||
-////                                component == civilStatusField) {
-////                            if (!text.matches(pattern)) {
-////                                JOptionPane.showMessageDialog(null, "Invalid input. Please input letters and spaces only.");
-////                                source.setText(""); // Clear invalid input
-////
-////                            }}
-////                        else if (component == emergencyContactNumberField || component == phoneNumberField ) {
-////                            if (text.length() == 11 && !text.matches(pattern2)|| text.length() > 11) {
-////                                JOptionPane.showMessageDialog(null, "Enter a valid number.");
-////                                source.setText(""); // Clear invalid input
-////
-////                            }
-////                        }
-////                        else if (component == postalCodeField) {
-////
-////                            // Validate only when text length is exactly 4
-////                            if (text.length() == 4 && !text.matches(pattern3)) {
-////                                JOptionPane.showMessageDialog(null, "Postal code must be exactly 4 digits.");
-////                                source.setText("");  // Clear invalid input
-////                            }
-////                            else if (text.length() > 4) {
-////                                JOptionPane.showMessageDialog(null, "Postal code must be exactly 4 digits.");
-////                                source.setText("");  // Clear input if it's more than 4 digits
-////                            }}
-//
-//                          // Handle text change for specific fields
-//                        if (component == patientNameFieldFN) {
-//                            model.setFirstName(text);
-//                        } else if (component == patientNameFieldLN) {
-//                            model.setLastName(text);
-//                        } else if (component == patientNameFieldMN) {
-//                            model.setMiddleName(text);
-//                        } else if (component == emailAddressField) {
-//                            model.setEmail(text);
-//                        } else if (component == streetAddressField) {
-//                            model.setStreetName(text);
-//                        } else if (component == cityField) {
-//                            model.setCity(text);
-//                        } else if (component == regionField) {
-//                            model.setRegion(text);
-//                        } else if (component == civilStatusField) {
-//                            model.setCivilStatus(text);
-//                        } else if (component == phoneNumberField) {
-//                            model.setPhoneNumber(text);
-//                        } else if (component == emergencyContactNumberField) {
-//                            model.setEmergencyContactNumber(text);
-//                        } else if (component == municipalityField) {
-//                            model.setMunicipality(text);
-//                        } else if (component == nationalityTextField) {
-//                            model.setNationality(text);
-//                        }
-//
-//                }
-//                );}
-//                });
-//            } else if (component instanceof Container) {
-//                setOnChangeEvent((Container) component, model);
-//            }
-//        }
-//    }
-
     public void addStaffToDatabase() {
         int choice = JOptionPane.showConfirmDialog(null, "Confirm?",
                 "Edit Admin", JOptionPane.YES_NO_OPTION);
@@ -373,43 +286,48 @@ public class EditAdminView extends JFrame {
         String GENERAL_TEXT_REGEX = "^[A-Za-z0-9-.\\s]+$"; // Allow letters and numbers with spaces
         String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$"; // Password regex
 
-        // Validate firstName
-        if (staffModel.getFirstName() == null || !staffModel.getFirstName().matches(GENERAL_TEXT_REGEX)) {
+        // Validate firstName, the first validation is when if it is not equals to the placeholder
+        if (staffModel.getFirstName().equals("First Name") || !staffModel.getFirstName().matches(GENERAL_TEXT_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid first name! Please use letters only.", "Validation Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         // Validate lastName
-        if (staffModel.getLastName() == null || !staffModel.getLastName().matches(GENERAL_TEXT_REGEX)) {
+        if (staffModel.getLastName().equals("Last Name") || !staffModel.getLastName().matches(GENERAL_TEXT_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid last name! Please use letters only.", "Validation Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         // Validate middleName (optional, but must match if provided)
-        if (staffModel.getMiddleName() != null && !staffModel.getMiddleName().matches(GENERAL_TEXT_REGEX)) {
+        if (staffModel.getMiddleName().equals("Last Name") && !staffModel.getMiddleName().matches(GENERAL_TEXT_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid middle name! Please use letters only.", "Validation Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        // Validate username (optional, but must match if provided)
-        if (staffModel.getUsername() != null && !staffModel.getUsername().matches(GENERAL_TEXT_REGEX)) {
-            JOptionPane.showMessageDialog(null, "Invalid username! Please use alphanumeric characters and valid symbols.", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return false;
+        System.out.println(staffModel.getPassword());
+
+        //validate the username and password if the user has inputted
+        if ((staffModel.getPassword() != null) || (staffModel.getUsername() != null)) {
+            if (staffModel.getPassword() == null || !staffModel.getPassword().matches(PASSWORD_REGEX)) {
+                JOptionPane.showMessageDialog(null, "Invalid password! Password must be at least 8 characters long, include uppercase, lowercase, a number, and a special character.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            if (staffModel.getUsername() == null || !staffModel.getUsername().matches(GENERAL_TEXT_REGEX)) {
+                JOptionPane.showMessageDialog(null, "Invalid username! Please use alphanumeric characters and valid symbols.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
         }
 
-        // Validate password using the password regex
-        if (staffModel.getPassword() == null || !staffModel.getPassword().matches(PASSWORD_REGEX)) {
-            JOptionPane.showMessageDialog(null, "Invalid password! Password must be at least 8 characters long, include uppercase, lowercase, a number, and a special character.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+
+        // Validate position (optional, but should not be empty)
+        if (staffModel.getPosition().equals("Position") && staffModel.getPosition().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Position cannot be empty!", "Validation Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         // Validation passed for all fields
         return true;
     }
-
-
-
-
-
 
 }

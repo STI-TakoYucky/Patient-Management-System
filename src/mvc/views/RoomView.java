@@ -50,6 +50,11 @@ public class RoomView extends Panel {
         gbc.insets = new Insets(5, 20, 5, 20);
 
         addRoomBttn.addActionListener(new addRoomBttn());
+        addRoomBttn.setContentAreaFilled(false);
+        addRoomBttn.setOpaque(true);
+        addRoomBttn.setBackground(Constants.secondary);
+        addRoomBttn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        addRoomBttn.setFocusPainted(false);
 
         addRoomPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         addRoomPanel.setBorder(new EmptyBorder(30,80,0,0));
@@ -93,10 +98,7 @@ public class RoomView extends Panel {
     public void updateUI(List<Document> rooms){
         roomListPanel.removeAll();
 
-        if (rooms == null) {
-            JLabel noRooms = new JLabel("No Rooms Yet");
-            roomListPanel.add(noRooms);
-        } else {
+        if (rooms != null) {
             for (Document room : rooms) {
                 RoomListItem item = new RoomListItem(room, roomView, dashboard);
                 roomListPanel.add(item);
