@@ -43,6 +43,11 @@ public class MedicalStaffView extends Panel {
         gbc.insets = new Insets(5, 20, 5, 20);
 
         addStaffBttn.addActionListener(new addStaffBttn());
+        addStaffBttn.setContentAreaFilled(false);
+        addStaffBttn.setOpaque(true);
+        addStaffBttn.setBackground(Constants.secondary);
+        addStaffBttn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        addStaffBttn.setFocusPainted(false);
 
         addStaffPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         addStaffPanel.setBorder(new EmptyBorder(30,80,0,0));
@@ -70,6 +75,23 @@ public class MedicalStaffView extends Panel {
             JLabel noStaff = new JLabel("No Staff Yet");
             staffListItemPanel.add(noStaff);
         } else {
+            for (Document staff : staffList) {
+                MedicalStaffItem item = new MedicalStaffItem(staff, medView, dashboard);
+                staffListItemPanel.add(item);
+                staffListItemPanel.add(Box.createVerticalStrut(20));
+                item.revalidate();
+                item.repaint();
+            }
+        }
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+        revalidate();
+        repaint();
+    }
+
+    public void updateUI(List<Document> staffList){
+        staffListItemPanel.removeAll();
+
+        if (staffList != null) {
             for (Document staff : staffList) {
                 MedicalStaffItem item = new MedicalStaffItem(staff, medView, dashboard);
                 staffListItemPanel.add(item);

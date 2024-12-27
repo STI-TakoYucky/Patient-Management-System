@@ -46,6 +46,7 @@ public class EditPatientController {
                 Updates.set("Street Name", patientModel.getStreetName()),
                 Updates.set("City", patientModel.getCity()),
                 Updates.set("Civil Status", patientModel.getCivilStatus()),
+                Updates.set("Blood Type", patientModel.getBloodType()),
                 Updates.set("Assigned Staff", patientModel.getAssignedStaff()),
                 Updates.set("Symptoms", patientModel.getSymptoms()),
                 Updates.set("Medication", patientModel.getMedication()),

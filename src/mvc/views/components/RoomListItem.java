@@ -1,32 +1,28 @@
 package mvc.views.components;
 import mvc.controllers.GetPatients;
-import mvc.models.PatientModel;
 import mvc.models.RoomModel;
 import mvc.views.Dashboard;
 import mvc.views.EditRoomView;
+import mvc.views.MedicalRecordsView;
 import mvc.views.RoomView;
 import mvc.views.constants.Constants;
 import mvc.views.utility.SetDefaultFont;
 import org.bson.Document;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class RoomListItem extends CustomRoundedPanel {
     int width = 1060;
     Document roomItem;
     RoomView roomView;
     Dashboard dashboard;
-    PatientModel patientModel;
-    public RoomListItem(Document room, RoomView roomView, Dashboard dashboard, PatientModel patientModel) {
+
+    public RoomListItem(Document room, RoomView roomView, Dashboard dashboard) {
         this.roomItem = room;
-        this.patientModel = patientModel;
         this.roomView = roomView;
         this.dashboard = dashboard;
         initComponents();
@@ -45,9 +41,8 @@ public class RoomListItem extends CustomRoundedPanel {
         gbc.insets = new Insets(0, 12, 0, 0);
         gbc.anchor = GridBagConstraints.CENTER;
         JPanel roomHeaderPanel = new CustomRoundedPanel();
-//        roomHeaderPanel.setPreferredSize(new Dimension(1060, 50));
+        roomHeaderPanel.setPreferredSize(new Dimension(1060, 50));
         roomHeaderPanel.setLayout(new GridBagLayout());
-        roomHeaderPanel.setBackground(Constants.secondary);
         JLabel roomName = new JLabel(roomItem.getString("Room Name"));
         JLabel roomCapacity = new JLabel(String.valueOf(patientMapSize + "/" + roomItem.getInteger("Room Capacity")));
         JLabel roomType = new JLabel(roomItem.getString("Room Type"));
@@ -60,7 +55,7 @@ public class RoomListItem extends CustomRoundedPanel {
                 dashboard.setEnabled(false);
                 dashboard.setAlwaysOnTop(false);
                 dashboard.setFocusable(false);
-                new EditRoomView(roomItem.getString("_id"), new RoomModel(), roomView, dashboard, patientModel);
+                new EditRoomView(roomItem.getString("_id"), new RoomModel(), roomView, dashboard);
             }
         });
 
@@ -79,40 +74,88 @@ public class RoomListItem extends CustomRoundedPanel {
         fixedHeaderJLabel(roomHeaderPanel);
 
         roomHeaderWrapper.add(roomHeaderPanel);
-        roomHeaderWrapper.setOpaque(false);
-        roomHeaderPanel.setOpaque(false);
 
         roomMainContentPanel.setLayout(new BoxLayout(roomMainContentPanel, BoxLayout.Y_AXIS));
 
-
         createPatientListItem(patientMap);
-
-        roomMainContentPanel.setOpaque(false);
 
         add(roomHeaderWrapper, BorderLayout.NORTH);
         add(roomMainContentPanel, BorderLayout.CENTER);
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-        roomName.setFont(new Font("Arial", Font.BOLD, 20));
-        setBackground(Constants.primary);
+
+        roomMainContentPanel.setOpaque(false);
+        roomHeaderWrapper.setBackground(Constants.secondary);
+        roomHeaderPanel.setBackground(Constants.secondary);
     }
 
 
 
     public void createPatientListItem(Map<String, String> patientMap) {
-        if (patientMap != null) {
+        System.out.println(patientMap);
+        if (!patientMap.isEmpty()) {
             for (Map.Entry<String, String> entry : patientMap.entrySet()) {
-            JPanel patientItemPanel = new CustomRoundedPanel();
+            JPanel patientItemPanel = new JPanel();
             patientItemPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
             patientItemPanel.setLayout(new GridBagLayout());
             JLabel patientName = new JLabel("Patient Name: " + entry.getValue());
-            JLabel assignedStaff = new JLabel("Assigned Staff");
-            JLabel medicalRecords = new JLabel("Medical Records");
-            JLabel confinedDate = new JLabel("Confined Since: " + GetPatients.getPatientAdmissionDate(entry.getKey()));
+            JButton assignedStaff = new JButton("Assigned Staff");
+                assignedStaff.setFocusPainted(false);
+                assignedStaff.setBorderPainted(false);
 
-                gbc.weightx = 1;
-                gbc.weighty = 1;
-                gbc.anchor = GridBagConstraints.WEST;
-            gbc.fill = GridBagConstraints.BOTH;
+                // Custom Painting
+                assignedStaff.setContentAreaFilled(false);
+                assignedStaff.setOpaque(true);
+                assignedStaff.setBackground(Constants.primary);
+                assignedStaff.setForeground(Color.WHITE);
+                assignedStaff.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+                // Add Hover Effect
+                assignedStaff.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        assignedStaff.setBackground(Constants.hoverColor2);
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        assignedStaff.setBackground(Constants.primary);
+                        assignedStaff.setForeground(Color.white);
+                    }
+                });
+                assignedStaff.setMaximumSize(new Dimension(199,55));
+                assignedStaff.setPreferredSize(new Dimension(199,55));
+
+            JButton medicalRecords = new JButton("Medical Records");
+                medicalRecords.setFocusPainted(false);
+                medicalRecords.setBorderPainted(false);
+
+                // Custom Painting
+                medicalRecords.setContentAreaFilled(false);
+                medicalRecords.setOpaque(true);
+                medicalRecords.setBackground(Constants.primary);
+                medicalRecords.setForeground(Color.WHITE);
+                medicalRecords.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+                // Add Hover Effect
+                medicalRecords.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        medicalRecords.setBackground(Constants.hoverColor2);
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        medicalRecords.setBackground(Constants.primary);
+                        medicalRecords.setForeground(Color.white);
+                    }
+                });
+                medicalRecords.setMaximumSize(new Dimension(220,55));
+                medicalRecords.setPreferredSize(new Dimension(220,55));
+                JLabel confinedDate = new JLabel("Confined Since: " + GetPatients.getPatientAdmissionDate(entry.getKey()));
+
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            gbc.anchor = GridBagConstraints.WEST;
             gbc.insets = new Insets(0, 29, 0, 0);
 
             gbc.gridx = 0;
@@ -138,7 +181,34 @@ public class RoomListItem extends CustomRoundedPanel {
             //set the default font for all the Labels
             fixedJLabel(patientItemPanel);
             roomMainContentPanel.add(Box.createVerticalStrut(12));
+
+            //show medical records
+                medicalRecords.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                medicalRecords.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        new MedicalRecordsView(entry.getKey(), dashboard);
+                    }
+                });
             }
+        } else {
+            JLabel roomEmpty  = new JLabel("Room is empty.");
+            JPanel patientItemPanel = new JPanel();
+            patientItemPanel.setBackground(Constants.primary);
+            patientItemPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
+            patientItemPanel.setLayout(new GridBagLayout());
+            gbc.gridy = 0;
+            gbc.gridx = 0;
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            gbc.anchor = GridBagConstraints.WEST;
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.insets = new Insets(0, 29, 0, 0);
+            patientItemPanel.add(roomEmpty, gbc);
+            roomMainContentPanel.add(patientItemPanel);
+
+            fixedJLabel(patientItemPanel);
+            roomMainContentPanel.add(Box.createVerticalStrut(12));
         }
     }
 
@@ -146,10 +216,9 @@ public class RoomListItem extends CustomRoundedPanel {
         for (Component component : container.getComponents()) {
             if (component instanceof JLabel) {
                 JLabel label = (JLabel) component;
-                label.setPreferredSize(new Dimension(500, 30));  // Adjusted size
-                label.setMaximumSize(new Dimension(500, 30));    // Adjusted size
+                label.setBorder(new EmptyBorder(20,43,20,70));    // Adjusted size
                 label.setForeground(Color.white);                // Set text color
-                label.setFont(new Font("Arial", Font.PLAIN, 15)); // Set font
+                label.setFont(new Font("Arial", Font.PLAIN, 18)); // Set font
             } else if (component instanceof Container) {
                 fixedJLabel((Container) component);  // Recursive call for nested containers
             }
@@ -160,8 +229,8 @@ public class RoomListItem extends CustomRoundedPanel {
         for (Component component : container.getComponents()) {
             if (component instanceof JLabel) {
                 JLabel label = (JLabel) component;
-                label.setPreferredSize(new Dimension(150, 60));  // Adjusted size
-                label.setMaximumSize(new Dimension(150, 60));    // Adjusted size
+
+                label.setBorder(new EmptyBorder(20,70,20,70));    // Adjusted size
                 label.setFont(new Font("Arial", Font.PLAIN, 15)); // Set font
             } else if (component instanceof Container) {
                 fixedJLabel((Container) component);  // Recursive call for nested containers

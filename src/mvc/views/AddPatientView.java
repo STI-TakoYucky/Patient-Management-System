@@ -1,23 +1,17 @@
 package mvc.views;
 import mvc.controllers.AddPatientController;
-import mvc.controllers.DeletePatientController;
-import mvc.controllers.GetRooms;
+import mvc.controllers.GetPatients;
 import mvc.controllers.GetStaff;
 import mvc.models.PatientModel;
 import mvc.views.constants.Constants;
 import com.toedter.calendar.JDateChooser;
-
-import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
-
 import mvc.views.utility.SetDefaultFont;
 import mvc.views.utility.SetFocusListenerToJTextFields;
 import org.bson.Document;
@@ -61,9 +55,6 @@ public class AddPatientView extends JFrame {
     public JTextField civilStatusField = new JTextField("Civil Status", 15);
     public JRadioButton maleRadioButtonn = new JRadioButton("Male");
     public JRadioButton femaleRadioButton = new JRadioButton("Female");
-    String[] bloodTypes = {"Blood Type", "A+", "A-", "B+","B-", "O+", "O-", "AB+", "AB-" };
-    public JComboBox<String> bloodType = new JComboBox<String>(bloodTypes);
-
 
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
     Image image = closeButtonIcon.getImage();
@@ -109,20 +100,22 @@ public class AddPatientView extends JFrame {
         ImageIcon addPatientP;
         Image resiAddPa;
         ImageIcon addPatientIcon;
-        int wid = 50;
-        int hei = 50;
+        int wid = 45;
+        int hei = 45;
         addPatientP = new ImageIcon("src/assets/images/patient.png");
         resiAddPa =addPatientP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
         addPatientIcon = new ImageIcon(resiAddPa);
 
         // Header Section
-        JLabel addPatientHeader = new JLabel("Add Patient",addPatientIcon,JLabel.LEFT);
+
+        JLabel addPatientHeader = new JLabel("  Add Patient",addPatientIcon,JLabel.LEFT);
+
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
+        addPatientHeader.setBorder(new EmptyBorder(0, 0, 0, 570));
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(addPatientHeader);
-        closeButton.setBorder(new EmptyBorder(0, 610, 0, 0));
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -187,20 +180,6 @@ public class AddPatientView extends JFrame {
         genderPanel.add(genderFieldLabel);
         genderPanel.add(maleRadioButtonn);
         genderPanel.add(femaleRadioButton);
-
-        //bloodtype section
-        JPanel bloodTypePanel = new JPanel(new GridBagLayout());
-        JPanel bloodTypePanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel bloodTypeHeader = new JLabel("Blood Type");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        bloodTypePanel.add(bloodTypeHeader, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        bloodTypePanel.add(bloodType, gbc);
-        bloodTypePanelWrapper.add(bloodTypePanel);
-
-
 
         // Contact Information Section
         JLabel contactInfoLabel = new JLabel("Contact Information");
@@ -462,8 +441,6 @@ public class AddPatientView extends JFrame {
             patientModel.setBirthdate(birthDate.getDate());
             patientModel.setAdmissionDate(admissionDate.getDate());
             patientModel.setAssignedStaff(String.valueOf(chooseMedicalStaffComboBox.getSelectedItem()));
-            patientModel.setBloodType((String) bloodType.getSelectedItem());
-
             if (maleRadioButtonn.isSelected()) {
                 patientModel.setSex(maleRadioButtonn.getText());
             } else if (femaleRadioButton.isSelected()) {
@@ -473,7 +450,6 @@ public class AddPatientView extends JFrame {
             patientModel.setMedication(medicationArray);
             patientModel.setAllergies(allergiesArray);
             patientModel.setPostalCode(Integer.parseInt(postalCodeField.getText()));
-
             if (validatePatientModel(patientModel)) {
                 addPatientToDatabase();
             } else {
@@ -490,8 +466,6 @@ public class AddPatientView extends JFrame {
         mainContent.add(datePanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(genderPanel);
-        mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
-        mainContent.add(bloodTypePanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(contactInfoPanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -728,101 +702,6 @@ public class AddPatientView extends JFrame {
         }
     }
 
-//    private void setOnChangeEvent(Container container, PatientModel model) {
-//        for (Component component : container.getComponents()) {
-//            if (component instanceof JTextField) {
-//                JTextField textField = (JTextField) component;
-//                String[] previousValue = { textField.getText() };
-//                ((JTextField) component).getDocument().addDocumentListener(new DocumentListener() {
-//                    @Override
-//                    public void insertUpdate(DocumentEvent e) {
-//                        handleTextChange();
-//                    }
-//
-//                    @Override
-//                    public void removeUpdate(DocumentEvent e) {
-//                        handleTextChange();
-//                    }
-//
-//                    @Override
-//                    public void changedUpdate(DocumentEvent e) {
-//                        handleTextChange();
-//                    }
-//
-//                    private void handleTextChange() {
-//                        SwingUtilities.invokeLater(() -> {
-////                        String pattern = "^[a-zA-Zs]*$";
-////                        String pattern2 = "^09\\d{9}$";    // Numbers starting with 09, exactly 11 digits
-////                        String pattern3 = "^\\d{4}$";
-//                        JTextField source = (JTextField) component;
-//                        String text = source.getText();
-////
-////
-////
-////                        if (component == patientNameFieldFN || component == patientNameFieldLN ||
-////                                component == patientNameFieldMN || component == cityField ||
-////                                component == municipalityField || component == nationalityTextField ||
-////                                component == civilStatusField) {
-////                            if (!text.matches(pattern)) {
-////                                JOptionPane.showMessageDialog(null, "Invalid input. Please input letters and spaces only.");
-////                                source.setText(""); // Clear invalid input
-////
-////                            }}
-////                        else if (component == emergencyContactNumberField || component == phoneNumberField ) {
-////                            if (text.length() == 11 && !text.matches(pattern2)|| text.length() > 11) {
-////                                JOptionPane.showMessageDialog(null, "Enter a valid number.");
-////                                source.setText(""); // Clear invalid input
-////
-////                            }
-////                        }
-////                        else if (component == postalCodeField) {
-////
-////                            // Validate only when text length is exactly 4
-////                            if (text.length() == 4 && !text.matches(pattern3)) {
-////                                JOptionPane.showMessageDialog(null, "Postal code must be exactly 4 digits.");
-////                                source.setText("");  // Clear invalid input
-////                            }
-////                            else if (text.length() > 4) {
-////                                JOptionPane.showMessageDialog(null, "Postal code must be exactly 4 digits.");
-////                                source.setText("");  // Clear input if it's more than 4 digits
-////                            }}
-//
-//                          // Handle text change for specific fields
-//                        if (component == patientNameFieldFN) {
-//                            model.setFirstName(text);
-//                        } else if (component == patientNameFieldLN) {
-//                            model.setLastName(text);
-//                        } else if (component == patientNameFieldMN) {
-//                            model.setMiddleName(text);
-//                        } else if (component == emailAddressField) {
-//                            model.setEmail(text);
-//                        } else if (component == streetAddressField) {
-//                            model.setStreetName(text);
-//                        } else if (component == cityField) {
-//                            model.setCity(text);
-//                        } else if (component == regionField) {
-//                            model.setRegion(text);
-//                        } else if (component == civilStatusField) {
-//                            model.setCivilStatus(text);
-//                        } else if (component == phoneNumberField) {
-//                            model.setPhoneNumber(text);
-//                        } else if (component == emergencyContactNumberField) {
-//                            model.setEmergencyContactNumber(text);
-//                        } else if (component == municipalityField) {
-//                            model.setMunicipality(text);
-//                        } else if (component == nationalityTextField) {
-//                            model.setNationality(text);
-//                        }
-//
-//                }
-//                );}
-//                });
-//            } else if (component instanceof Container) {
-//                setOnChangeEvent((Container) component, model);
-//            }
-//        }
-//    }
-
     public void addPatientToDatabase() {
         int choice = JOptionPane.showConfirmDialog(null, "Confirm?",
                 "Add patient", JOptionPane.YES_NO_OPTION);
@@ -840,8 +719,8 @@ public class AddPatientView extends JFrame {
                 dashboard.setEnabled(true);
                 dashboard.setFocusable(true);
                 dashboard.setAlwaysOnTop(true);
-                dashboard.updatePatientCount();
-
+            String newCount = String.valueOf(GetPatients.getPatientCount());
+            Dashboard.HeaderCount("Patient Count: " , newCount);
         }
     }
 
@@ -961,11 +840,6 @@ public class AddPatientView extends JFrame {
 
         if (patientModel.getEmergencyContactNumber() != null && !patientModel.getEmergencyContactNumber().matches(PH_PHONE_NUMBER_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid emergency contact number. It must start with '09' and contain 10 digits.");
-            return false;
-        }
-
-        if (patientModel.getBloodType() == "Blood Type") {
-            JOptionPane.showMessageDialog(null, "Please choose a blood type.");
             return false;
         }
 

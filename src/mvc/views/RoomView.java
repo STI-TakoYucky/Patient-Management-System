@@ -12,6 +12,7 @@ import mvc.views.constants.Constants;
 import mvc.views.utility.SetDefaultFont;
 import org.bson.Document;
 
+import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -49,6 +50,11 @@ public class RoomView extends Panel {
         gbc.insets = new Insets(5, 20, 5, 20);
 
         addRoomBttn.addActionListener(new addRoomBttn());
+        addRoomBttn.setContentAreaFilled(false);
+        addRoomBttn.setOpaque(true);
+        addRoomBttn.setBackground(Constants.secondary);
+        addRoomBttn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        addRoomBttn.setFocusPainted(false);
 
         addRoomPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         addRoomPanel.setBorder(new EmptyBorder(30,80,0,0));
@@ -77,11 +83,26 @@ public class RoomView extends Panel {
             roomListPanel.add(noRooms);
         } else {
             for (Document room : roomList) {
-                RoomListItem item = new RoomListItem(room, roomView, dashboard, patientModel);
+                RoomListItem item = new RoomListItem(room, roomView, dashboard);
                 roomListPanel.add(item);
                 roomListPanel.add(Box.createVerticalStrut(20));
                 item.revalidate();
                 item.repaint();
+            }
+        }
+        SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
+        revalidate();
+        repaint();
+    }
+
+    public void updateUI(List<Document> rooms){
+        roomListPanel.removeAll();
+
+        if (rooms != null) {
+            for (Document room : rooms) {
+                RoomListItem item = new RoomListItem(room, roomView, dashboard);
+                roomListPanel.add(item);
+                roomListPanel.add(Box.createVerticalStrut(20));
             }
         }
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);

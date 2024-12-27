@@ -20,13 +20,34 @@ public class MedicalStaffItem extends CustomRoundedPanel {
         JLabel staffID = new JLabel("Staff ID: " + staffList.getString("_id"));
         JLabel staffName = new JLabel(staffList.getString("First Name") + " " +  staffList.getString("Last Name"));
         JLabel staffPosition = new JLabel(staffList.getString("Position"));
-        JLabel editStaffItemButton = new JLabel("Edit Info");
+        JButton editStaffItemButton = new JButton("Edit Info");
+        editStaffItemButton.setContentAreaFilled(false);
+        editStaffItemButton.setOpaque(true);
+        editStaffItemButton.setBackground(Constants.primary);
+        editStaffItemButton.setForeground(Color.WHITE);
+        editStaffItemButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        editStaffItemButton.setFocusPainted(false);
+        editStaffItemButton.setBorderPainted(false);
+
+        // Add Hover Effect
+        editStaffItemButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                editStaffItemButton.setBackground(Constants.hoverColor2);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                editStaffItemButton.setBackground(Constants.primary);
+                editStaffItemButton.setForeground(Color.white);
+            }
+        });
 
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 50, 5, 0);
+        gbc.insets = new Insets(5, 50, 5, 15);
         gbc.fill = GridBagConstraints.BOTH; // Fill the cell both horizontally and vertically
         gbc.weightx = 1;  // Evenly distribute horizontally
         gbc.weighty = 1;

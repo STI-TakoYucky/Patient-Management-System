@@ -61,6 +61,8 @@ public class EditPatientView extends JFrame {
     public JRadioButton maleRadioButtonn;
     public JRadioButton femaleRadioButton;
     public JComboBox<String> chooseMedicalStaffComboBox;
+    String[] bloodTypes = {"Blood Type", "A+", "A-", "B+","B-", "O+", "O-", "AB+", "AB-" };
+    public JComboBox<String> bloodType = new JComboBox<String>(bloodTypes);
 
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
     Image image = closeButtonIcon.getImage();
@@ -109,6 +111,7 @@ public class EditPatientView extends JFrame {
             postalCodeField = new JTextField(postalCodeValue.toString(),8);
             nationalityTextField = new JTextField(patientDocument.getString("Nationality"), 15);
             civilStatusField = new JTextField(patientDocument.getString("Civil Status"), 15);
+            bloodType.setSelectedItem(patientDocument.getString("Blood Type"));
 
             maleRadioButtonn = new JRadioButton("Male");
             femaleRadioButton = new JRadioButton("Female");
@@ -142,23 +145,24 @@ public class EditPatientView extends JFrame {
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-        // Header Icon
-        ImageIcon EPHedP;
-        Image resizedEPHed;
-        ImageIcon EPHedIcon;
+        ImageIcon addPatientP;
+        Image resiAddPa;
+        ImageIcon addPatientIcon;
         int wid = 45;
         int hei = 45;
-        EPHedP = new ImageIcon("src/assets/images/icons8-edit-24(1).png");
-        resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
-        EPHedIcon = new ImageIcon(resizedEPHed);
+        addPatientP = new ImageIcon("src/assets/images/patient.png");
+        resiAddPa =addPatientP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        addPatientIcon = new ImageIcon(resiAddPa);
+
         // Header Section
-        JLabel addPatientHeader = new JLabel(" Edit Patient",EPHedIcon,JLabel.LEFT);
+        JLabel addPatientHeader = new JLabel("  Edit Patient",addPatientIcon,JLabel.LEFT);
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
+        addPatientHeader.setBorder(new EmptyBorder(0, 0, 0, 570));
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(addPatientHeader);
-        closeButton.setBorder(new EmptyBorder(0, 610, 0, 0));
+
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -221,6 +225,18 @@ public class EditPatientView extends JFrame {
         genderPanel.add(genderFieldLabel);
         genderPanel.add(maleRadioButtonn);
         genderPanel.add(femaleRadioButton);
+
+        //bloodtype section
+        JPanel bloodTypePanel = new JPanel(new GridBagLayout());
+        JPanel bloodTypePanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel bloodTypeHeader = new JLabel("Blood Type");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        bloodTypePanel.add(bloodTypeHeader, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        bloodTypePanel.add(bloodType, gbc);
+        bloodTypePanelWrapper.add(bloodTypePanel);
 
         // Contact Information Section
         JLabel contactInfoLabel = new JLabel("Contact Information");
@@ -415,21 +431,34 @@ public class EditPatientView extends JFrame {
 
         JPanel chooseRoomAndStaffPanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel chooseRoomAndStaffPanel = new JPanel(new GridBagLayout());
-        GetStaff getStaff = new GetStaff();
-        List<Document> staffData = getStaff.getStaffData();
+        GetRooms getRooms = new GetRooms();
+        List<Document> roomData = getRooms.getRoomData();
 
 
-        chooseMedicalStaffComboBox = new JComboBox<>();
-        chooseMedicalStaffComboBox.addItem("Select Medical Staff");
-        chooseMedicalStaffComboBox.setSelectedItem(0);
+        JComboBox<String> chooseRoomComboBox = new JComboBox<>();
+        JComboBox<String> chooseMedicalStaffComboBox = new JComboBox<>();
 
-        if (staffData != null) {
-            for (Document staff : staffData) {
-                String staffName = staff.getString("First Name") + " " + staff.getString("Last Name");
-                chooseMedicalStaffComboBox.addItem(staffName);
+        chooseRoomComboBox.addItem("Select Room");
+
+
+
+        if (roomData != null) {
+            for (Document room : roomData) {
+                Map<String, String> patientMap = (Map<String, String>) room.get("Patients");
+                int patientMapSize = patientMap.size();
+                String roomName = room.getString("Room Name");
+                if (roomName != null && !(room.getInteger("Room Capacity") == patientMapSize)) { // Ensure roomName is not null
+                    chooseRoomComboBox.addItem(roomName);
+                    chooseMedicalStaffComboBox.addItem(roomName);
+                }
             }
         }
-        chooseMedicalStaffComboBox.setSelectedItem(patientDocument.getString("Assigned Staff"));
+
+        if (Objects.equals(patientModel.getRoom(), "Select Room")) {
+            chooseRoomComboBox.setSelectedItem("Select Room");
+        } else {
+            chooseRoomComboBox.setSelectedItem(patientModel.getRoom());
+        }
         JLabel chooseRoomAndStaffLabel = new JLabel("Assigned Medical Staff");
 
         gbc.gridx = 0;
@@ -461,7 +490,8 @@ public class EditPatientView extends JFrame {
                 dashboard.setEnabled(true);
                 dashboard.setFocusable(true);
                 dashboard.setAlwaysOnTop(true);
-                Dashboard.updatePatientCount();
+                String newCount = String.valueOf(GetPatients.getPatientCount());
+                Dashboard.HeaderCount("Patient Count: " , newCount);
             }
         });
 
@@ -479,7 +509,9 @@ public class EditPatientView extends JFrame {
             patientModel.setMunicipality(municipalityField.getText());
             patientModel.setNationality(nationalityTextField.getText());
             patientModel.setBirthdate(birthDate.getDate());
-            patientModel.setAssignedStaff((String) chooseMedicalStaffComboBox.getSelectedItem());
+            patientModel.setOldRoom(patientModel.getRoom());
+            patientModel.setRoom((String) chooseRoomComboBox.getSelectedItem());
+            chooseRoomComboBox.setSelectedItem(patientModel.getRoom());
             if (maleRadioButtonn.isSelected()) {
                 patientModel.setSex(maleRadioButtonn.getText());
             } else if (femaleRadioButton.isSelected()) {
@@ -489,6 +521,7 @@ public class EditPatientView extends JFrame {
             patientModel.setMedication(medicationArray);
             patientModel.setAllergies(allergiesArray);
             patientModel.setPostalCode(Integer.parseInt(postalCodeField.getText()));
+            patientModel.setBloodType(String.valueOf(bloodType.getSelectedItem()));
             if (validatePatientModel(patientModel)) {
                 editPatientInDatabase();
             } else {
@@ -506,11 +539,15 @@ public class EditPatientView extends JFrame {
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(genderPanel);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
+        mainContent.add(bloodTypePanelWrapper);
+        mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(contactInfoPanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(addressPanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(civilStatusWrapper);
+        mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
+        mainContent.add(admissionDatePanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
         mainContent.add(chooseRoomAndStaffPanelWrapper);
         mainContent.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -838,7 +875,7 @@ public class EditPatientView extends JFrame {
         patientModel.setPostalCode(patientDocument.getInteger("Postal Code")); // Integer field
         patientModel.setBirthdate(patientDocument.getDate("Birthdate")); // Date field
         patientModel.setAdmissionDate(patientDocument.getDate("Admission Date")); // Date field
-        patientModel.setAssignedStaff(patientDocument.getString("Assigned Staff"));
+
     }
 
     public boolean validatePatientModel(PatientModel patientModel) {
@@ -957,6 +994,11 @@ public class EditPatientView extends JFrame {
 
         if (patientModel.getEmergencyContactNumber() != null && !patientModel.getEmergencyContactNumber().matches(PH_PHONE_NUMBER_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid emergency contact number. It must start with '09' and contain 10 digits.");
+            return false;
+        }
+
+        if (patientModel.getBloodType() == "Blood Type") {
+            JOptionPane.showMessageDialog(null, "Please choose a blood type.");
             return false;
         }
 

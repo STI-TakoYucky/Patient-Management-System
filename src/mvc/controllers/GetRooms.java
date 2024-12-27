@@ -32,6 +32,28 @@ public class GetRooms {
         return null;
     }
 
+    public List<Document> getRoomDataByInputtedText(String text) {
+        List<Document> roomDocs = new ArrayList<>();
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
+            MongoDatabase database = mongoClient.getDatabase("roomDB");
+            MongoCollection<Document> collection = database.getCollection("rooms");
+
+            Document query = new Document("$or", List.of(
+                    new Document("_id", text),
+                    new Document("Room Name", new Document("$regex", text).append("$options", "i")),
+                    new Document("Room Type", new Document("$regex", text).append("$options", "i"))
+            ));
+
+            roomDocs = collection.find(query).into(new ArrayList<>());
+            return roomDocs;
+        } catch (Exception err) {
+            System.err.println("An error occurred while fetching room data: " + err.getMessage());
+            err.printStackTrace();
+        }
+        return roomDocs; // Return an empty list if no rooms are found or an error occurs
+    }
+
+
     public Document getRoomDataByID(String id) {
 
         try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
@@ -45,5 +67,19 @@ public class GetRooms {
             err.printStackTrace();
         }
         return null;
+    }
+
+    public static long getRoomCount() {
+        try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
+            MongoDatabase database = mongoClient.getDatabase("roomDB");
+            MongoCollection<Document> collection = database.getCollection("rooms");
+
+            // Get the count of documents in the collection
+            long roomCount = collection.countDocuments();
+            return roomCount;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0; // Return 0 if any exception occurs
     }
 }

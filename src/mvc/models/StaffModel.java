@@ -19,7 +19,12 @@ public class StaffModel {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        if (username.equals("Username")) {
+            this.username = null;
+        } else {
+            this.username = username;
+        }
+
     }
 
     public String getPassword() {
@@ -27,7 +32,11 @@ public class StaffModel {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        if (password.equals("Password")) {
+            this.password = null;
+        } else {
+            this.password = password;
+        }
     }
 
     public void setFirstName(String firstName) {

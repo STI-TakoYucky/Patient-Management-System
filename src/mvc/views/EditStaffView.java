@@ -84,24 +84,25 @@ public class EditStaffView extends JFrame {
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-        // Header Icon
+        // Hearder Icon
+        ImageIcon addStaffP;
+        Image resizedStaff;
+        ImageIcon addStaffIcon;
+        int wid = 40;
+        int hei = 40;
+        addStaffP = new ImageIcon("src/assets/images/surgeon.png");
+        resizedStaff =addStaffP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        addStaffIcon = new ImageIcon(resizedStaff);
 
-        ImageIcon EPHedP;
-        Image resizedEPHed;
-        ImageIcon EPHedIcon;
-        int wid = 45;
-        int hei = 45;
-        EPHedP = new ImageIcon("src/assets/images/icons8-edit-24(1).png");
-        resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
-        EPHedIcon = new ImageIcon(resizedEPHed);
         // Header Section
-        JLabel addPatientHeader = new JLabel(" Edit Medical Staff",EPHedIcon,JLabel.LEFT );
-        addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel Header = new JLabel("  Edit Medical Staff",addStaffIcon,JLabel.LEFT);
+        Header.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        Header.setAlignmentX(Component.LEFT_ALIGNMENT);
+        Header.setBorder(new EmptyBorder(0, 0, 0, 520));
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        headerPanel.add(addPatientHeader);
-        closeButton.setBorder(new EmptyBorder(0, 560, 0, 0));
+        headerPanel.add(Header);
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -122,6 +123,7 @@ public class EditStaffView extends JFrame {
 
         JPanel namePanel = new JPanel(new GridBagLayout());
         JPanel namePanelWrapper = new JPanel();
+        namePanelWrapper.setMaximumSize(new Dimension(900, 20));
         namePanelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
         namePanelWrapper.add(namePanel);
         gbc.gridx = 0;
@@ -136,31 +138,33 @@ public class EditStaffView extends JFrame {
         namePanel.add(staffNameFieldLN, gbc);
 
 
-
-
-
-
-        JLabel staffDetailsPanel = new JLabel("Medical Staff Details");
-        JLabel staffAccount = new JLabel("Medical Staff Account");
+        JLabel staffDetailsLabel = new JLabel("Medical Staff Details");
+        JLabel staffAccount = new JLabel("Medical Staff Account (Optional)");
 
         JPanel detailsPanel = new JPanel(new GridBagLayout());
         JPanel detailsPanelWrappeer = new JPanel();
+        detailsPanelWrappeer.setMaximumSize(new Dimension(900, 500));
         detailsPanelWrappeer.setLayout(new FlowLayout(FlowLayout.LEFT));
         detailsPanelWrappeer.add(detailsPanel);
+
         gbc.gridx = 0;
         gbc.gridy = 0;
-        detailsPanel.add(staffDetailsPanel, gbc);
+        detailsPanel.add(staffDetailsLabel, gbc);
         gbc.gridy = 1;
         gbc.gridx = 0;
+        gbc.insets = new Insets(0,0, 20, 0);
         detailsPanel.add(staffPosition, gbc);
         gbc.gridx = 0;
         gbc.gridy = 2;
+        gbc.insets = new Insets(0,0, 5, 0);
         detailsPanel.add(staffAccount, gbc);
         gbc.gridx = 0;
         gbc.gridy = 4;
+        gbc.insets = new Insets(0,0, 20, 5);
         detailsPanel.add(staffUserName, gbc);
         gbc.gridx = 1;
         gbc.gridy = 4;
+        gbc.insets = new Insets(0,0, 20, 0);
         detailsPanel.add(staffPassword, gbc);
 
         // Add Patient Button
@@ -197,6 +201,8 @@ public class EditStaffView extends JFrame {
                 dashboard.setEnabled(true);
                 dashboard.setFocusable(true);
                 dashboard.setAlwaysOnTop(true);
+                String newCount = String.valueOf(GetStaff.getStaffCount());
+                Dashboard.HeaderCount("Admin Count: " , newCount);
             }
         });
 
@@ -221,7 +227,7 @@ public class EditStaffView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
-        addPatientHeader.setFont(Constants.HEADING_FONT);
+        Header.setFont(Constants.HEADING_FONT);
         setJTextFieldPadding(this);
 
         new SetFocusListenerToJTextFields(this);
@@ -276,38 +282,40 @@ public class EditStaffView extends JFrame {
         String GENERAL_TEXT_REGEX = "^[A-Za-z0-9-.\\s]+$"; // Allow letters and numbers with spaces
         String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$"; // Password regex
 
-        // Validate firstName
-        if (staffModel.getFirstName() == null || !staffModel.getFirstName().matches(GENERAL_TEXT_REGEX)) {
+        // Validate firstName, the first validation is when if it is not equals to the placeholder
+        if (staffModel.getFirstName().equals("First Name") || !staffModel.getFirstName().matches(GENERAL_TEXT_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid first name! Please use letters only.", "Validation Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         // Validate lastName
-        if (staffModel.getLastName() == null || !staffModel.getLastName().matches(GENERAL_TEXT_REGEX)) {
+        if (staffModel.getLastName().equals("Last Name") || !staffModel.getLastName().matches(GENERAL_TEXT_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid last name! Please use letters only.", "Validation Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         // Validate middleName (optional, but must match if provided)
-        if (staffModel.getMiddleName() != null && !staffModel.getMiddleName().matches(GENERAL_TEXT_REGEX)) {
+        if (staffModel.getMiddleName().equals("Last Name") && !staffModel.getMiddleName().matches(GENERAL_TEXT_REGEX)) {
             JOptionPane.showMessageDialog(null, "Invalid middle name! Please use letters only.", "Validation Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        // Validate username (optional, but must match if provided)
-        if (staffModel.getUsername() != null && !staffModel.getUsername().matches(GENERAL_TEXT_REGEX)) {
-            JOptionPane.showMessageDialog(null, "Invalid username! Please use alphanumeric characters and valid symbols.", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return false;
+        //validate the username and password if the user has inputted
+        if ((!staffModel.getPassword().equals("Password")) || (!staffModel.getUsername().equals("Username"))) {
+            if (!staffModel.getPassword().matches(PASSWORD_REGEX)) {
+                JOptionPane.showMessageDialog(null, "Invalid password! Password must be at least 8 characters long, include uppercase, lowercase, a number, and a special character.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            if (!staffModel.getUsername().matches(GENERAL_TEXT_REGEX) || staffModel.getUsername().equals("Username") || staffModel.getUsername() == null) {
+                JOptionPane.showMessageDialog(null, "Invalid username! Please use alphanumeric characters and valid symbols.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
         }
 
-        // Validate password using the password regex
-        if (staffModel.getPassword() == null || !staffModel.getPassword().matches(PASSWORD_REGEX)) {
-            JOptionPane.showMessageDialog(null, "Invalid password! Password must be at least 8 characters long, include uppercase, lowercase, a number, and a special character.", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
 
         // Validate position (optional, but should not be empty)
-        if (staffModel.getPosition() != null && staffModel.getPosition().isEmpty()) {
+        if (staffModel.getPosition().equals("Position") && staffModel.getPosition().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Position cannot be empty!", "Validation Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -315,10 +323,5 @@ public class EditStaffView extends JFrame {
         // Validation passed for all fields
         return true;
     }
-
-
-
-
-
 
 }

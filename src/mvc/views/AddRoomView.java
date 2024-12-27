@@ -1,9 +1,6 @@
 package mvc.views;
 import com.mongodb.client.FindIterable;
-import mvc.controllers.AddPatientController;
-import mvc.controllers.AddRoomController;
-import mvc.controllers.GetAssignedPatients;
-import mvc.controllers.GetPatients;
+import mvc.controllers.*;
 import mvc.models.RoomModel;
 import mvc.views.components.PatientItem;
 import mvc.views.constants.Constants;
@@ -89,15 +86,28 @@ public class AddRoomView extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
+        ImageIcon addRoomP;
+        Image resizedAdd;
+        ImageIcon addRoomIcon;
+        int wid = 45;
+        int hei = 45;
+        addRoomP = new ImageIcon("src/assets/images/hospital-bed.png");
+        resizedAdd =addRoomP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        addRoomIcon = new ImageIcon(resizedAdd);
+
         // Header Section
-        JLabel Header = new JLabel(" Add Room",addRoomIcon,JLabel.LEFT);
+
+        JLabel Header = new JLabel("  Add Patient",addRoomIcon,JLabel.LEFT);
+
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
+        Header.setBorder(new EmptyBorder(0, 0, 0, 570));
+
 
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(Header);
-        closeButton.setBorder(new EmptyBorder(0, 630, 0, 0));
+
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -218,6 +228,8 @@ public class AddRoomView extends JFrame {
                     dashboard.setEnabled(true);
                     dashboard.setFocusable(true);
                     dashboard.setAlwaysOnTop(true);
+                String newCount = String.valueOf(GetRooms.getRoomCount());
+                Dashboard.HeaderCount("Room Count: " , newCount);
 
             }
           }else {
@@ -292,12 +304,12 @@ public class AddRoomView extends JFrame {
         }
     }
 
-    public void updateUI(JPanel patientListPanel) {
+    public void updateUI(JPanel patientListPanel){
         patientListPanel.removeAll();
         GetPatients getPatients = new GetPatients();
         List<Document> patientList = getPatients.getPatientData();
 
-        if (patientList == null || patientList.isEmpty()) { // Null or empty check
+        if (patientList == null) {
             JLabel noPatient = new JLabel("No Patients Yet");
             patientListPanel.add(noPatient);
         } else {
@@ -315,7 +327,6 @@ public class AddRoomView extends JFrame {
         revalidate();
         repaint();
     }
-
 
     public void updateAssignedPatients() {
         toBeAssignedPanel.removeAll();
@@ -379,70 +390,69 @@ public class AddRoomView extends JFrame {
         for (Component component : container.getComponents()) {
             if (component instanceof JTextField) {
                 JTextField textField = (JTextField) component;
-                textField.getDocument().addDocumentListener(new DocumentListener() {
+                ((JTextField) component).getDocument().addDocumentListener(new DocumentListener() {
                     @Override
                     public void insertUpdate(DocumentEvent e) {
-                        handleTextChange(textField);
+                        handleTextChange();
                     }
 
                     @Override
                     public void removeUpdate(DocumentEvent e) {
-                        handleTextChange(textField);
+                        handleTextChange();
                     }
 
                     @Override
                     public void changedUpdate(DocumentEvent e) {
-                        handleTextChange(textField);
+                        handleTextChange();
                     }
 
-                    private void handleTextChange(JTextField source) {
-                        String text = source.getText().trim(); // Trim to avoid leading/trailing whitespace issues
+                    private void handleTextChange() {
+                        JTextField source = (JTextField) component;
+                        String text = source.getText();
 
+                        // Handle text change for specific fields
                         if (source == patientSearchField) {
+                            System.out.println(text);
+                            List<Document> patientList = GetPatients.filterPatientData(text);
 
-                            GetPatients getPatients = new GetPatients();
-                            List<Document> getPatientsList = getPatients.getPatientDataByInputtedText(text);
-                            if (!getPatientsList.isEmpty() && getPatientsList != null) {
-                                patientListPanel.removeAll();
-                                for (Document patient : getPatientsList) {
-                                    if (!patient.getBoolean("Assigned")) {
-                                        PatientItem item = new PatientItem(patient, 780, addRoomView);
-                                        patientListPanel.add(item);
-                                        patientListPanel.add(Box.createVerticalStrut(20));
-                                        item.revalidate();
-                                        item.repaint();
-                                        patientListPanel.revalidate();
-                                        patientListPanel.repaint();
-                                    }
-                                }
-                            } else if (text.equals("Search Patient")) {
-                                updateUI(patientListPanel);
-                            }else {
+                            if (patientList.isEmpty() && !text.equals("Search Patient") && !text.isEmpty()) {
                                 patientListPanel.removeAll();
                                 JLabel noPatient = new JLabel("Patient does not exist");
                                 patientListPanel.add(noPatient);
-                                patientListPanel.revalidate();
-                                patientListPanel.repaint();
+                            } else if(!text.isEmpty() && !patientList.isEmpty()){
+                                patientListPanel.removeAll();
+                                for (Document patient : patientList) {
+                                    PatientItem item = new PatientItem(patient, 780, addRoomView);
+                                    patientListPanel.add(item);
+                                    patientListPanel.add(Box.createVerticalStrut(20));
+                                    item.revalidate();
+                                    item.repaint();
+                                    revalidate();
+                                    repaint();
+                                }
+                            }else {
+                               updateUI(patientListPanel);
                             }
-
-
-
+                            revalidate();
+                            repaint();
                         } else if (source == roomCapacity) {
                             try {
                                 int roomCap = Integer.parseInt(text);
-                                if (roomCap > 0 && roomCap < PatientsNameArray.size()) {
-                                    for (int i = PatientsNameArray.size(); i > roomCap; i--) {
-                                        PatientsNameArray.remove(i - 1);
-                                        PatientsIDArray.remove(i - 1);
+                                if (!(roomCap <= 0)) {
+                                    if (roomCap < PatientsNameArray.size()) {
+                                        for (int i = PatientsNameArray.size(); i > roomCap; i--) {
+                                            PatientsNameArray.remove(i - 1);
+                                            PatientsIDArray.remove(i - 1);
+                                            updateAssignedPatients();
+                                        }
                                     }
-                                    updateAssignedPatients();
                                 }
-                            } catch (NumberFormatException err) {
-                                System.err.println("Invalid number format for room capacity: " + text);
+
+                            }catch (NumberFormatException err) {
+
                             }
                         }
-                    }
-                });
+                    }});
             } else if (component instanceof Container) {
                 setOnChangeEvent((Container) component, model);
             }
@@ -450,37 +460,4 @@ public class AddRoomView extends JFrame {
     }
 
 
-//if(patientList != null) {
-//        patientListPanel.removeAll();
-//        if (text.isEmpty() || text.equalsIgnoreCase("Search Patient")) {
-//            for (Document patient : patientDefaultList) {
-//                PatientItem item = new PatientItem(patient, 780, addRoomView);
-//                patientListPanel.add(item);
-//                patientListPanel.add(Box.createVerticalStrut(20));
-//                item.revalidate();
-//                item.repaint();
-//                patientListPanel.revalidate();
-//                patientListPanel.repaint();
-//            }
-//        } else if (patientList.isEmpty() && !text.isEmpty()) {
-//
-//        } else {
-//            for (Document patient : patientList) {
-//                PatientItem item = new PatientItem(patient, 780, addRoomView);
-//                patientListPanel.add(item);
-//                patientListPanel.add(Box.createVerticalStrut(20));
-//                item.revalidate();
-//                item.repaint();
-//                patientListPanel.revalidate();
-//                patientListPanel.repaint();
-//            }
-//        }
-//        patientListPanel.revalidate();
-//        patientListPanel.repaint();
-//    } else if (patientDefaultList == null) {
-//        JLabel noPatient = new JLabel("Patient does not exist");
-//        patientListPanel.add(noPatient);
-//        patientListPanel.revalidate();
-//        patientListPanel.repaint();
-//    }
 }
