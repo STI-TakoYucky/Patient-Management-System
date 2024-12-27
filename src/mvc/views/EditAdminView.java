@@ -89,6 +89,7 @@ public class EditAdminView extends JFrame {
         ImageIcon EPHedP;
         Image resizedEPHed;
         ImageIcon EPHedIcon;
+      
         int wid = 40;
         int hei = 40;
         EPHedP = new ImageIcon("src/assets/images/admin.png");
@@ -258,6 +259,7 @@ public class EditAdminView extends JFrame {
             }
         }
     }
+
 
     public void addStaffToDatabase() {
         int choice = JOptionPane.showConfirmDialog(null, "Confirm?",

@@ -164,7 +164,6 @@ public class Dashboard extends JFrame implements ActionListener  {
         medicalstaffBtn.setBorderPainted(false);
         adminBttn.setFocusPainted(false);
         adminBttn.setBorderPainted(false);
-
         roombtn.setFont(new Font("Arial", Font.PLAIN, 18));
         patientsbtn.setFont(new Font("Arial", Font.PLAIN, 18));
         medicalstaffBtn.setFont(new Font("Arial", Font.PLAIN, 18));

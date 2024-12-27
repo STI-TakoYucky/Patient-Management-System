@@ -233,7 +233,6 @@ public class AddAdminView extends JFrame {
         }
     }
 
-
     private boolean isUsernameTaken(String username) {
         try (MongoClient mongoClient = MongoClients.create(URI.URI)) {
             // Check in adminDB -> admins collection

@@ -73,7 +73,7 @@ public class MedicalRecordsView extends JFrame {
         JPanel mainHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
         mainHeader.setBackground(Constants.secondary);
         mainHeader.setBorder(new EmptyBorder(25, 25, 25, 25));
-
+      
         JLabel Header = new JLabel("Medical Records",EPHedIcon, JLabel.LEFT);
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
         Header.setBorder(new EmptyBorder(0, 0, 0, 560));

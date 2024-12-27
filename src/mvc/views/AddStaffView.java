@@ -75,6 +75,7 @@ public class AddStaffView extends JFrame {
         ImageIcon addStaffIcon;
         int wid = 40;
         int hei = 40;
+
         addStaffP = new ImageIcon("src/assets/images/surgeon.png");
         resizedStaff =addStaffP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
         addStaffIcon = new ImageIcon(resizedStaff);
@@ -89,7 +90,6 @@ public class AddStaffView extends JFrame {
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         headerPanel.add(Header);
-
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -223,7 +223,6 @@ public class AddStaffView extends JFrame {
             }
         }
     }
-
 
     public void addStaffToDatabase() {
         int choice = JOptionPane.showConfirmDialog(null, "Confirm?",

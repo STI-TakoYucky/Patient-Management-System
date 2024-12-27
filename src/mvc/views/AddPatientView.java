@@ -107,7 +107,9 @@ public class AddPatientView extends JFrame {
         addPatientIcon = new ImageIcon(resiAddPa);
 
         // Header Section
+
         JLabel addPatientHeader = new JLabel("  Add Patient",addPatientIcon,JLabel.LEFT);
+
         addPatientHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
         addPatientHeader.setBorder(new EmptyBorder(0, 0, 0, 570));
 
