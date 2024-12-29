@@ -33,6 +33,29 @@ public class RoomListItem extends CustomRoundedPanel {
 
 
     public void initComponents() {
+        ImageIcon roomPath, capacityPath,typePath,editPath;
+        roomPath = new ImageIcon("src/assets/images/room.png");
+        capacityPath = new ImageIcon("src/assets/images/capacity.png");
+        typePath = new ImageIcon("src/assets/images/roomtype.png");
+        editPath = new ImageIcon("src/assets/images/edit_black.png");
+
+        int width = 35;
+        int height = 35;
+
+        // Resize the image to the desired width and height
+        Image resizedRoom, resizedType,resizedCapacity,resizedEdit;
+        resizedRoom = roomPath.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        resizedCapacity = capacityPath.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        resizedType = typePath.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        resizedEdit = editPath.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+
+        // Create a new ImageIcon with the resized image
+        ImageIcon roomIcon, CapacityIcon,TypeIcon,EditIcon;
+        roomIcon = new ImageIcon(resizedRoom);
+        CapacityIcon = new ImageIcon(resizedCapacity);
+        TypeIcon = new ImageIcon(resizedType);
+        EditIcon = new ImageIcon(resizedEdit);
+
         Map<String, String> patientMap = (Map<String, String>) roomItem.get("Patients");
         int patientMapSize = patientMap.size();
 
@@ -43,10 +66,10 @@ public class RoomListItem extends CustomRoundedPanel {
         JPanel roomHeaderPanel = new CustomRoundedPanel();
         roomHeaderPanel.setPreferredSize(new Dimension(1060, 50));
         roomHeaderPanel.setLayout(new GridBagLayout());
-        JLabel roomName = new JLabel(roomItem.getString("Room Name"));
-        JLabel roomCapacity = new JLabel(String.valueOf(patientMapSize + "/" + roomItem.getInteger("Room Capacity")));
-        JLabel roomType = new JLabel(roomItem.getString("Room Type"));
-        JLabel editBttn = new JLabel("Edit room");
+        JLabel roomName = new JLabel(roomItem.getString("Room Name"),roomIcon,JLabel.LEFT);
+        JLabel roomCapacity = new JLabel(String.valueOf(patientMapSize + "/" + roomItem.getInteger("Room Capacity")),CapacityIcon,JLabel.LEFT);
+        JLabel roomType = new JLabel(roomItem.getString("Room Type"),TypeIcon,JLabel.LEFT);
+        JLabel editBttn = new JLabel("Edit room",EditIcon,JLabel.LEFT);
         editBttn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         editBttn.addMouseListener(new MouseAdapter() {

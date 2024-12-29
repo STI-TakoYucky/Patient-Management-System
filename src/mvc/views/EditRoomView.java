@@ -233,6 +233,9 @@ public class EditRoomView extends JFrame {
                     int choice = JOptionPane.showConfirmDialog(null, "Confirm?",
                             "Edit Room", JOptionPane.YES_NO_OPTION);
                     if (choice == JOptionPane.YES_OPTION) {
+
+
+
                         roomModel.setRoomID(roomData.getString("_id"));
                         roomModel.setRoomName(roomName.getText());
                         roomModel.setRoomCapacity(Integer.parseInt(roomCapacity.getText()));
