@@ -86,14 +86,14 @@ public class AddRoomView extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
-        ImageIcon addRoomP;
-        Image resizedAdd;
-        ImageIcon addRoomIcon;
-        int wid = 45;
-        int hei = 45;
-        addRoomP = new ImageIcon("src/assets/images/hospital-bed.png");
-        resizedAdd =addRoomP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
-        addRoomIcon = new ImageIcon(resizedAdd);
+        ImageIcon addRoomPa;
+        Image resizedAddR;
+        ImageIcon addRoomIcon2;
+        int width = 45;
+        int height = 45;
+        addRoomPa = new ImageIcon("src/assets/images/hospital-bed.png");
+        resizedAddR =addRoomPa.getImage().getScaledInstance(width,height, Image.SCALE_SMOOTH);
+        addRoomIcon2 = new ImageIcon(resizedAddR);
 
         // Header Section
 

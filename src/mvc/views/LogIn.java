@@ -26,6 +26,13 @@ public class LogIn extends JFrame implements ActionListener {
     }
 
     public void LogInComponents() {
+        ImageIcon logoPath = new ImageIcon("src/assets/images/JWWy8xWz-removebg-preview.png");
+        int width = 70;
+        int height = 70;
+        Image  resizedLogo = logoPath.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        ImageIcon  logoIcon = new ImageIcon(resizedLogo);
+
+
         JPanel logPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         logInbtn = new JButton("Log In");
         logInbtn.setSize(20, 10);
@@ -36,9 +43,10 @@ public class LogIn extends JFrame implements ActionListener {
         registerBtn.addActionListener(this);
 
         JPanel Logheader = new JPanel();
-        JLabel headerName = new JLabel("Welcome to HealthSync!");
+        JLabel headerName = new JLabel("Welcome to HealthSync!",logoIcon,JLabel.LEFT);
         headerName.setForeground(Color.white);
         Logheader.add(headerName);
+
         Logheader.setLayout(new FlowLayout(FlowLayout.CENTER));
         Logheader.setBorder(new EmptyBorder(30, 0, 30, 0));
 
