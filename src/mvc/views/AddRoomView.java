@@ -86,14 +86,9 @@ public class AddRoomView extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
-        ImageIcon addRoomPa;
-        Image resizedAddR;
-        ImageIcon addRoomIcon2;
-        int width = 45;
-        int height = 45;
-        addRoomPa = new ImageIcon("src/assets/images/hospital-bed.png");
-        resizedAddR =addRoomPa.getImage().getScaledInstance(width,height, Image.SCALE_SMOOTH);
-        addRoomIcon2 = new ImageIcon(resizedAddR);
+        addRoomP = new ImageIcon("src/assets/images/hospital-bed.png");
+        resizedAdd =addRoomP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        addRoomIcon = new ImageIcon(resizedAdd);
 
         // Header Section
 
@@ -266,7 +261,6 @@ public class AddRoomView extends JFrame {
         SetDefaultFont.setFontForAllLabels(this, Constants.DEFAULT_FONT);
         Header.setFont(Constants.HEADING_FONT);
         setOnChangeEvent(this, roomModel);
-        new SetFocusListenerToJTextFields(this);
         setJTextFieldPadding(this);
         scrollPane.setHorizontalScrollBar(null);
 
@@ -276,8 +270,7 @@ public class AddRoomView extends JFrame {
                 addRoomBttn.requestFocusInWindow();
             }
         });
-
-
+        new SetFocusListenerToJTextFields(this);
     }
 
     public void assignPatientsToRoom(String name, String id) {
@@ -390,69 +383,72 @@ public class AddRoomView extends JFrame {
         for (Component component : container.getComponents()) {
             if (component instanceof JTextField) {
                 JTextField textField = (JTextField) component;
-                ((JTextField) component).getDocument().addDocumentListener(new DocumentListener() {
-                    @Override
-                    public void insertUpdate(DocumentEvent e) {
-                        handleTextChange();
-                    }
+                if (textField == patientSearchField) {
+                    ((JTextField) component).getDocument().addDocumentListener(new DocumentListener() {
+                        @Override
+                        public void insertUpdate(DocumentEvent e) {
+                            handleTextChange();
+                        }
 
-                    @Override
-                    public void removeUpdate(DocumentEvent e) {
-                        handleTextChange();
-                    }
+                        @Override
+                        public void removeUpdate(DocumentEvent e) {
+                            handleTextChange();
+                        }
 
-                    @Override
-                    public void changedUpdate(DocumentEvent e) {
-                        handleTextChange();
-                    }
+                        @Override
+                        public void changedUpdate(DocumentEvent e) {
+                            handleTextChange();
+                        }
 
-                    private void handleTextChange() {
-                        JTextField source = (JTextField) component;
-                        String text = source.getText();
+                        private void handleTextChange() {
+                            JTextField source = (JTextField) component;
+                            String text = source.getText();
 
-                        // Handle text change for specific fields
-                        if (source == patientSearchField) {
-                            System.out.println(text);
-                            List<Document> patientList = GetPatients.filterPatientData(text);
+                            // Handle text change for specific fields
+                            if (source == patientSearchField) {
+                                System.out.println(text);
+                                List<Document> patientList = GetPatients.filterPatientData(text);
 
-                            if (patientList.isEmpty() && !text.equals("Search Patient") && !text.isEmpty()) {
-                                patientListPanel.removeAll();
-                                JLabel noPatient = new JLabel("Patient does not exist");
-                                patientListPanel.add(noPatient);
-                            } else if(!text.isEmpty() && !patientList.isEmpty()){
-                                patientListPanel.removeAll();
-                                for (Document patient : patientList) {
-                                    PatientItem item = new PatientItem(patient, 780, addRoomView);
-                                    patientListPanel.add(item);
-                                    patientListPanel.add(Box.createVerticalStrut(20));
-                                    item.revalidate();
-                                    item.repaint();
-                                    revalidate();
-                                    repaint();
+                                if (patientList == null && !text.equals("Search Patient") && !text.isEmpty()) {
+                                    patientListPanel.removeAll();
+                                    JLabel noPatient = new JLabel("Patient does not exist");
+                                    patientListPanel.add(noPatient);
+                                } else if(!text.isEmpty() && patientList != null){
+                                    patientListPanel.removeAll();
+                                    for (Document patient : patientList) {
+                                        PatientItem item = new PatientItem(patient, 780, addRoomView);
+                                        patientListPanel.add(item);
+                                        patientListPanel.add(Box.createVerticalStrut(20));
+                                        item.revalidate();
+                                        item.repaint();
+                                        revalidate();
+                                        repaint();
+                                    }
+                                }else {
+                                    updateUI(patientListPanel);
                                 }
-                            }else {
-                               updateUI(patientListPanel);
-                            }
-                            revalidate();
-                            repaint();
-                        } else if (source == roomCapacity) {
-                            try {
-                                int roomCap = Integer.parseInt(text);
-                                if (!(roomCap <= 0)) {
-                                    if (roomCap < PatientsNameArray.size()) {
-                                        for (int i = PatientsNameArray.size(); i > roomCap; i--) {
-                                            PatientsNameArray.remove(i - 1);
-                                            PatientsIDArray.remove(i - 1);
-                                            updateAssignedPatients();
+                                revalidate();
+                                repaint();
+                            } else if (source == roomCapacity) {
+                                try {
+                                    int roomCap = Integer.parseInt(text);
+                                    if (!(roomCap <= 0)) {
+                                        if (roomCap < PatientsNameArray.size()) {
+                                            for (int i = PatientsNameArray.size(); i > roomCap; i--) {
+                                                PatientsNameArray.remove(i - 1);
+                                                PatientsIDArray.remove(i - 1);
+                                                updateAssignedPatients();
+                                            }
                                         }
                                     }
+
+                                }catch (NumberFormatException err) {
+
                                 }
-
-                            }catch (NumberFormatException err) {
-
                             }
-                        }
-                    }});
+                        }});
+                }
+
             } else if (component instanceof Container) {
                 setOnChangeEvent((Container) component, model);
             }

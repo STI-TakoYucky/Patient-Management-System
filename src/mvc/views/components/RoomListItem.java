@@ -1,16 +1,15 @@
 package mvc.views.components;
 import mvc.controllers.GetPatients;
 import mvc.models.RoomModel;
-import mvc.views.Dashboard;
-import mvc.views.EditRoomView;
-import mvc.views.MedicalRecordsView;
-import mvc.views.RoomView;
+import mvc.views.*;
 import mvc.views.constants.Constants;
 import mvc.views.utility.SetDefaultFont;
 import org.bson.Document;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map;
@@ -39,8 +38,8 @@ public class RoomListItem extends CustomRoundedPanel {
         typePath = new ImageIcon("src/assets/images/roomtype.png");
         editPath = new ImageIcon("src/assets/images/edit_black.png");
 
-        int width = 35;
-        int height = 35;
+        int width = 30;
+        int height = 30;
 
         // Resize the image to the desired width and height
         Image resizedRoom, resizedType,resizedCapacity,resizedEdit;
@@ -122,6 +121,15 @@ public class RoomListItem extends CustomRoundedPanel {
             patientItemPanel.setLayout(new GridBagLayout());
             JLabel patientName = new JLabel("Patient Name: " + entry.getValue());
             JButton assignedStaff = new JButton("Assigned Staff");
+
+
+            assignedStaff.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new AssignedStaffView(dashboard, entry.getKey());
+                }
+            });
+
                 assignedStaff.setFocusPainted(false);
                 assignedStaff.setBorderPainted(false);
 
@@ -148,18 +156,18 @@ public class RoomListItem extends CustomRoundedPanel {
                 assignedStaff.setMaximumSize(new Dimension(199,55));
                 assignedStaff.setPreferredSize(new Dimension(199,55));
 
-            JButton medicalRecords = new JButton("Medical Records");
+                JButton medicalRecords = new JButton("Medical Records");
                 medicalRecords.setFocusPainted(false);
                 medicalRecords.setBorderPainted(false);
 
-                // Custom Painting
+// Custom Painting
                 medicalRecords.setContentAreaFilled(false);
                 medicalRecords.setOpaque(true);
                 medicalRecords.setBackground(Constants.primary);
                 medicalRecords.setForeground(Color.WHITE);
                 medicalRecords.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-                // Add Hover Effect
+// Add Hover Effect
                 medicalRecords.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseEntered(MouseEvent e) {
@@ -172,8 +180,13 @@ public class RoomListItem extends CustomRoundedPanel {
                         medicalRecords.setForeground(Color.white);
                     }
                 });
-                medicalRecords.setMaximumSize(new Dimension(220,55));
-                medicalRecords.setPreferredSize(new Dimension(220,55));
+
+                medicalRecords.setMaximumSize(new Dimension(220, 55));
+                medicalRecords.setPreferredSize(new Dimension(220, 55));
+
+                medicalRecords.addActionListener(e -> {
+                    MedicalRecordsView medRec = new MedicalRecordsView(entry.getKey(), dashboard);
+                });
                 JLabel confinedDate = new JLabel("Confined Since: " + GetPatients.getPatientAdmissionDate(entry.getKey()));
 
             gbc.weightx = 1;
@@ -207,12 +220,6 @@ public class RoomListItem extends CustomRoundedPanel {
 
             //show medical records
                 medicalRecords.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                medicalRecords.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        new MedicalRecordsView(entry.getKey(), dashboard);
-                    }
-                });
             }
         } else {
             JLabel roomEmpty  = new JLabel("Room is empty.");
