@@ -1,4 +1,5 @@
 package mvc.views;
+
 import mvc.controllers.GetPatients;
 import mvc.views.constants.Constants;
 import javax.swing.*;
@@ -8,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import mvc.views.utility.SetFocusListenerToJTextFields;
 import org.bson.Document;
 
@@ -35,15 +37,12 @@ public class MedicalRecordsView extends JFrame {
         initComponents();
     }
 
-
     ImageIcon closeButtonIcon = new ImageIcon(getClass().getResource("/src/assets/images/x-icon.png"));
     Image image = closeButtonIcon.getImage();
     Image resizedImage = image.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
     ImageIcon resizedCloseButtonIcon = new ImageIcon(resizedImage);
 
-    // Create a JLabel with the PNG image
     JLabel closeButton = new JLabel(resizedCloseButtonIcon);
-
 
     public void initComponents() {
         dashboard.setEnabled(false);
@@ -60,21 +59,21 @@ public class MedicalRecordsView extends JFrame {
 
         // Main Panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
-        // Header Icon
         ImageIcon EPHedP;
         Image resizedEPHed;
         ImageIcon EPHedIcon;
         int wid = 45;
         int hei = 45;
         EPHedP = new ImageIcon("src/assets/images/icons8-medical-records-66.png");
-        resizedEPHed = EPHedP.getImage().getScaledInstance(wid,hei, Image.SCALE_SMOOTH);
+        resizedEPHed = EPHedP.getImage().getScaledInstance(wid, hei, Image.SCALE_SMOOTH);
         EPHedIcon = new ImageIcon(resizedEPHed);
+
         // Header Panel
         JPanel mainHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
         mainHeader.setBackground(Constants.secondary);
         mainHeader.setBorder(new EmptyBorder(25, 25, 25, 25));
-      
-        JLabel Header = new JLabel("Medical Records",EPHedIcon, JLabel.LEFT);
+
+        JLabel Header = new JLabel("Medical Records", EPHedIcon, JLabel.LEFT);
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
         Header.setBorder(new EmptyBorder(0, 0, 0, 560));
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -105,11 +104,10 @@ public class MedicalRecordsView extends JFrame {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
         String formattedBirthDate = dateFormat.format(birthDate);
 
-// Add the formatted birthdate to the label
+        // Add the formatted birthdate to the label
         mainContent.add(createLabel("Admission Date", patientDocument.getDate("Admission Date").toString()));
         mainContent.add(createLabel("Blood Type", patientDocument.getString("Blood Type")));
         mainContent.add(createLabel("Birthdate", formattedBirthDate));
-        mainContent.add(createLabel("Admission Date", patientDocument.getDate("Admission Date").toString()));
         mainContent.add(createLabel("Phone Number", patientDocument.get("Phone Number").toString()));
         mainContent.add(createLabel("Email Address", patientDocument.getString("Email")));
         mainContent.add(createLabel("Emergency Contact", patientDocument.get("Emergency Contact Number").toString()));
@@ -121,6 +119,16 @@ public class MedicalRecordsView extends JFrame {
         mainContent.add(createLabel("Nationality", patientDocument.getString("Nationality")));
         mainContent.add(createLabel("Civil Status", patientDocument.getString("Civil Status")));
         mainContent.add(createLabel("Sex", patientDocument.getString("Sex")));
+
+        // Extract Symptoms, Allergies, and Medications from patient document
+        List<String> symptoms = patientDocument.getList("Symptoms", String.class);
+        List<String> allergies = patientDocument.getList("Allergies", String.class);
+        List<String> medications = patientDocument.getList("Medications", String.class);
+
+        // Add Symptoms, Allergies, and Medications to the panel
+        mainContent.add(createListLabel("Symptoms", symptoms));
+        mainContent.add(createListLabel("Allergies", allergies));
+        mainContent.add(createListLabel("Medications", medications));
 
         // Wrap Content in JScrollPane
         JScrollPane scrollPane = new JScrollPane(mainContent);
@@ -154,7 +162,7 @@ public class MedicalRecordsView extends JFrame {
         panel.setBackground(Color.WHITE);
 
         JLabel fieldLabel = new JLabel(fieldName + ": ");
-        fieldLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        fieldLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         fieldLabel.setForeground(Color.DARK_GRAY);
 
         JLabel valueLabel = new JLabel(value);
@@ -167,7 +175,36 @@ public class MedicalRecordsView extends JFrame {
         return panel;
     }
 
+    // Create a method to handle the array lists for Symptoms, Allergies, and Medications
+    private JPanel createListLabel(String fieldName, List<String> items) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setBorder(new EmptyBorder(8, 15, 8, 15));
+        panel.setBackground(Color.WHITE);
 
+        JLabel fieldLabel = new JLabel(fieldName + ": ");
+        fieldLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        fieldLabel.setForeground(Color.DARK_GRAY);
+
+        // Format the items list
+        StringBuilder valueText = new StringBuilder();
+        if (items != null && !items.isEmpty()) {
+            for (String item : items) {
+                valueText.append(item).append("<br>");
+            }
+        } else {
+            valueText.append("No data available.");
+        }
+
+        JLabel valueLabel = new JLabel("<html>" + valueText.toString() + "</html>");
+        valueLabel.setFont(Constants.DEFAULT_FONT);
+        valueLabel.setForeground(Color.BLACK);
+
+        panel.add(fieldLabel, BorderLayout.NORTH);
+        panel.add(valueLabel, BorderLayout.CENTER);
+
+        return panel;
+    }
 
     // Helper Method to Add Fields
     private void addField(JPanel panel, GridBagConstraints gbc, String label, JTextField textField) {
@@ -178,10 +215,8 @@ public class MedicalRecordsView extends JFrame {
         panel.add(textField, gbc);
     }
 
-
-
     public void setJTextFieldPadding(Container container) {
-        for (Component component: container.getComponents()) {
+        for (Component component : container.getComponents()) {
             if (component instanceof JTextField) {
                 component.setFont(new Font("Arial", Font.PLAIN, 16));
                 Border borderColor = BorderFactory.createLineBorder(Color.gray, 1, true);
@@ -193,101 +228,4 @@ public class MedicalRecordsView extends JFrame {
             }
         }
     }
-
-//    private void setOnChangeEvent(Container container, PatientModel model) {
-//        for (Component component : container.getComponents()) {
-//            if (component instanceof JTextField) {
-//                JTextField textField = (JTextField) component;
-//                String[] previousValue = { textField.getText() };
-//                ((JTextField) component).getDocument().addDocumentListener(new DocumentListener() {
-//                    @Override
-//                    public void insertUpdate(DocumentEvent e) {
-//                        handleTextChange();
-//                    }
-//
-//                    @Override
-//                    public void removeUpdate(DocumentEvent e) {
-//                        handleTextChange();
-//                    }
-//
-//                    @Override
-//                    public void changedUpdate(DocumentEvent e) {
-//                        handleTextChange();
-//                    }
-//
-//                    private void handleTextChange() {
-//                        SwingUtilities.invokeLater(() -> {
-////                        String pattern = "^[a-zA-Zs]*$";
-////                        String pattern2 = "^09\\d{9}$";    // Numbers starting with 09, exactly 11 digits
-////                        String pattern3 = "^\\d{4}$";
-//                        JTextField source = (JTextField) component;
-//                        String text = source.getText();
-////
-////
-////
-////                        if (component == patientNameFieldFN || component == patientNameFieldLN ||
-////                                component == patientNameFieldMN || component == cityField ||
-////                                component == municipalityField || component == nationalityTextField ||
-////                                component == civilStatusField) {
-////                            if (!text.matches(pattern)) {
-////                                JOptionPane.showMessageDialog(null, "Invalid input. Please input letters and spaces only.");
-////                                source.setText(""); // Clear invalid input
-////
-////                            }}
-////                        else if (component == emergencyContactNumberField || component == phoneNumberField ) {
-////                            if (text.length() == 11 && !text.matches(pattern2)|| text.length() > 11) {
-////                                JOptionPane.showMessageDialog(null, "Enter a valid number.");
-////                                source.setText(""); // Clear invalid input
-////
-////                            }
-////                        }
-////                        else if (component == postalCodeField) {
-////
-////                            // Validate only when text length is exactly 4
-////                            if (text.length() == 4 && !text.matches(pattern3)) {
-////                                JOptionPane.showMessageDialog(null, "Postal code must be exactly 4 digits.");
-////                                source.setText("");  // Clear invalid input
-////                            }
-////                            else if (text.length() > 4) {
-////                                JOptionPane.showMessageDialog(null, "Postal code must be exactly 4 digits.");
-////                                source.setText("");  // Clear input if it's more than 4 digits
-////                            }}
-//
-//                          // Handle text change for specific fields
-//                        if (component == patientNameFieldFN) {
-//                            model.setFirstName(text);
-//                        } else if (component == patientNameFieldLN) {
-//                            model.setLastName(text);
-//                        } else if (component == patientNameFieldMN) {
-//                            model.setMiddleName(text);
-//                        } else if (component == emailAddressField) {
-//                            model.setEmail(text);
-//                        } else if (component == streetAddressField) {
-//                            model.setStreetName(text);
-//                        } else if (component == cityField) {
-//                            model.setCity(text);
-//                        } else if (component == regionField) {
-//                            model.setRegion(text);
-//                        } else if (component == civilStatusField) {
-//                            model.setCivilStatus(text);
-//                        } else if (component == phoneNumberField) {
-//                            model.setPhoneNumber(text);
-//                        } else if (component == emergencyContactNumberField) {
-//                            model.setEmergencyContactNumber(text);
-//                        } else if (component == municipalityField) {
-//                            model.setMunicipality(text);
-//                        } else if (component == nationalityTextField) {
-//                            model.setNationality(text);
-//                        }
-//
-//                }
-//                );}
-//                });
-//            } else if (component instanceof Container) {
-//                setOnChangeEvent((Container) component, model);
-//            }
-//        }
-//    }
-
-
 }
